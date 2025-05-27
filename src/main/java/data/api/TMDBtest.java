@@ -121,6 +121,7 @@ public class TMDBtest {
 
 	            data.put("genres", genreNames);
 
+	            // 포스터(사진)
 	            data.put("poster", movie.get("poster_path"));
 
 	            // JSONArray에 JSON 데이터 추가
@@ -173,6 +174,7 @@ public class TMDBtest {
 
 		            data.put("genres", genreNames);
 
+		            // 포스터(사진)
 		            data.put("poster", movie.get("poster_path"));
 
 		            movieList.add(data);
