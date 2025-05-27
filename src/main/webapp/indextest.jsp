@@ -15,7 +15,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<%=size%>개
+	<%=size%>
 	<%
 		for(int i = 0; i < list.size(); i++)
 		{
