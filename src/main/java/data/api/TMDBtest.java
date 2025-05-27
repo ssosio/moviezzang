@@ -1,4 +1,4 @@
-package api;
+package data.api;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,13 +14,15 @@ import org.json.simple.parser.JSONParser;
 @SuppressWarnings("unchecked")
 
 public class TMDBtest {
-	private String apiKey = "개인API키 여기에";							// API Key
+	private String apiKey = "4b5b6ecd35061a1b21381bae419c6d9b";							// API Key
 	private Map<Long, String> genreMap = new HashMap<Long, String>();	// id는 숫자가 크지 않지만 json.simple은 number 타입을 long으로 변환한다
 	
 	// 생성할 때 장르 ID를 한글로 변환하여 ID<->한글장르명 으로 매핑
 	public TMDBtest()
 	{
 		String urlStr = "https://api.themoviedb.org/3/genre/movie/list?api_key=" + apiKey + "&language=ko-KR";
+		
+		System.out.println(apiKey);
 		
 		URL url;
 		try {
@@ -86,6 +88,8 @@ public class TMDBtest {
 
 	        // 1페이지 결과 추가
 	        JSONArray results = (JSONArray) resultObj.get("results");
+	        
+	        System.out.println(results.size());
 	        for (Object obj : results) 
 	        {
 	        	JSONObject movie = (JSONObject) obj;
