@@ -1,0 +1,84 @@
+Table user {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  username varchar(20) [unique, not null, note: '아이디']
+  password varchar(30) [not null, note: '암호(암호화)']
+  name varchar(20) [not null, note: '이름']
+  gender char(1) [not null, note: '성별']
+  age tinyint [not null, note: '나이, unsigned']
+  phone varchar(20) [not null, note: '휴대폰번호']
+  address varchar(30) [not null, note: '주소']
+  mileage int [not null, note: '마일리지, unsigned']
+  user_type varchar(10) [not null, default: 'USER', note: '회원 유형(USR/ADMIN)']
+  signup_at datetime [not null, note: '회원 가입일']
+}
+
+Table movie {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  title varchar(50) [not null, unique, note: '영화제목']
+  synopsis varchar(2000) [note: '줄거리']
+  release_date datetime [note: '개봉일']
+  rating varchar(10) [note: '관람등급']
+  runtime int [note: '상영시간(분)']
+  studio varchar(30) [note: '제작사']
+  distributor varchar(30) [note: '배급사']
+  poster_url varchar(1000) [note: '포스터 사진']
+}
+
+Table theater {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  region varchar(10) [not null, unique, note: '지역(수도권, 경기 등)']
+  name varchar(30) [not null, unique, note: '지점명(강남점, 고양스타필드점 등)']
+  address varchar(50) [not null, note: '주소']
+}
+
+Table auditorium {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  theater_id int [not null, ref: > theater.id, note: 'FK: theater(영화관) 참조']
+  name varchar(20) [not null, note: '상영관명']
+}
+
+Table seat {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  auditorium_id int [not null, ref: > auditorium.id, note: 'FK: auditorium(상영관) 참조']
+  seat_row char(1) [not null, note: '행']
+  seat_col int [not null, note: '열']
+  seat_no varchar(10) [not null, note: '좌석번호']
+  seat_type varchar(10) [not null, note: '좌석유형']
+}
+
+Table screening {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  movie_id int [not null, ref: > movie.id, note: 'FK: Movie(영화) 참조']
+  auditorium_id int [not null, ref: > auditorium.id, note: 'FK: Auditorium(상영관) 참조']
+  start_time datetime [not null, note: '상영 시작 시간']
+  price int [not null, note: '가격']
+}
+
+Table reservation {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  screening_id int [not null, ref: > screening.id, note: 'FK: Screening(상영 정보) 참조']
+  user_id int [not null, ref: > user.id, note: 'FK: User(회원) 참조']
+  reserved_at datetime [not null, note: '예매 시간']
+}
+
+Table seat_reserved {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  reservation_id int [not null, ref: > reservation.id, note: 'FK: Reservation(예매) 참조']
+  seat_id int [not null, ref: > seat.id, note: 'FK: Seat(좌석) 참조']
+}
+
+Table review {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  movie_id int [not null, ref: > movie.id, note: 'FK: Movie(영화) 참조']
+  user_id int [not null, ref: > user.id, note: 'FK: User(회원) 참조']
+  content varchar(1000) [not null, note: '리뷰 내용']
+  rating tinyint [not null, note: '평점']
+  created_at datetime [not null, note: '작성일시']
+}
+
+Table notice {
+  id int [pk, increment, note: 'Auto increment, unsigned']
+  user_id int [not null, ref: > user.id, note: 'FK: User(회원) 참조']
+  content varchar(1000) [not null, note: '공지 내용']
+  created_at datetime [not null, note: '작성일시']
+}
