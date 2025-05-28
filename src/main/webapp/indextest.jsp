@@ -1,3 +1,4 @@
+<%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@page import="data.api.TMDBtest"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -20,12 +21,20 @@
 		for(int i = 0; i < list.size(); i++)
 		{
 			out.print(list.get(i).toString());
-			//System.out.println(list.get(i).toString().split("poster")[1]);
 	%>
 	<br>
 	<%
 		}
+	
+		for(Object obj : list)
+		{
+			JSONObject jobj = (JSONObject)obj;
+			String img = (String)jobj.get("poster");
 	%>
-	<img src="https://image.tmdb.org/t/p/w500/k5aQ2TqKcQFwPoXHkpAGoKNVDLZ.jpg" alt="포스터">
+		<img src="https://image.tmdb.org/t/p/w185<%=img%>" alt="포스터">
+	<%
+		}
+	%>
+	<!-- <img src="https://image.tmdb.org/t/p/w500/k5aQ2TqKcQFwPoXHkpAGoKNVDLZ.jpg" alt="포스터"> -->
 </body>
 </html>
