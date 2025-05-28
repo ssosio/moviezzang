@@ -11,11 +11,16 @@
 <style>
     body {
       background-color: #f7f7f7;
+      
     }
+    
     .sidebar {
       background-color: #333;
       color: white;
-      height: 100vh;
+      height: 400px;
+      width: 200px;
+      border-radius: 15px;
+      
     }
     .sidebar a {
       display: block;
@@ -23,6 +28,7 @@
       padding: 12px;
       text-decoration: none;
       border-bottom: 1px solid #444;
+      
     }
     .sidebar a:hover {
       background-color: #555;
@@ -31,14 +37,20 @@
       background: linear-gradient(to right, #1a1a3c, #181847);
       color: white;
       padding: 20px;
+      width: 740px;
+      height: 150px;
+      border-radius: 15px;
     }
     .card-box {
       background-color: white;
       border-radius: 10px;
       padding: 20px;
-      margin-top: 20px;
+      margin-top: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+   
+    
+ 
     .step-line {
       display: flex;
       justify-content: space-between;
@@ -52,55 +64,54 @@
     }
   </style>
 </head>
-<body>
-  <div class="container-fluid">
+<body class="d-flex justify-content-center align-items-center min-vh-100">
+  <div class="container-fluid" style="margin-left: 450px;">
     <div class="row">
       <div class="col-md-3 sidebar p-0">
         <div class="p-3">
           <h5>My MZ Page</h5>
-          <a href="#">예매내역</a>
-          <a href="#">나의 무비스토리</a>
-          <a href="#">회원정보</a>
+          <a href="bookMovieList.jsp">예매내역</a>
+          <a href="myMovieStory.jsp">나의 무비스토리</a>
+          <a href="myInfo.jsp">회원정보 수정</a>
         </div>
       </div>
 
       <div class="col-md-9">
         <div class="mypage-header">
           <h3>안녕하세요! ***님</h3>
-          <p>현재 마일리지 (0P)</p>
+          <p style="float: right; font-size: 15pt; margin-top: 40px;">보유 마일리지 (0P)</p>
           <div class="step-line">
             <span>Welcome!</span>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-4" style="margin-top: 20px;">
+           <h4>마일리지 이용내역</h4>
             <div class="card-box">
-              <h6>마일리지 이용내역</h6>
               <p>적립예정: 0P<br />당월소멸예정: 0P</p>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4" style="margin-top: 20px;">
+          <h4>영화 예매 내역</h4>
             <div class="card-box">
-              <h6>관람권/쿠폰</h6>
-              <p>영화관람권: 0매<br />스토어교환권: 0매<br />할인쿠폰: 0매</p>
+              <p>영화관람권: 0매</p>
             </div>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6" style="margin-top: 20px;">
+          <h4>나의 무비스토리</h4>
+           <button type="button" onclick="location.href='#'" style="border-radius: 10px; float: right;"
+           		 class="btn btn-outline-dark">본 영화 등록</button>
             <div class="card-box">
-              <h6>나의 무비스토리</h6>
-              <p>본 영화: 0</p>
-            </div>
+              <p>본 영화: 0</p>         
           </div>
         
         </div>
 
-        <div class="text-end mt-3">
-          <a href="#">더보기 &gt;</a>
-        </div>
+        
       </div>
     </div>
   </div>
