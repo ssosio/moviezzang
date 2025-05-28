@@ -7,6 +7,15 @@
 <title>index</title>
 </head>
 <body>
-	index
+	<div class="container">
+		<div class="title">
+		<h3>빠른예매</h3>
+		</div>
+		<div class="listbox">
+			<div>
+
+			</div>
+		</div>
+	</div>
 </body>
 </html>
