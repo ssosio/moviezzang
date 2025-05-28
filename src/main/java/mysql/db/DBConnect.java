@@ -24,7 +24,7 @@ static final String MySqlDriver="com.mysql.cj.jdbc.Driver";
 	}
 
    }
-
+   
 	//오라클계정연결
 	public Connection getConnecton()
 	{

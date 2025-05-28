@@ -1,0 +1,20 @@
+@charset "UTF-8";
+.btn-movstyle{
+
+	border: 1px purple solid;
+	background: white;
+	border-radius: 15px;
+}
+.btn-movstyle:hover {
+	border: 1px purple solid;
+	background: purple;
+	color: white;
+}
+
+.btn-basiclist{
+	border: none;
+	background: white;
+}
+.btn-basiclist:hover {
+	background: #ccc;
+}
