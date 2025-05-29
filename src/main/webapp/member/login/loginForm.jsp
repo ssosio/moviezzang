@@ -39,7 +39,7 @@ input.pass {
 </head>
 <body>
 <div class="container mt-3">
-  <img alt="" src="">
+  <img alt="" src="../../../resources/moviezzang.png">
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"  style="margin: 100px;">
     Login
   </button>
@@ -72,6 +72,6 @@ input.pass {
   </div>
 </div>
 
-
+<jsp:include page="../../header.jsp" />
 </body>
 </html>
