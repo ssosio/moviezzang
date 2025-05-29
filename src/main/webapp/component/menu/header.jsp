@@ -5,43 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
- <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: { primary: "#352461", secondary: "#503396" },
-            borderRadius: {
-              none: "0px",
-              sm: "4px",
-              DEFAULT: "8px",
-              md: "12px",
-              lg: "16px",
-              xl: "20px",
-              "2xl": "24px",
-              "3xl": "32px",
-              full: "9999px",
-              button: "8px",
-            },
-          },
-        },
-      };
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+ 
  
 </head>
 <body class="bg-white pt-[72px]">
@@ -49,8 +13,8 @@
       <div class="container mx-auto px-4 py-3 bg-black">
         <div class="flex justify-between items-center">
           <nav
-            class="hidden md:flex items-center space-x-12"
-            style="padding-left: 25rem"
+            class="hidden md:flex items-center space-x-12 justify-center mx-auto"
+            style="padding-left: 13rem"
           >
             <a href="" class="text-primary transition-colors">영화</a>
             <a href="" class="hover:text-primary transition-colors">극장</a>
@@ -88,4 +52,7 @@
       </div>
     </header>
 </body>
+<%-- <% for (int i = 0; i < 100; i++) { %>
+    <br>
+<% } %> --%>
 </html>
