@@ -220,6 +220,5 @@ function check(f) {
     }
 </script>
 
-<jsp:include page="../../header.jsp" />
 </body>
 </html>

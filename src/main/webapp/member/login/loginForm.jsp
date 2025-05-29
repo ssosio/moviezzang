@@ -71,7 +71,5 @@ input.pass {
     </div>
   </div>
 </div>
-
-<jsp:include page="../../header.jsp" />
 </body>
 </html>
