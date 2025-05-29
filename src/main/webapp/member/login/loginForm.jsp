@@ -5,14 +5,16 @@
 <head>
 <meta charset="UTF-8">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <title>Insert title here</title>
 
 <style type="text/css">
 .modal-header {
 	background: #503396;
 	color: #fff;
+	height: 50px;
 }
 
 input.id {
@@ -34,7 +36,11 @@ input.pass {
 	background: #351f67; 
 }
 
-
+.close i{
+	color: white;
+	font-size: 1.6em;
+	margin-left: 330px;
+}
 </style>
 </head>
 <body>
@@ -53,7 +59,7 @@ input.pass {
       <!-- Modal Header -->
       <div class="modal-header">
         <h4 class="modal-title">로그인</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <button type="button" class="btn close" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i></button>
       </div>
 
       <!-- Modal body -->
@@ -65,7 +71,7 @@ input.pass {
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger loginbtn" data-bs-dismiss="modal">로그인</button>
+        <button type="button" class="btn loginbtn" data-bs-dismiss="modal">로그인</button>
       </div>
 
     </div>
