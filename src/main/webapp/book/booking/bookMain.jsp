@@ -136,7 +136,9 @@ width: 100%;
   background-color: gray;
   margin: auto 10px; /* 상하 가운데 정렬 */
 }
-
+div.listbox h4{
+margin-top: 30px;
+}
 </style>
 </head>
 <body>
@@ -188,6 +190,7 @@ width: 100%;
 					</div>
 			</div>
 			<div class="time">
+			<form action="../seat/seatForm.jsp">
 			<h4>&nbsp; &nbsp; &nbsp;시간</h4>
 			<%
 			 Date today = new Date();
@@ -197,7 +200,7 @@ width: 100%;
 				<input type="date" class="form-control" style="max-width: 40%; margin:40px 100px;" value="<%=todate%>">
 				<ul>
 					<li>
-						<button class="btntime btn-basiclist">
+						<button class="btntime btn-basiclist" type="submit">
 							<div class="timebox">
 								<span class="starttime"><b style="font-size: 1.2em">14:00</b>~16:22</span>
 								<span class="movietitle">영화1이야</span>
@@ -206,7 +209,7 @@ width: 100%;
 						</button>
 					</li>
 					<li>
-						<button class="btntime btn-basiclist">
+						<button class="btntime btn-basiclist" type="submit">
 							<div class="timebox">
 								<span class="starttime"><b style="font-size: 1.2em">15:10</b>~17:32</span>
 								<span class="movietitle">영화1이야</span>
@@ -215,7 +218,7 @@ width: 100%;
 						</button>
 					</li>
 					<li>
-						<button class="btntime btn-basiclist">
+						<button class="btntime btn-basiclist" type="submit">
 							<div class="timebox">
 								<span class="starttime"><b style="font-size: 1.2em">15:40</b>~18:24</span>
 								<span class="movietitle">영화1이야</span>
@@ -224,7 +227,7 @@ width: 100%;
 						</button>
 					</li>
 					<li>
-						<button class="btntime btn-basiclist">
+						<button class="btntime btn-basiclist" type="submit">
 							<div class="timebox">
 								<span class="starttime"><b style="font-size: 1.2em">16:20</b>~18:42</span>
 								<span class="movietitle">영화1이야</span>
@@ -233,6 +236,7 @@ width: 100%;
 						</button>
 					</li>
 				</ul>
+				</form>
 			</div>
 		</div>
 	</div>
