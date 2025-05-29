@@ -38,7 +38,6 @@ input.pass {
 
 .close i{
 	color: white;
-	font-size: 1.6em;
 	margin-left: 330px;
 }
 </style>

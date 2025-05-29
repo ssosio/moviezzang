@@ -8,6 +8,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <title>Insert title here</title>
 <script type="text/javascript">
 	$(function () {
@@ -110,12 +112,18 @@ function check(f) {
 	background-color: #351f67;
 	color: white;
 }
+i.dash {
+	color: black;
+}
+
 
 </style>
 </head>
 <body>
-
+<div class="scontainer">
+<jsp:include page="../../component/menu/header.jsp"/>
 <div class="wrap">
+
 <form action="" method="post" onsubmit="">
 	
 	<div class="boxs">
@@ -166,15 +174,14 @@ function check(f) {
 		<!-- <input type="text" name="phone" id="phone" class="form-control" required="required" placeholder="연락처를 입력해주세요"> -->
 		
 		<select name="hp1" class="form-control">
-						<option>010</option>
-						<option>011</option>
 						<option>02</option>
-						<option>031</option>
-					</select>&nbsp;&nbsp;
-					<b>-</b>&nbsp;&nbsp;
-					<input type="text" name="hp2" required="required" class="form-control" onkeyup="goFocus(this)">&nbsp;&nbsp;
-					<b>-</b>&nbsp;&nbsp;
-					<input type="text" name="hp3" required="required" class="form-control">&nbsp;&nbsp;
+						<option>011</option>
+						<option>010</option>
+					</select>
+					<i class="bi bi-dash-lg dash" style="color: black;"></i>
+					<input type="text" name="hp2" required="required" class="form-control" onkeyup="goFocus(this)">
+					<i class="bi bi-dash-lg dash"></i>
+					<input type="text" name="hp3" required="required" class="form-control">
 		
 	</div>
 	
@@ -185,9 +192,9 @@ function check(f) {
 		<input type="text" name="email2" id="email2" class="form-control" required="required">
 		<select id="selemail" class="form-control">
 			<option value="-">직접입력</option>
-			<option value="naver.com">네이버</option>	
-			<option value="gmail.com">구글</option>	
-			<option value="hanmail.net">다음</option>					
+			<option value="naver.com">naver.com</option>	
+			<option value="gmail.com">gmail.com</option>	
+			<option value="hanmail.net">hanmail.net</option>					
 		</select>
 		<button type="button" class="btn" id="btnCheck">중복확인</button>
 	</div>
@@ -196,7 +203,7 @@ function check(f) {
 		
 </form>
 </div>
-
+</div>
 <script>
     function sample4_execDaumPostcode(){
         new daum.Postcode({
@@ -218,5 +225,8 @@ function check(f) {
     }
 </script>
 
+
+
 </body>
+<jsp:include page="../../component/menu/footer.jsp"/>
 </html>
