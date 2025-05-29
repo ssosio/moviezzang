@@ -23,7 +23,7 @@
               <img
                 src="https://static.readdy.ai/image/12bfdaa4bfcf1b50ecec721ef7feb22b/430a084c59d6bf1f60f916f809d7bf0e.png"
                 alt="영화짱닷컴"
-                class="h-16"
+                class="h-24 max-w-none"
               />
             </a>
             <a href="" class="hover:text-primary transition-colors">스토어</a>
@@ -36,7 +36,7 @@
             >
               <i class="ri-search-line ri-lg"></i>
             </div>
-            <a href="" class="text-sm hover:text-primary transition-colors"
+            <a href="../member/login/loginForm.jsp" class="text-sm hover:text-primary transition-colors"
               >로그인</a
             >
             <a href="" class="text-sm hover:text-primary transition-colors"
