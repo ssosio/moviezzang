@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class DBConnect {
 
-static final String URL="jdbc:mysql://localhost:3306/semi";
+static final String URL="jdbc:mysql://moviezzang.c72c02iwaybk.ap-northeast-2.rds.amazonaws.com:3306/moviezzang";
 static final String MySqlDriver="com.mysql.cj.jdbc.Driver";
 
 //생성자 안에 드라이버 넣기
@@ -24,14 +24,14 @@ static final String MySqlDriver="com.mysql.cj.jdbc.Driver";
 	}
 
    }
-   
+
 	//오라클계정연결
 	public Connection getConnecton()
 	{
 		Connection conn=null;
 
 		try {
-			conn=DriverManager.getConnection(URL, "catdog", "0321");
+			conn=DriverManager.getConnection(URL, "adminLKH", "lkh940706!");
 
 			System.out.println("Mysql 연결 성공!!!");
 		} catch (SQLException e) {

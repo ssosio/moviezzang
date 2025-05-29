@@ -48,6 +48,7 @@
 	color: purple;
 	border: 1px solid purple;
 }
-.btn-seat:checked {
+.btn-seat.select{
 	background: purple;
+	color: white;
 }

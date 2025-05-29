@@ -161,6 +161,13 @@ div.pay>span:last-child {
 }
 </style>
 </head>
+<script type="text/javascript">
+$(function() {
+	$(".selseat").on("click",function(){
+		$(this).toggleClass("select");
+	});
+})
+</script>
 <body>
 	<div class="container">
 		<div class="title">
@@ -202,14 +209,12 @@ div.pay>span:last-child {
 					%>
 						<button class="btn-seat selseat" type="button" style="margin-left: <%=margin%>">
 						<%=j %></button>
-
 					<%}%>
 					</div>
 				<%}
 				%>
 				</div>
 		</div>
-
 		</div>
 		<div class="paybox">
 			<div class="pay-title">
