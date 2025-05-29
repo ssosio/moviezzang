@@ -1,0 +1,53 @@
+@charset "UTF-8";
+.btn-movstyle{
+
+	border: 1px purple solid;
+	background: white;
+	border-radius: 15px;
+}
+.btn-movstyle:hover {
+	border: 1px purple solid;
+	background: purple;
+	color: white;
+}
+
+.btn-basiclist{
+	border: none;
+	background: white;
+}
+.btn-basiclist:hover {
+	background: #ccc;
+}
+.btn-mov {
+	border: 1px purple solid;
+	background: white;
+	border-radius: 15px;
+	color:purple;
+}
+
+.btn-mov:hover {
+	background: purple;
+	color: white;
+}
+.btn-up{
+	background: white;
+	border-radius: 0px 10px 10px 0px;
+	border: 1px #ccc solid;
+	width: 30px;
+}
+.btn-down{
+	background: white;
+	border-radius: 10px 0px 0px 10px;
+	border: 1px #ccc solid;
+	width: 30px;
+}
+.btn-seat{
+	width: 30px;
+	height: 30px;
+	background: white;
+	color: purple;
+	border: 1px solid purple;
+}
+.btn-seat:checked {
+	background: purple;
+}
