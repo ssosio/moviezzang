@@ -10,6 +10,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+<!-- sideBar -->
+<jsp:include page="sideBar.jsp"></jsp:include>
 <div class="container">
 	<form action="#">
 	<input type="hidden">
