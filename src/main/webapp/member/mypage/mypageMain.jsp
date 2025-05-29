@@ -82,7 +82,7 @@
 <jsp:include page="sideBar.jsp"></jsp:include>
 
 <!-- header -->
- <%-- <jsp:include page="../../header.jsp"></jsp:include> --%>
+ 
 
   <!-- Main content -->
   <div class="mypage-content">
