@@ -1,3 +1,7 @@
+<%@page import="data.dao.MovieDAO"%>
+<%@page import="java.io.DataOutput"%>
+<%@page import="data.dto.MovieDTO"%>
+<%@page import="java.util.List"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -22,7 +26,7 @@ margin-top: 100px;
 margin-left: 100px;
 }
 div.listbox{
-border: 1px gray solid;
+border: 1px #ccc solid;
 width: 900px;
 height: 600px;
 margin: 1px 100px;
@@ -31,13 +35,13 @@ display: flex;
 div.theater-local{
 width: 300px;
 height: 100%;
-border-right: 1px gray solid;
+border-right: 1px #ccc solid;
 display: flex;
 }
 div.movie{
 width: 200px;
 height: 100%;
-border-right: 1px gray solid;
+border-right: 1px #ccc solid;
 }
 div.movie ul>li{
 list-style: none;
@@ -133,7 +137,7 @@ width: 100%;
 .vertical-line {
   width: 1px;
   height: 75%;
-  background-color: gray;
+  background-color: #ccc;
   margin: auto 10px; /* 상하 가운데 정렬 */
 }
 div.listbox h4{
@@ -141,6 +145,10 @@ margin-top: 30px;
 }
 </style>
 </head>
+<%
+MovieDAO dao = MovieDAO.getInstance();
+List<MovieDTO> list = dao.getAllDatas();
+%>
 <body>
 	<div class="container">
 		<div class="title">
@@ -151,11 +159,13 @@ margin-top: 30px;
 			<div class="movie">
 				<h4>&nbsp;&nbsp;&nbsp;영화</h4>
 				<ul>
-					<li><button type="button" class="movielist btn-basiclist">영화1</button></li>
-					<li><button type="button" class="movielist btn-basiclist">영화2</button></li>
-					<li><button type="button" class="movielist btn-basiclist">영화3</button></li>
-					<li><button type="button" class="movielist btn-basiclist">영화4</button></li>
-					<li><button type="button" class="movielist btn-basiclist">영화5</button></li>
+					<%
+					for(int i=0;i<list.size();i++){
+					MovieDTO dto = list.get(i);
+					%>
+						<li><button type="button" class="movielist btn-basiclist"><%=dto.getTitle() %></button></li>
+					<%}
+					%>
 				</ul>
 			</div>
 			<div class="theater-local">
