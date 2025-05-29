@@ -9,7 +9,9 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>Insert title here</title>
 </head>
-<body>
-
+<body class="d-flex justify-content-center align-items-center min-vh-100">
+	<div>
+		
+	</div>
 </body>
 </html>
