@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ include file="../../component/menu/headrResources.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+
   <title>마이페이지</title>
   <style type="text/css"> 
     body {
@@ -50,7 +51,7 @@
       border-radius: 10px;
       padding: 20px;
       margin-top: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
 
     .mypage-section h4 {
@@ -91,21 +92,21 @@
     </div>
 
     <div class="mypage-section">
-      <h4>마일리지 이용내역</h4>
+      <h4 class="text-2xl font-bold" style="color: #000080">마일리지 이용내역</h4>
       <div class="mypage-box">
         <p>적립예정: 0P<br />당월소멸예정: 0P</p>
       </div>
     </div>
 
     <div class="mypage-section">
-      <h4>영화 예매 내역</h4>
+      <h4 class="text-2xl font-bold" style="color: #000080">영화 예매 내역</h4>
       <div class="mypage-box">
         <p>영화관람권: 0매</p>
       </div>
     </div>
 
     <div class="mypage-section">
-      <h4>나의 무비스토리</h4>
+      <h4 class="text-2xl font-bold" style="color: #000080">나의 무비스토리</h4>
       <div class="mypage-box">
         <p>본 영화: 0</p>
       </div>
