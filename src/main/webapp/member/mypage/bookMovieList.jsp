@@ -1,15 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ include file="../../component/menu/headrResources.jsp" %>
+   <%@ include file="../../component/menu/headrResources.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <title>Insert title here</title>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function () {
+  const select = document.getElementById("monthSelect");
+  const today = new Date();
 
+  if (!select) {
+      console.error("select 못 찾음");
+      return;
+    }
+  for (let i = 0; i < 12; i++) {
+    const date = new Date(today.getFullYear(), today.getMonth() - i, 1); // 이전 달로 이동
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // getMonth()는 0~11이므로 +1
+    const option = document.createElement("option");
+
+    option.value = `${year}-${month.toString().padStart(2, '0')}`; // ex: 2025-05
+    option.text = `${year}년 ${month}월`; // ex: 2025년 5월
+
+    select.appendChild(option);
+  }
+});
+
+</script>
 <style type="text/css"> 
     body {
       margin: 0;
@@ -94,18 +115,7 @@
       <div class="booklist-box">
         <p>예매내역</p>
         <select id="monthSelect" class="w-48 p-2 border border-gray-300 rounded-md">
-  			<option>2025년 5월</option>
-  			<option>2025년 4월</option>
-  			<option>2025년 3월</option>
-  			<option>2025년 2월</option>
-  			<option>2025년 1월</option>
-  			<option>2024년 12월</option>
-  			<option>2024년 11월</option>
-  			<option>2024년 10월</option>
-  			<option>2024년 9월</option>
-  			<option>2024년 8월</option>
-  			<option>2024년 7월</option>
-  			<option>2024년 6월</option>
+  		
 		</select>
       </div>
     </div>
@@ -122,7 +132,6 @@
     </div>
   </div>
 </div>
-
 </body>
 <!-- footer -->
 <jsp:include page="../../component/menu/footer.jsp"></jsp:include>
