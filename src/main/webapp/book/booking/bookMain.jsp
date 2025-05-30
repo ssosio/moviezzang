@@ -6,6 +6,7 @@
 <%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@include file="../../component/menu/headrResources.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -105,7 +106,6 @@ padding: 0px;
 button.btntime{
 width: 100%;
 }
-
 /*time박스내용 정렬 */
 .timebox {
   display: flex;
@@ -158,6 +158,7 @@ margin-top: 30px;
 }
 .btn-content img {
   position: absolute;
+  left:0px;
   width: 30px;
 }
 .btn-content span {
@@ -167,7 +168,18 @@ margin-top: 30px;
   word-break: keep-all;
   padding-left: 40px;
 }
+div.movielist-section{
+margin-top: 50px;
+}
 </style>
+<script type="text/javascript">
+$(function() {
+	$("button.movielist").click(function() {
+		var movieid = $(this).attr("movieid");
+		alert(movieid);
+	});
+})
+</script>
 </head>
 <%
 MovieDAO dao = MovieDAO.getInstance();
@@ -177,7 +189,9 @@ List<MovieDTO> list = dao.getAllDatas();
 String root = getServletContext().getRealPath("/");
 %>
 <body>
+	<jsp:include page="../../component/menu/header.jsp"/>
 	<div class="container">
+
 		<div class="title">
 			<h3>빠른예매</h3>
 			<hr>
@@ -185,7 +199,7 @@ String root = getServletContext().getRealPath("/");
 		<div class="listbox">
 			<div class="movie">
 				<h4>&nbsp;&nbsp;&nbsp;영화</h4>
-				<%= "불러온 영화 수: " + list.size() %>
+				<div class="movielist-section">
 				<ul>
 					<%
 					for(int i=0;i<list.size();i++){
@@ -195,7 +209,7 @@ String root = getServletContext().getRealPath("/");
 										dto.getCertification().contains("15")?"15세":"19세";
 					%>
 						<li>
-						<button type="button" class="movielist btn-basiclist">
+						<button type="button" class="movielist btn-basiclist" movieid="<%=dto.getId() %>">
 						<div class="btn-content">
 						<img src="../../resources/ratingimg/<%=certification %>.png" width="30px;" style="margin-right: 10px;">
 						<span><%=dto.getTitle() %></span>
@@ -204,6 +218,7 @@ String root = getServletContext().getRealPath("/");
 					<%}
 					%>
 				</ul>
+				</div>
 			</div>
 			<div class="theater-local">
 				<div class="local">
@@ -287,5 +302,6 @@ String root = getServletContext().getRealPath("/");
 			</div>
 		</div>
 	</div>
+	<jsp:include page="../../component/menu/footer.jsp"/>
 </body>
 </html>
