@@ -1,6 +1,6 @@
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.json.simple.JSONArray"%>
-<%@page import="data.api.TMDBtest"%>
+<%@page import="data.api.TMDB"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <%
-	TMDBtest tmdb = new TMDBtest();
+	TMDB tmdb = new TMDB();
 
 	JSONArray list = tmdb.getMovieDatas();
 	int size = list.size();	
