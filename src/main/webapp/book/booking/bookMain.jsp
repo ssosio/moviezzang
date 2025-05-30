@@ -186,6 +186,7 @@ $(function() {
 				//alert("성공");
 				console.log(res);
 				$.each(res,function(i,item){
+				console.log(item.region);
 				});
 			},
 			error: function(xhr, status, error) {
