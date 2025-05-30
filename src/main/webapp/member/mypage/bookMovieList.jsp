@@ -92,21 +92,32 @@
 
     <div class="booklist-section">
       <div class="booklist-box">
-        <p></p>
+        <p>예매내역</p>
+        <select id="monthSelect" class="w-48 p-2 border border-gray-300 rounded-md">
+  			<option>2025년 5월</option>
+  			<option>2025년 4월</option>
+  			<option>2025년 3월</option>
+  			<option>2025년 2월</option>
+  			<option>2025년 1월</option>
+  			<option>2024년 12월</option>
+  			<option>2024년 11월</option>
+  			<option>2024년 10월</option>
+  			<option>2024년 9월</option>
+  			<option>2024년 8월</option>
+  			<option>2024년 7월</option>
+  			<option>2024년 6월</option>
+		</select>
+      </div>
+    </div>
+
+    <div class="booklist-section">  
+      <div class="booklist-box"> 
       </div>
     </div>
 
     <div class="booklist-section">
-      <h4 class="text-2xl font-bold" style="color: #000080">영화 예매 내역</h4>
       <div class="booklist-box">
-        <p>영화관람권: 0매</p>
-      </div>
-    </div>
-
-    <div class="booklist-section">
-      <h4 class="text-2xl font-bold" style="color: #000080">나의 무비스토리</h4>
-      <div class="booklist-box">
-        <p>본 영화: 0</p>
+        
       </div>
     </div>
   </div>
