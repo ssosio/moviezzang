@@ -5,14 +5,13 @@
 <head>
   <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <title>마이페이지</title>
-  <style type="text/css"> 
+  <style type="text/css">
     body {
       margin: 0;
       padding: 0;
       background-color: #f7f7f7;
-      
+
     }
 
     .mypage-wrapper {
@@ -69,13 +68,13 @@
       cursor: pointer;
     }
 
-  
+
   </style>
 </head>
 <body>
 
 <div class="mypage-wrapper">
-  
+
   <!-- sideBar -->
 <jsp:include page="sideBar.jsp"></jsp:include>
 

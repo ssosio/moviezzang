@@ -6,7 +6,6 @@
 <%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@include file="../../component/menu/headrResources.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,11 +19,11 @@
 <style type="text/css">
 div.container{
 position: absolute;
-
 }
 div.title{
 margin-top: 100px;
 margin-left: 100px;
+width: 900px;
 }
 div.listbox{
 border: 1px #ccc solid;
@@ -176,7 +175,24 @@ margin-top: 50px;
 $(function() {
 	$("button.movielist").click(function() {
 		var movieid = $(this).attr("movieid");
-		alert(movieid);
+		//alert(movieid);
+
+		$.ajax({
+			type:"get",
+			url:"<%=request.getContextPath()%>/book/booking/booklist.jsp",
+			dataType:"json",
+			data:{movieid:movieid},
+			success:function(res){
+				//alert("성공");
+				console.log(res);
+				$.each(res,function(i,item){
+				});
+			},
+			error: function(xhr, status, error) {
+		        console.error("에러 발생:", error);
+		        console.log(xhr.responseText);
+		    }
+		})
 	});
 })
 </script>
@@ -188,10 +204,9 @@ List<MovieDTO> list = dao.getAllDatas();
 //절대경로
 String root = getServletContext().getRealPath("/");
 %>
-<body>
-	<jsp:include page="../../component/menu/header.jsp"/>
-	<div class="container">
 
+<body>
+	<div class="container">
 		<div class="title">
 			<h3>빠른예매</h3>
 			<hr>
@@ -223,8 +238,8 @@ String root = getServletContext().getRealPath("/");
 			<div class="theater-local">
 				<div class="local">
 					<h4>&nbsp;&nbsp;&nbsp;극장</h4>
-					<ul>
-						<li><button class="btnlocal btn-basiclist">서울</button></li>
+					<ul id="locals">
+					<li><button class="btnlocal btn-basiclist">서울</button></li>
 						<li><button class="btnlocal btn-basiclist">경기</button></li>
 						<li><button class="btnlocal btn-basiclist">인천</button></li>
 						<li><button class="btnlocal btn-basiclist">대전/충청/세종</button></li>
@@ -236,7 +251,7 @@ String root = getServletContext().getRealPath("/");
 				</div>
 				<div class="vertical-line"></div>
 					<div class="theater">
-						<ul>
+						<ul id="theater">
 							<li><button class="btntheater btn-basiclist">1</button></li>
 							<li><button class="btntheater btn-basiclist">2</button></li>
 							<li><button class="btntheater btn-basiclist">3</button></li>
@@ -302,6 +317,5 @@ String root = getServletContext().getRealPath("/");
 			</div>
 		</div>
 	</div>
-	<jsp:include page="../../component/menu/footer.jsp"/>
 </body>
 </html>

@@ -5,8 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
- 
- 
+ <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+
 </head>
 <body class="bg-white pt-[72px]">
  <header class="w-full bg-black text-white fixed top-0 left-0 right-0 z-50">
