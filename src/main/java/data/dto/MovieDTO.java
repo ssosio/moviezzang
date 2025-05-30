@@ -3,17 +3,17 @@ package data.dto;
 import java.sql.Timestamp;
 
 public class MovieDTO {
-	
+
 	private String id;
 	private String title;
 	private String synopsis;
 	private Timestamp release_date;
-	private String rating;
+	private String certification;
 	private int runtime;
 	private String studio;
 	private String distributor;
 	private String poster_url;
-	
+
 	public String getId() {
 		return id;
 	}
@@ -38,11 +38,11 @@ public class MovieDTO {
 	public void setRelease_date(Timestamp release_date) {
 		this.release_date = release_date;
 	}
-	public String getRating() {
-		return rating;
+	public String getCertification() {
+		return certification;
 	}
-	public void setRating(String rating) {
-		this.rating = rating;
+	public void setCertification(String rating) {
+		this.certification = rating;
 	}
 	public int getRuntime() {
 		return runtime;

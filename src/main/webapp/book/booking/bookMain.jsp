@@ -42,16 +42,20 @@ div.movie{
 width: 200px;
 height: 100%;
 border-right: 1px #ccc solid;
+overflow-y: auto;
 }
 div.movie ul>li{
 list-style: none;
 text-align: center;
 }
 div.movie ul{
-margin-top: 40px;
+margin-top: 10px;
 }
 button.movielist{
+display: flex;
 width: 100%;
+align-items: center;
+justify-content: center;
 }
 div.local{
 width: 50%;
@@ -143,11 +147,34 @@ width: 100%;
 div.listbox h4{
 margin-top: 30px;
 }
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* span 텍스트를 가로 중앙 */
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+.btn-content img {
+  position: absolute;
+  width: 30px;
+}
+.btn-content span {
+  width: 100%;
+  text-align: center;
+  line-height: 1.4;
+  word-break: keep-all;
+  padding-left: 40px;
+}
 </style>
 </head>
 <%
 MovieDAO dao = MovieDAO.getInstance();
+//영화 리스트 구하기
 List<MovieDTO> list = dao.getAllDatas();
+//절대경로
+String root = getServletContext().getRealPath("/");
 %>
 <body>
 	<div class="container">
@@ -158,12 +185,22 @@ List<MovieDTO> list = dao.getAllDatas();
 		<div class="listbox">
 			<div class="movie">
 				<h4>&nbsp;&nbsp;&nbsp;영화</h4>
+				<%= "불러온 영화 수: " + list.size() %>
 				<ul>
 					<%
 					for(int i=0;i<list.size();i++){
 					MovieDTO dto = list.get(i);
+					String certification = dto.getCertification().contains("전체")?"전체":
+										dto.getCertification().contains("12")?"12세":
+										dto.getCertification().contains("15")?"15세":"19세";
 					%>
-						<li><button type="button" class="movielist btn-basiclist"><%=dto.getTitle() %></button></li>
+						<li>
+						<button type="button" class="movielist btn-basiclist">
+						<div class="btn-content">
+						<img src="../../resources/ratingimg/<%=certification %>.png" width="30px;" style="margin-right: 10px;">
+						<span><%=dto.getTitle() %></span>
+						</div>
+						</button></li>
 					<%}
 					%>
 				</ul>
