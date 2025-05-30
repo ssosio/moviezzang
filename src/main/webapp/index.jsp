@@ -7,6 +7,9 @@
 <title>index</title>
 </head>
 <body>
-	
+	<%
+    RequestDispatcher rd = request.getRequestDispatcher("layout/main.jsp");
+    rd.forward(request, response);
+	%>
 </body>
 </html>

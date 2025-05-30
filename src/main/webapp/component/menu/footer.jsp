@@ -144,7 +144,7 @@
                 고객센터: 1544-0000 (평일 09:00~18:00)
               </p>
               <p class="text-gray-400 text-sm mt-2">
-                &copy; 2025 MEGABOX. All Rights Reserved.
+                &copy; 2025 영화짱닷컴. All Rights Reserved.
               </p>
             </div>
             <div class="flex space-x-4">

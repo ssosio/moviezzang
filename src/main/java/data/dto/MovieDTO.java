@@ -1,19 +1,34 @@
 package data.dto;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 public class MovieDTO {
-	
+
 	private String id;
 	private String title;
 	private String synopsis;
-	private Timestamp release_date;
-	private String rating;
+	private Date release_date;
+	private String certification;
 	private int runtime;
 	private String studio;
 	private String distributor;
-	private String poster_url;
+	private float score;
+	private float local_score;
 	
+	public float getScore() {
+		return score;
+	}
+	public void setScore(float score) {
+		this.score = score;
+	}
+	public float getLocal_score() {
+		return local_score;
+	}
+	public void setLocal_score(float local_score) {
+		this.local_score = local_score;
+	}
+	private String poster_url;
+
 	public String getId() {
 		return id;
 	}
@@ -32,17 +47,17 @@ public class MovieDTO {
 	public void setSynopsis(String synopsis) {
 		this.synopsis = synopsis;
 	}
-	public Timestamp getRelease_date() {
+	public Date getRelease_date() {
 		return release_date;
 	}
-	public void setRelease_date(Timestamp release_date) {
+	public void setRelease_date(Date release_date) {
 		this.release_date = release_date;
 	}
-	public String getRating() {
-		return rating;
+	public String getCertification() {
+		return certification;
 	}
-	public void setRating(String rating) {
-		this.rating = rating;
+	public void setCertification(String certification) {
+		this.certification = certification;
 	}
 	public int getRuntime() {
 		return runtime;

@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<title>Insert title here</title>
+<title>로그인</title>
 
 <style type="text/css">
 .modal-header {
@@ -43,8 +43,10 @@ input.pass {
 </style>
 </head>
 <body>
+<jsp:include page="../../component/menu/header.jsp"/>
+<%@ include file="../../component/menu/headrResources.jsp" %>
 <div class="container mt-3">
-  <img alt="" src="../../../resources/moviezzang.png">
+  <img alt="" src="">
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"  style="margin: 100px;">
     Login
   </button>
@@ -76,5 +78,6 @@ input.pass {
     </div>
   </div>
 </div>
+<jsp:include page="../../component/menu/footer.jsp"/>
 </body>
 </html>

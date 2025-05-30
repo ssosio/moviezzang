@@ -1,3 +1,7 @@
+<%@page import="data.dao.MovieDAO"%>
+<%@page import="java.io.DataOutput"%>
+<%@page import="data.dto.MovieDTO"%>
+<%@page import="java.util.List"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -22,7 +26,7 @@ margin-top: 100px;
 margin-left: 100px;
 }
 div.listbox{
-border: 1px gray solid;
+border: 1px #ccc solid;
 width: 900px;
 height: 600px;
 margin: 1px 100px;
@@ -31,23 +35,27 @@ display: flex;
 div.theater-local{
 width: 300px;
 height: 100%;
-border-right: 1px gray solid;
+border-right: 1px #ccc solid;
 display: flex;
 }
 div.movie{
 width: 200px;
 height: 100%;
-border-right: 1px gray solid;
+border-right: 1px #ccc solid;
+overflow-y: auto;
 }
 div.movie ul>li{
 list-style: none;
 text-align: center;
 }
 div.movie ul{
-margin-top: 40px;
+margin-top: 10px;
 }
 button.movielist{
+display: flex;
 width: 100%;
+align-items: center;
+justify-content: center;
 }
 div.local{
 width: 50%;
@@ -133,14 +141,41 @@ width: 100%;
 .vertical-line {
   width: 1px;
   height: 75%;
-  background-color: gray;
+  background-color: #ccc;
   margin: auto 10px; /* 상하 가운데 정렬 */
 }
 div.listbox h4{
 margin-top: 30px;
 }
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* span 텍스트를 가로 중앙 */
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+.btn-content img {
+  position: absolute;
+  width: 30px;
+}
+.btn-content span {
+  width: 100%;
+  text-align: center;
+  line-height: 1.4;
+  word-break: keep-all;
+  padding-left: 40px;
+}
 </style>
 </head>
+<%
+MovieDAO dao = MovieDAO.getInstance();
+//영화 리스트 구하기
+List<MovieDTO> list = dao.getAllDatas();
+//절대경로
+String root = getServletContext().getRealPath("/");
+%>
 <body>
 	<div class="container">
 		<div class="title">
@@ -150,12 +185,24 @@ margin-top: 30px;
 		<div class="listbox">
 			<div class="movie">
 				<h4>&nbsp;&nbsp;&nbsp;영화</h4>
+				<%= "불러온 영화 수: " + list.size() %>
 				<ul>
-					<li><button type="button" class="movielist btn-basiclist">영화1</button></li>
-					<li><button type="button" class="movielist btn-basiclist">영화2</button></li>
-					<li><button type="button" class="movielist btn-basiclist">영화3</button></li>
-					<li><button type="button" class="movielist btn-basiclist">영화4</button></li>
-					<li><button type="button" class="movielist btn-basiclist">영화5</button></li>
+					<%
+					for(int i=0;i<list.size();i++){
+					MovieDTO dto = list.get(i);
+					String certification = dto.getCertification().contains("전체")?"전체":
+										dto.getCertification().contains("12")?"12세":
+										dto.getCertification().contains("15")?"15세":"19세";
+					%>
+						<li>
+						<button type="button" class="movielist btn-basiclist">
+						<div class="btn-content">
+						<img src="../../resources/ratingimg/<%=certification %>.png" width="30px;" style="margin-right: 10px;">
+						<span><%=dto.getTitle() %></span>
+						</div>
+						</button></li>
+					<%}
+					%>
 				</ul>
 			</div>
 			<div class="theater-local">

@@ -9,32 +9,68 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<title>Insert title here</title>
+
+<title>회원가입</title>
 <script type="text/javascript">
 	$(function () {
 		
+		//아이디 중복체크
+		$("#idCheck").click(function () {
+			
+			var userid=$("#id").val();
+			//alert(userid);
+			
+			$.ajax({
+				
+				type:"get",
+				url:"idCheck.jsp",
+				dataType:"json",
+				data:{"userid":userid},
+				success:function(res){
+					//console.log(res.idCheck);
+					
+					if(res.idCheck==1){
+						alert("이미가입된 아이디입니다");
+					}else{
+						alert("가입가능한 아이디입니다");
+					} 
+				}
+				
+				
+			});
+			
+		});
 		
 		//이메일선택이벤트
-		$("#selemail").change(function () {
+		$("#selecEmail").change(function () {
 			
 			if($(this).val()=='-')
 				$("#email2").val('');
 			else
 				$("#email2").val($(this).val());
 		});
+		
 	});
-
-function check(f) {
+		
 	
-	if(f.pass.value!=f.pass2.value){
-		alert("비밀번호가 서로 다릅니다");
-		f.pass.value="";
-		f.pass2.value="";
-		return false;
-	}
+	 function goFocus(hp){
+		 if(hp.value.length==4)
+			 frm.hp3.focus();
+	 }
+	 
+	 
 	
-}	
+	function check(f) {
+			
+		if(f.password.value!=f.password2.value){
+			alert("비밀번호가 서로 다릅니다");
+				f.password.value="";
+				f.password2.value="";
+				return false;
+			}
+			
+		}	
+	
 
 	
 </script>
@@ -62,8 +98,19 @@ function check(f) {
 .wrap>form .email {
 	height: 40px;
 }
+.wrap>form .email>input.email2 {
+	width: 140px;
+	margin-right: 10px;
+}
+
+.wrap>form .email>span {
+	line-height: 40px; 
+	font-weight: bold; 
+	margin: 0 5px;
+}
 .wrap>form .email>input {
 	width: 200px;
+	
 }
 .wrap>form label {
 	margin-right: 20px; 
@@ -80,7 +127,7 @@ function check(f) {
 	width: 150px;
 }
 
-.wrap>form button.gaip {
+.wrap>form button.regis {
 	margin: 0 auto;
 	width: 180px; 
 	margin-bottom: 50px;
@@ -113,33 +160,37 @@ function check(f) {
 	color: white;
 }
 i.dash {
-	color: black;
+	color: rgba(0, 0, 0, 1);
+	line-height: 40px;
+	margin: 0 10px;
 }
-
+.wrap>form button.check {
+	margin-left: 5px;
+}
 
 </style>
 </head>
 <body>
-<div class="scontainer">
 <jsp:include page="../../component/menu/header.jsp"/>
+<%@ include file="../../component/menu/headrResources.jsp" %>
 <div class="wrap">
 
-<form action="" method="post" onsubmit="">
+<form action="signupAction.jsp" method="post" onsubmit="return check(this)" name="frm">
 	
 	<div class="boxs">
 	<label for="id">아이디</label>
-	<input type="text" name="id" id="id" class="form-control" maxlength="10" required="required" placeholder="아이디를 입력해주세요">
-	<button type="button" class="btn" id="btnCheck">중복확인</button>
+		<input type="text" name="id" id="id" class="form-control" required="required" placeholder="아이디를 입력해주세요">
+	<button type="button" class="btn check" id="idCheck">중복확인</button>
 	</div>
 	
 	<div class="boxs">
 	<label for="password">비밀번호</label>
-		<input type="password" name="pass" id="password" class="form-control" required="required" placeholder="비밀번호를 입력해주세요">
+		<input type="password" name="password" id="password" class="form-control" required="required" placeholder="비밀번호를 입력해주세요">
 	</div>
 	
 	<div class="boxs">
-	<label for="password">비밀번호확인</label>
-		<input type="password" name="pass2" id="password" class="form-control" required="required" placeholder="비밀번호를 한번더 입력해주세요">
+	<label for="password2">비밀번호확인</label>
+		<input type="password" name="password2" id="password2" class="form-control" required="required" placeholder="비밀번호를 한번더 입력해주세요">
 	</div>
 	
 	<div class="boxs">
@@ -149,17 +200,18 @@ i.dash {
 	
 	<div class="boxs">
 	<label for="birth">생년월일</label>
-		<input type="date" name="birth" id="birth" class="form-control" value="2000-01-01" required="required">
+	<input type="date" name="birth" id="birth" class="form-control" value="1990-01-01" required="required">
+	<input type="hidden" name="age" id="age">
 	</div>
 	
 	<div class="boxs gender">
-	<label for="gender">성별</label>
-		<input type="radio" name="gender" id="gender" value="남자">남자
-		<input type="radio" name="gender" id="gender" value="여자">여자
-	</div>
+	<label for="">성별</label>
+		<input type="radio" name="gender" id="gender1" value="M">남
+		<input type="radio" name="gender" id="gender2" value="F">여
+	</div> 
 	
 	<div class="boxs addr">
-	<label for="addr">주소</label>
+	<label for="zipCode">주소</label>
     	<div class="col-sm-6 mb-3 mb-sm-0">
     		<input type="text" class="form-control form-control-user" id="zipCode" name="zipCode" placeholder="우편번호" readonly onclick="sample4_execDaumPostcode()">
     		<input type="text" class="form-control form-control-user" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly>
@@ -167,42 +219,35 @@ i.dash {
     	</div>
     </div>
            
-	
-	
 	<div class="boxs phone">
-	<label for="phone">휴대폰</label>
-		<!-- <input type="text" name="phone" id="phone" class="form-control" required="required" placeholder="연락처를 입력해주세요"> -->
-		
-		<select name="hp1" class="form-control">
-						<option>02</option>
-						<option>011</option>
-						<option>010</option>
-					</select>
-					<i class="bi bi-dash-lg dash" style="color: black;"></i>
-					<input type="text" name="hp2" required="required" class="form-control" onkeyup="goFocus(this)">
-					<i class="bi bi-dash-lg dash"></i>
-					<input type="text" name="hp3" required="required" class="form-control">
-		
+	<label for="hp2">휴대폰</label>		
+	<select name="hp1" class="form-control">
+		<option>02</option>
+		<option>011</option>
+		<option>010</option>
+	</select>
+		<i class="bi bi-dash-lg dash"></i>
+		<input type="text" name="hp2" id="hp2" required="required" class="form-control" onkeyup="goFocus(this)">
+		<i class="bi bi-dash-lg dash"></i>
+		<input type="text" name="hp3" id="hp3" required="required" class="form-control">
 	</div>
 	
 	<div class="boxs email">
 	<label for="email1">이메일</label>
 		<input type="text" name="email1" id="email1" class="form-control" required="required" placeholder="이메일을 입력해주세요">
 		<span>@</span>
-		<input type="text" name="email2" id="email2" class="form-control" required="required">
-		<select id="selemail" class="form-control">
+		<input type="text" name="email2" id="email2" class="form-control email2" required="required">
+		<select id="selecEmail" class="form-control">
 			<option value="-">직접입력</option>
 			<option value="naver.com">naver.com</option>	
 			<option value="gmail.com">gmail.com</option>	
 			<option value="hanmail.net">hanmail.net</option>					
 		</select>
-		<button type="button" class="btn" id="btnCheck">중복확인</button>
 	</div>
 	
-		<button type="submit" class="btn gaip">가입하기</button>
+		<button type="submit" class="btn regis" id="register">가입하기</button>
 		
 </form>
-</div>
 </div>
 <script>
     function sample4_execDaumPostcode(){
