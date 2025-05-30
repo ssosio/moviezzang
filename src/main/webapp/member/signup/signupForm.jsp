@@ -10,7 +10,7 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<title>Insert title here</title>
+<title>회원가입</title>
 <script type="text/javascript">
 	$(function () {
 		
@@ -25,16 +25,20 @@
 		});
 	});
 
-function check(f) {
+	$(".register").click(function () {
+		function check(f) {
+			
+			if(f.pass.value!=f.pass2.value){
+				alert("비밀번호가 서로 다릅니다");
+				f.pass.value="";
+				f.pass2.value="";
+				return false;
+			}
+			
+		}	
+	});
 	
-	if(f.pass.value!=f.pass2.value){
-		alert("비밀번호가 서로 다릅니다");
-		f.pass.value="";
-		f.pass2.value="";
-		return false;
-	}
-	
-}	
+
 
 	
 </script>
@@ -62,6 +66,15 @@ function check(f) {
 .wrap>form .email {
 	height: 40px;
 }
+.wrap>form .email>input.email2 {
+	width: 140px;
+}
+
+.wrap>form .email>span {
+	line-height: 40px; 
+	font-weight: bold; 
+	margin: 0 5px;
+}
 .wrap>form .email>input {
 	width: 200px;
 }
@@ -80,7 +93,7 @@ function check(f) {
 	width: 150px;
 }
 
-.wrap>form button.gaip {
+.wrap>form button.register {
 	margin: 0 auto;
 	width: 180px; 
 	margin-bottom: 50px;
@@ -149,7 +162,7 @@ i.dash {
 	
 	<div class="boxs">
 	<label for="birth">생년월일</label>
-		<input type="date" name="birth" id="birth" class="form-control" value="2000-01-01" required="required">
+		<input type="date" name="birth" id="birth" class="form-control" value="1990-01-01" required="required">
 	</div>
 	
 	<div class="boxs gender">
@@ -170,9 +183,7 @@ i.dash {
 	
 	
 	<div class="boxs phone">
-	<label for="phone">휴대폰</label>
-		<!-- <input type="text" name="phone" id="phone" class="form-control" required="required" placeholder="연락처를 입력해주세요"> -->
-		
+	<label for="phone">휴대폰</label>		
 		<select name="hp1" class="form-control">
 						<option>02</option>
 						<option>011</option>
@@ -189,7 +200,7 @@ i.dash {
 	<label for="email1">이메일</label>
 		<input type="text" name="email1" id="email1" class="form-control" required="required" placeholder="이메일을 입력해주세요">
 		<span>@</span>
-		<input type="text" name="email2" id="email2" class="form-control" required="required">
+		<input type="text" name="email2" id="email2" class="form-control email2" required="required">
 		<select id="selemail" class="form-control">
 			<option value="-">직접입력</option>
 			<option value="naver.com">naver.com</option>	
@@ -199,7 +210,7 @@ i.dash {
 		<button type="button" class="btn" id="btnCheck">중복확인</button>
 	</div>
 	
-		<button type="submit" class="btn gaip">가입하기</button>
+		<button type="submit" class="btn register">가입하기</button>
 		
 </form>
 </div>

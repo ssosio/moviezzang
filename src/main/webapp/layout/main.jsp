@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@page import="data.api.YouTube"%>
+<% 
+	YouTube fetcher = new YouTube();
+String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널"); 
+%>
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
 <%@ include file="../component/menu/headrResources.jsp"%>
@@ -31,7 +37,7 @@
       };
     </script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://fonts.gstatic.com"  />
 <link
 	href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
 	rel="stylesheet" />
@@ -40,6 +46,7 @@
 	rel="stylesheet" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+	
 <style>
 :where([class^="ri-"])::before {
 	content: "\f3c2";
@@ -92,6 +99,7 @@ body {
 	flex: 0 0 100%;
 	scroll-snap-align: start;
 }
+
 </style>
 </head>
 
@@ -99,43 +107,8 @@ body {
 
 	<jsp:include page="../component/menu/header.jsp"></jsp:include>
 	<!-- 메인 비주얼 영역 -->
-	<section class="relative w-full h-[50rem] overflow-hidden">
-		<div class="absolute inset-0 bg-cover bg-center"
-			style="background-image: url('');"></div>
-		<div class="absolute inset-0 bg-black bg-opacity-40"></div>
-		<div class="absolute inset-0 flex items-center">
-			<div class="container mx-auto px-4">
-				<h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
-					영화제목</h1>
-				<p class="text-xl text-white mb-6">영화소개</p>
-				<div class="flex space-x-4">
-					<button
-						class="bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors">
-						상세정보</button>
-					<button
-						class="bg-white text-primary px-6 py-3 !rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors">
-						예매하기</button>
-				</div>
-			</div>
-		</div>
-		<!-- 슬라이드 네비게이션 -->
-		<div
-			class="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black bg-opacity-50 rounded-full flex items-center justify-center cursor-pointer hover:bg-opacity-70 transition-all">
-			<i class="ri-arrow-left-s-line ri-2x text-white"></i>
-		</div>
-		<div
-			class="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black bg-opacity-50 rounded-full flex items-center justify-center cursor-pointer hover:bg-opacity-70 transition-all">
-			<i class="ri-arrow-right-s-line ri-2x text-white"></i>
-		</div>
-		<!-- 슬라이드 인디케이터 -->
-		<div
-			class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
-			<div class="dot active"></div>
-			<div class="dot"></div>
-			<div class="dot"></div>
-			<div class="dot"></div>
-		</div>
-	</section>
+
+	<jsp:include page="../component/movieContent/movieTrailer.jsp"></jsp:include>
 	<!-- 박스오피스 섹션 -->
 	<section class="py-16 bg-gray-50">
 		<div class="container mx-auto px-4">
@@ -276,7 +249,7 @@ body {
 	<section class="py-16 bg-gray-50">
 		<div class="container mx-auto px-4">
 			<div class="flex justify-between items-center mb-8">
-				<h2 class="text-2xl font-bold">특별관</h2>
+				<h2 class="text-2xl font-bold">특별관 (준비예정)</h2>
 				<div class="flex space-x-2">
 					<button id="prevSpecialHall"
 						class="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-gray-100 transition-colors">
@@ -469,7 +442,7 @@ body {
         startTimer();
       });
       // 히어로 슬라이더
-      document.addEventListener("DOMContentLoaded", function () {
+   /*    document.addEventListener("DOMContentLoaded", function () {
         const mainSlides = [
           {
             image:
@@ -563,7 +536,7 @@ body {
         mainSection.addEventListener("mouseenter", stopTimer);
         mainSection.addEventListener("mouseleave", startTimer);
         startTimer();
-      });
+      }); */
     </script>
 </body>
 </html>
