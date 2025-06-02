@@ -3,16 +3,19 @@
 	<%@page import="data.api.YouTube"%>
 <% 
 	YouTube fetcher = new YouTube();
-String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널"); 
+String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널4"); 
 %>
 <!DOCTYPE html>
 
 <html lang="ko">
 <head>
-<%@ include file="../component/menu/headrResources.jsp"%>
+<%@ include file="../component/menu/headerResources.jsp"%>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+<link rel="icon"
+	href="${pageContext.request.contextPath}/resources/domainIcon.png">
+<link rel="apple-touch-icon"
+	href="${pageContext.request.contextPath}/resources/domainIcon.png">
 <title>영화짱닷컴</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <script>
