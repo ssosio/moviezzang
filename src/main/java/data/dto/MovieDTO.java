@@ -14,7 +14,16 @@ public class MovieDTO {
 	private String distributor;
 	private float score;
 	private float local_score;
+	private String genre;
 	
+	public String getGenre()
+	{
+		return genre;
+	}
+	public void setGenre(String genre)
+	{
+		this.genre = genre;
+	}
 	public float getScore() {
 		return score;
 	}
