@@ -1,14 +1,38 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ include file="../../component/menu/headrResources.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-  <title>마이페이지</title>
+<title>마이페이지</title>
+  <script type="text/javascript">
+  	$(function() {
+  		
+		$("#selemail").change(function () {
+			
+			if($(this).val()=='-')
+				$("#email2").val('');
+			else
+				$("#email2").val($(this).val());
+		});
+	});
+  	
+  	function check(f) {
+			
+			if(f.pass.value!=f.pass2.value){
+				alert("비밀번호가 서로 다릅니다");
+				f.pass.value="";
+				f.pass2.value="";
+				return false;
+			}
+  	}
+</script>
   <style type="text/css"> 
     body {
       margin: 0;
@@ -17,7 +41,7 @@
       
     }
 
-    .mypage-wrapper {
+    .myinfo-wrapper {
       display: flex;
       max-width: 1200px;
       margin: 100px auto 50px auto;
@@ -25,41 +49,45 @@
       gap: 30px;
     }
 
-    .mypage-content {
+    .myinfo-content {
       flex: 1;
     }
 
-    .mypage-header {
+    .myinfo-header {
       background: linear-gradient(to right, #1a1a3c, #181847);
       color: white;
       padding: 20px;
       border-radius: 15px;
+      width: 800px;
     }
 
-    .mypage-header h3 {
+    .myinfo-header h3 {
       margin: 0;
       font-size: 20px;
     }
 
-    .mypage-header .mileage {
+    .myinfo-header .mileage {
       font-size: 20px;
       text-align: right;
       margin-top: 10px;
     }
 
-    .mypage-box {
+   /*  .mypage-box {
       background-color: white;
       border-radius: 10px;
       padding: 20px;
       margin-top: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+    } */
 
-    .mypage-section h4 {
+    .myinfo-section h4 {
       margin-top: 30px;
       margin-bottom: 10px;
     }
-
+	th{
+		align-content: center;
+		width: 200px;
+	}
     
 
   
@@ -67,7 +95,7 @@
 </head>
 <body>
 
-<div class="mypage-wrapper">
+<div class="myinfo-wrapper">
   
   <!-- sideBar -->
 <jsp:include page="sideBar.jsp"></jsp:include>
@@ -76,36 +104,124 @@
 <jsp:include page="../../component/menu/header.jsp"></jsp:include>
 
   <!-- Main content -->
-  <div class="mypage-content">
-    <div class="mypage-header">
+  <div class="myinfo-content">
+    <div class="myinfo-header">
       <h1 class="text-2xl font-bold">개인정보 수정</h1>
       <h6 style="color: #D3D3D3;">회원님의 정보를 정확히 입력해주세요.</h6>
+      <p>아이디</p>
       <div class="mileage"><button type="button" class="btn btn-outline-info" style="color: white;">회원탈퇴</button></div>
     </div>
 
-    <div class="mypage-section">
-      <h4>마일리지 이용내역</h4>
-      <div class="mypage-box">
-        <p>적립예정: 0P<br />당월소멸예정: 0P</p>
-      </div>
-    </div>
-
-    <div class="mypage-section">
-      <h4>영화 예매 내역</h4>
-      <div class="mypage-box">
-        <p>영화관람권: 0매</p>
-      </div>
-    </div>
-
-    <div class="mypage-section">
-      <h4>나의 무비스토리</h4>
-      <div class="mypage-box">
-        <p>본 영화: 0</p>
-      </div>
+    <div class="myinfo-section">
+      <h4 class="text-2xl font-bold" style="color: #000080">기본정보</h4>
+      <span style="color: red; margin-left: 640px;">*<b style="color: black;">는 필수</b></span>
+      <form action="">
+        <table class="table" style="width: 700px;">
+        	<tr>
+        	<hr width="700">
+        	<th style="background-color: whitesmoke;">이름<label style="color: red;">*</label></th>
+        	<td>
+        		<input type="text" class="form-control" style="width: 150px;" name="name" id="name" value=""
+        		required="required" placeholder="변경 할 이름">
+        	</td>
+        	</tr>
+        	<tr>
+        	<th style="background-color: whitesmoke;">비밀번호<label style="color: red;">*</label></th>
+        	<td>
+        		<input type="password" class="form-control"  name="pass" id="password" style="width: 150px;" value=""
+        		required="required" placeholder="변경 할 비밀번호">
+        		<input type="password" name="pass2" id="password" class="form-control" style="width: 150px;" required="required" placeholder="비밀번호 확인">
+        	</td>
+        	</tr>
+        	<tr>
+        	<th style="background-color: whitesmoke;">생년월일<label style="color: red;">*</label></th>
+        	<td>
+        		<input type="date" class="form-control" style="width: 150px;" name="birth" id="birth" value="">
+        	</td>
+        	</tr>
+        	<tr>
+        	<th style="background-color: whitesmoke;">휴대폰<label style="color: red;">*</label></th>
+        	<td class="input-group">
+        	<select name="hp1" class="form-control">
+						<option>02</option>
+						<option>011</option>
+						<option>010</option>
+					</select>
+					<a style="color: "><i class="bi bi-dash-lg dash"></i></a>
+        		<input type="text" class="form-control"  name="hp2" style="width: 30px;" onkeyup="goFocus(this)"
+        		value="">
+        			<i class="bi bi-dash-lg dash" style="color: black;"></i>
+        		<input type="text" class="form-control"  name="hp3" style="width: 30px;"
+        		value="">
+        	</td>
+        	</tr>
+        	<tr>
+        	<th style="background-color: whitesmoke;">이메일<label style="color: red;">*</label></th>
+        	<td class="input-group">
+        		<input type="text" name="email1" id="email1" class="form-control" required="required" placeholder="이메일을 입력해주세요"
+        		style="width: 100px;" value="">
+				<span>@</span>
+				<input type="text" name="email2" id="email2" class="form-control" required="required"
+				style="width: 100px;" value="">
+				<select id="selemail" class="form-control">
+					<option value="-">직접입력</option>
+					<option value="naver.com">naver.com</option>	
+					<option value="gmail.com">gmail.com</option>	
+					<option value="hanmail.net">hanmail.net</option>					
+				</select>
+        	</td>
+        	</tr>
+        	<tr>
+        	<th style="background-color: whitesmoke;">주소</th>
+        	<td>
+        		<div class="col-sm-6 mb-3 mb-sm-0">
+    		<input type="text" class="form-control form-control-user" id="zipCode" name="zipCode" placeholder="우편번호" readonly onclick="sample4_execDaumPostcode()"
+    		value="" style="width: 90px;">
+    		<input type="text" class="" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly
+    		value="">
+    		<input type="text" class="" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()"
+    		value="">
+    			</div>
+        	</td>
+        	</tr>
+        	<tr>
+        		<th style="background-color: whitesmoke;">성별</th>
+        		<td>
+        			<input type="radio" name="gender" id="gender1" value="M">남자
+					<input type="radio" name="gender" id="gender2" value="F">여자
+        		</td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" align="center">
+        			<button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='mypageMain.jsp'">취소</button>&nbsp;&nbsp;
+        			<button type="submit" class="btn btn-dark btn-lg">등록</button>
+        		</td>
+        	</tr>
+        </table>
+       </form>
     </div>
   </div>
 </div>
-
+<script>
+    function sample4_execDaumPostcode(){
+        new daum.Postcode({
+            oncomplete: function(data) {
+            	// 우편번호
+                $("#zipCode").val(data.zonecode);
+                // 도로명 및 지번주소
+                $("#streetAdr").val(data.roadAddress);
+            }
+        }).open();
+    }
+</script>
+<script type="text/javascript">
+    function addrCheck() {
+        if($("#zipCode").val() == '' && $("#streetAdr").val() == ''){
+            alert("우편번호를 클릭하여 주소를 검색해주세요.");
+            $("#zipCode").focus();
+        }
+    }
+</script>
 </body>
 <!-- footer -->
 <jsp:include page="../../component/menu/footer.jsp"></jsp:include>
