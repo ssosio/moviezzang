@@ -42,7 +42,6 @@
             <a href="" class="text-sm hover:text-primary transition-colors"
               >회원가입</a
             >
-            <a href="member/mypage/mypageMain.jsp" class="text-sm hover:text-primary transition-colors">마이페이지</a>
             <a
               href=""
               class="bg-primary text-white px-6 py-2 !rounded-button whitespace-nowrap text-sm hover:bg-opacity-90 transition-colors"

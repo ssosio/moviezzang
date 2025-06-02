@@ -7,28 +7,31 @@
 <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <title>Insert title here</title>
 <script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function () {
-  const select = document.getElementById("monthSelect");
-  const today = new Date();
 
-  if (!select) {
-      console.error("select 못 찾음");
-      return;
-    }
-  for (let i = 0; i < 12; i++) {
-    const date = new Date(today.getFullYear(), today.getMonth() - i, 1); // 이전 달로 이동
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // getMonth()는 0~11이므로 +1
-    const option = document.createElement("option");
+$(function () {
+	  const select = document.getElementById("monthSelect");
+	  const today = new Date();
 
-    option.value = `${year}-${month.toString().padStart(2, '0')}`; // ex: 2025-05
-    option.text = `${year}년 ${month}월`; // ex: 2025년 5월
+	  if (!select) {
+	    console.error("select 못 찾음");
+	    return;
+	  }
 
-    select.appendChild(option);
-  }
-});
+	  for (let i = 0; i < 6; i++) {
+	    const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+	    const year = date.getFullYear();
+	    const month = date.getMonth() + 1;
+
+	    const option = document.createElement("option");
+	    option.value = `\${year}-\${month.toString().padStart(2, '0')}`;
+	    option.text = `\${year}년 \${month}월`;
+	    select.appendChild(option);
+	  }
+	});
 
 </script>
 <style type="text/css"> 
@@ -41,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     .booklist-wrapper {
       display: flex;
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 100px auto 50px auto;
       padding: 20px;
       gap: 30px;
@@ -62,15 +65,9 @@ document.addEventListener("DOMContentLoaded", function () {
       margin: 0;
       font-size: 20px;
     }
-
-    .booklist-header .mileage {
-      font-size: 20px;
-      text-align: right;
-      margin-top: 10px;
-    }
-
+   
     .booklist-box {
-      background-color: white;
+      background-color: whitesmoke;
       border-radius: 10px;
       padding: 20px;
       margin-top: 20px;
@@ -82,17 +79,25 @@ document.addEventListener("DOMContentLoaded", function () {
       margin-bottom: 10px;
     }
 
-    .movie-btn {
-      float: right;
-      margin-top: -30px;
-      margin-bottom: 10px;
-      background-color: white;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-
+  	.booklist-list{
+  		
+  		border-bottom: 1px solid gray;
+  		text-align: center;
+  		height: 120px;
+  		align-items: center;
+  		justify-content: center;
+  		display: flex;
+  	}
+  	
+  	.booklist-cancel{
+  		border-bottom: 1px solid gray;
+  		text-align: center;
+  		height: 100px;
+  		align-items: center;
+  		justify-content: center;
+  		display: flex;
+  	}
+	
   
   </style>
 </head>
@@ -108,31 +113,47 @@ document.addEventListener("DOMContentLoaded", function () {
   <!-- Main content -->
   <div class="booklist-content">
     <div class="booklist-header">
-     <h2 class="text-3xl font-bold" style="color: #000080">예매 내역</h2>
+     <h2 class="text-2xl font-bold" style="color: #000080">예매내역</h2>
     </div>
 
     <div class="booklist-section">
       <div class="booklist-box">
         <p>예매내역</p>
-        <select id="monthSelect" class="w-48 p-2 border border-gray-300 rounded-md">
-  		
+        <select id="monthSelect" class="w-40 p-2 border border-gray-300 rounded-md">
+  			
 		</select>
       </div>
-    </div>
-
-    <div class="booklist-section">  
-      <div class="booklist-box"> 
-      </div>
-    </div>
-
-    <div class="booklist-section">
-      <div class="booklist-box">
-        
-      </div>
+      	<div class="booklist-list">
+      		<table class="table">
+      			<tr>
+      				<th>예매일시</th>
+      				<th>영화명</th>
+      				<th>극장</th>
+      				<th>상영일시</th>
+      				<th>결제금액</th>
+      			</tr>
+      		</table>
+      	</div>
+      	<br>
+      	   <h2 class="text-2xl font-bold" style="color: #000080">예매취소내역</h2>
+      	    <div class="booklist-cancel">
+      	    <table class="table">
+      	    	<tr>
+      	    		<th style="background-color: whitesmoke">취소일시</th>
+      	    		<th style="background-color: whitesmoke">영화명</th>
+      	    		<th style="background-color: whitesmoke">극장</th>
+      	    		<th style="background-color: whitesmoke">상영일시</th>
+      	    		<th style="background-color: whitesmoke">취소금액</th>
+      	    	</tr>
+      	    </table>
+      	    </div>
     </div>
   </div>
 </div>
 </body>
 <!-- footer -->
 <jsp:include page="../../component/menu/footer.jsp"></jsp:include>
+
 </html>
+
+
