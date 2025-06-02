@@ -165,12 +165,16 @@ public class MovieDAO {
 
 				dto.setId(rs.getString("id"));
 				dto.setTitle(rs.getString("title"));
+				dto.setSynopsis(rs.getString("synopsis"));
 				dto.setRelease_date(rs.getDate("release_date"));
 				dto.setCertification(rs.getString("certification"));
 				dto.setRuntime(rs.getInt("runtime"));
 				dto.setStudio(rs.getString("studio"));
 				dto.setDistributor(rs.getString("distributor"));
 				dto.setPoster_url(rs.getString("poster_url"));
+				dto.setScore(rs.getFloat("score"));
+				dto.setLocal_score(rs.getFloat("local_score"));
+				dto.setGenre(rs.getString("genre"));
 
 				list.add(dto);
 			}
