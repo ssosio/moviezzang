@@ -44,7 +44,7 @@ input.pass {
 </head>
 <body>
 <jsp:include page="../../component/menu/header.jsp"/>
-<%@ include file="../../component/menu/headrResources.jsp" %>
+<%@ include file="../../component/menu/headerResources.jsp" %>
 <div class="container mt-3">
   <img alt="" src="">
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"  style="margin: 100px;">
