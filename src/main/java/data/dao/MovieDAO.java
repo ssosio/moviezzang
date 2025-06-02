@@ -34,7 +34,7 @@ public class MovieDAO {
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
 
-		String sql = "insert into movie values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into movie values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -48,6 +48,7 @@ public class MovieDAO {
 			pstmt.setString(8, dto.getPoster_url());
 			pstmt.setFloat(9, dto.getScore());
 			pstmt.setFloat(10, dto.getLocal_score());
+			pstmt.setString(11, dto.getGenre());
 
 			pstmt.execute();
 		} catch (SQLException e) {
@@ -86,7 +87,7 @@ public class MovieDAO {
 		PreparedStatement pstmt = null;
 		
 		// 배급사는 받아올 수 없어서 null로 일단 삽입
-		String sql = "insert into movie values(null, ?, ?, ?, ?, ?, ?, null, ?, ?, ?)";
+		String sql = "insert into movie values(null, ?, ?, ?, ?, ?, ?, null, ?, ?, ?, ?)";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -119,6 +120,20 @@ public class MovieDAO {
 				pstmt.setString(7, (String)jobj.get("poster"));
 				pstmt.setFloat(8, Math.round(((Number) jobj.get("score")).floatValue() * 10) / 10.0f);
 				pstmt.setFloat(9, 0.0f);
+				
+				// 장르는 또다른 JSON배열로 저장되므로 String으로 변환하는 추가 과정이 필요
+				JSONArray genres = (JSONArray) jobj.get("genres");
+				
+				if (genres != null) 
+				{
+					// , 로 구분해서 저장
+				    String genresStr = String.join(",", genres);
+				    pstmt.setString(10, genresStr);
+				} 
+				else 
+				{
+				    pstmt.setString(10, "준비중");
+				}
 				
 				pstmt.executeUpdate();
 			}

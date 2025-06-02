@@ -1,3 +1,4 @@
+<%@page import="data.dao.MovieDAO"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@page import="data.api.TMDB"%>
@@ -12,6 +13,8 @@
 
 	JSONArray list = tmdb.getMovieDatas();
 	int size = list.size();	
+	
+	//MovieDAO.getInstance().insertData(list);
 %>
 <title>Insert title here</title>
 </head>
