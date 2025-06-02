@@ -18,14 +18,13 @@
 		<div class="relative">
 			<img src="https://image.tmdb.org/t/p/w500<%=dto.getPoster_url()%>"
 				alt="" class="w-64 h-96 object-cover rounded" />
-			<div
-				class="hover-info absolute inset-0 bg-black bg-opacity-70 rounded flex flex-col justify-center items-center p-4">
+			<div class="hover-info absolute inset-0 !bg-black !bg-opacity-70 rounded flex flex-col justify-center items-center p-4"  style="width: 256px;">
 				<div class="text-white text-center mb-4">
 					<p class="font-bold mb-2"><%=dto.getTitle()%></p>
 					<p class="text-sm"><%=dto.getRelease_date()%></p>
 				</div>
 				<button
-					class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2">
+					class="!bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2">
 					예매하기</button>
 				<button
 					class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full"

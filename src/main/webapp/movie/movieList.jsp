@@ -4,7 +4,7 @@
 <%@page import="data.dao.MovieDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../component/menu/headrResources.jsp" %>
+<%@ include file="../component/menu/headerResources.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -124,7 +124,7 @@
 	    const keyword = $("#movieSearch").val().toLowerCase();
 	    
 		// 해당 키워드를 가진 영화 목록을 찾아와서
-	    $.get("./movieSearch.jsp", { keyword }, function(data){    	
+	    $.get("/movie/movieSearch.jsp", { keyword }, function(data){    	
 			// 기존 목록을 지우고
 			$("#mCardList").empty();
 			
@@ -167,12 +167,12 @@
 			<div class="mCard poster relative flex-shrink-0 w-64">
 				<div class="relative">
 					<img src="https://image.tmdb.org/t/p/w500<%=dto.getPoster_url()%>" alt="" class="w-64 h-96 object-cover rounded" />
-					<div class="hover-info absolute inset-0 bg-black bg-opacity-70 rounded flex flex-col justify-center items-center p-4">
+					<div class="hover-info absolute inset-0 !bg-black !bg-opacity-70 rounded flex flex-col justify-center items-center p-4" style="width: 256px;">
 						<div class="text-white text-center mb-4">
 							<p class="mTitle font-bold mb-2"><%=dto.getTitle()%></p>
 							<p class="text-sm"><%=dto.getRelease_date()%></p>
 						</div>
-						<button class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2">
+						<button class="!bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2">
 							예매하기</button>
 						<button class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full" onclick="location.href='./movieDetail.jsp?num=<%=dto.getId()%>'">
 							상세정보</button>
@@ -191,7 +191,7 @@
 			%>
 		</div>
 		<div class="mCardList">
-    		<button id="pageLoader" class="btn btn-outline-primary">더보기 ▼</button>
+    		<button id="pageLoader" class="btn !bg-primary" style="color: white;">더보기 ▼</button>
 		</div>
 		<script>
 			// jsp코드는 script 조건문으로 제어할 수 없다
@@ -201,7 +201,7 @@
 			
 			// 더보기버튼 클릭 시
 			$("#pageLoader").click(function(){
-			    $.get("./movieListAppend.jsp", { contentAmount, appendAmount }, function(data){
+			    $.get("movie/movieListAppend.jsp", { contentAmount, appendAmount }, function(data){
 					//console.log(data);
 			    	
 			        $("#mCardList").append(data);   	// 서버에서 카드 HTML 받아서 추가		// div 조절필ㅇㅅ
