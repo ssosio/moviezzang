@@ -6,9 +6,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
  
- 
+<!--  pt-[72px] -->
 </head>
-<body class="bg-white pt-[72px]">
+<body class="bg-white <%= request.getParameter("main") != null ? "pt-[72px]" : "" %>">
  <header class="w-full bg-black text-white fixed top-0 left-0 right-0 z-50">
       <div class="container mx-auto px-4 py-3 bg-black">
         <div class="flex justify-between items-center">
@@ -16,14 +16,16 @@
             class="hidden md:flex items-center space-x-12 justify-center mx-auto"
             style="padding-left: 13rem"
           >
-            <a href="" class="text-primary transition-colors">영화</a>
+            <a href="?main=movie/movieDetail.jsp" class="text-primary transition-colors">영화</a>
             <a href="" class="hover:text-primary transition-colors">극장</a>
             <a href="" class="hover:text-primary transition-colors">예매</a>
-            <a href="" class="flex items-center space-x-2">
+            <a onclick="location.href='<%=request.getContextPath()%>/'" class="flex items-center space-x-2">
               <img
                 src="https://static.readdy.ai/image/12bfdaa4bfcf1b50ecec721ef7feb22b/430a084c59d6bf1f60f916f809d7bf0e.png"
                 alt="영화짱닷컴"
                 class="h-12 max-w-none"
+  
+              
               />
             </a>
             <a href="" class="hover:text-primary transition-colors">스토어</a>
