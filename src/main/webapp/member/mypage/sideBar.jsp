@@ -48,7 +48,7 @@
   <h3 class="mmp" onclick="location.href='mypageMain.jsp'">My MZ Page</h3>
   <a href="bookMovieList.jsp">예매내역</a>
   <a href="myMovieStory.jsp">나의 무비스토리</a>
-  <a href="myInfo.jsp">회원정보 수정</a>
+  <a href="updatemyInfo.jsp">회원정보 수정</a>
 </div>
      
 </body>
