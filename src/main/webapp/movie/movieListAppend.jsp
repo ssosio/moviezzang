@@ -4,6 +4,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
+	String root = request.getContextPath();
+
 	MovieDAO dao = MovieDAO.getInstance();
 	List<MovieDTO> list = dao.getAllDatas();
 	
@@ -31,7 +33,7 @@
 					예매하기</button>
 				<button
 					class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full"
-					onclick="location.href='./movieDetail.jsp?num=<%=dto.getId()%>'">
+					onclick="location.href='<%=root%>/index.jsp?main=/movie/movieDetail.jsp?num=<%=dto.getId()%>'">
 					상세정보</button>
 			</div>
 		</div>
