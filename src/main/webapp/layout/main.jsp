@@ -19,10 +19,15 @@ String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널4");
 <title>영화짱닷컴</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: { primary: "#352461", secondary: "#503396" },
+	module.exports = {
+		content : [
+		
+		'./src/**/*.{js,ts,jsx,tsx,html}', ],
+		important : true, // 모든 Tailwind 유틸리티에 !important 적용
+		theme : {
+			extend : {
+			// 필요에 따라 커스텀 테마 확장
+			 colors: { primary: "#352461", secondary: "#503396" },
             borderRadius: {
               none: "0px",
               sm: "4px",
@@ -34,12 +39,13 @@ String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널4");
               "3xl": "32px",
               full: "9999px",
               button: "8px",
-             
-            },
-          },
-        },
-      };
-    </script>
+			},
+		},
+		plugins : [
+		// 필요 플러그인 추가
+		],
+	};
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link
@@ -117,7 +123,7 @@ body {
 		<div class="container mx-auto px-4">
 			<div class="flex justify-between items-center mb-8">
 				<h2 class="text-2xl font-bold">박스오피스</h2>
-				<a href="#"
+				<a href="?main=movie/movieList.jsp"
 					class="flex items-center text-gray-600 hover:text-primary transition-colors">
 					<!-- 영화정보로이동 --> <span>더보기</span>
 					<div class="w-5 h-5 flex items-center justify-center ml-1">
@@ -147,7 +153,7 @@ body {
 							<button
 								class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2">
 								예매하기<%=i + 1%></button>
-							<button onclick="location.href='?main=movie/movieDetail.jsp'"
+							<button onclick="location.href='?main=movie/movieList.jsp'"
 								class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full">
 								상세정보<%=i + 1%></button>
 						</div>
