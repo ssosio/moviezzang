@@ -279,7 +279,39 @@ public class UserDAO {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		
-		String sql="select * from user order by id";
+		String sql="select * from user order by userid";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			
+			rs=pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				UserDTO dto=new UserDTO();
+				dto.setId(rs.getString("id"));
+				dto.setName(rs.getString("name"));
+				dto.setUserid(rs.getString("userid"));
+				dto.setPassword(rs.getString("password"));
+				dto.setAge(rs.getInt("age"));
+				dto.setAddress(rs.getString("address"));
+				dto.setGender(rs.getString("gender"));
+				dto.setEmail(rs.getString("email"));
+				dto.setMileage(rs.getInt("mileage"));
+				dto.setPhone(rs.getString("phone"));
+				dto.setUser_type(rs.getString("user_type"));
+				dto.setSignup_at(rs.getTimestamp("signup_at"));
+				
+				list.add(dto);
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
 		
 		return list;
 	}
