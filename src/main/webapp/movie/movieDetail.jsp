@@ -684,66 +684,7 @@ pageEncoding="UTF-8"%>
                       스토리를 기대한다면 실망할 수도 있다.
                     </p>
                   </div>
-                  <!-- 관람평 5 -->
-                  <div>
-                    <div class="flex justify-between items-start mb-2">
-                      <div class="flex items-center">
-                        <div
-                          class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-3"
-                        >
-                          <div
-                            class="w-5 h-5 flex items-center justify-center text-gray-500"
-                          >
-                            <i class="ri-user-line"></i>
-                          </div>
-                        </div>
-                        <div>
-                          <p class="font-medium">정소연</p>
-                          <div class="flex items-center text-sm text-gray-500">
-                            <div class="flex text-yellow-400 mr-2">
-                              <i class="ri-star-fill"></i>
-                              <i class="ri-star-fill"></i>
-                              <i class="ri-star-fill"></i>
-                              <i class="ri-star-fill"></i>
-                              <i class="ri-star-half-fill"></i>
-                            </div>
-                            <span>2025.06.02</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="flex space-x-2">
-                        <button
-                          class="flex items-center text-gray-500 hover:text-primary"
-                        >
-                          <div
-                            class="w-5 h-5 flex items-center justify-center mr-1"
-                          >
-                            <i class="ri-thumb-up-line"></i>
-                          </div>
-                          <span>76</span>
-                        </button>
-                        <button
-                          class="flex items-center text-gray-500 hover:text-primary"
-                        >
-                          <div
-                            class="w-5 h-5 flex items-center justify-center mr-1"
-                          >
-                            <i class="ri-thumb-down-line"></i>
-                          </div>
-                          <span>3</span>
-                        </button>
-                      </div>
-                    </div>
-                    <p class="text-gray-700">
-                      액션 영화를 좋아하지 않는 편인데도 범죄도시 시리즈는 항상
-                      재미있게 본다. 이번 편도 역시 기대를 저버리지 않았다.
-                      마동석의 카리스마와 유머 감각이 영화의 큰 매력 포인트!
-                      베트남 배경의 이국적인 분위기도 좋았고, 액션 장면도
-                      시원시원하게 잘 연출되었다. 여름 시즌 최고의 오락영화로
-                      강추합니다!
-                    </p>
-                  </div>
-                </div>
+           
                 <!-- 페이지네이션 -->
                 <div class="flex justify-center mt-8">
                   <div class="inline-flex items-center">
