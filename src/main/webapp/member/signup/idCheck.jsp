@@ -6,7 +6,7 @@
 <%
 
 
-	String userid=request.getParameter("id");
+	String userid=request.getParameter("userid");
 
 	UserDAO dao=UserDAO.getInstance();
 	int idCheck=dao.idCheck(userid);

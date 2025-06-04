@@ -61,16 +61,7 @@
       margin-bottom: 10px;
     }
 
-    .movie-btn {
-      float: right;
-      margin-top: -30px;
-      margin-bottom: 10px;
-      background-color: white;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
+    
 
   
   </style>

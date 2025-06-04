@@ -96,6 +96,7 @@ text-align: center;
 div.time{
 border: none;
 width: 400px;
+overflow-y: auto;
 }
 div.time ul>li{
 list-style: none;
@@ -227,8 +228,6 @@ $(function() {
 			},
 			url : "<%=request.getContextPath()%>/book/booking/theaterList.jsp",
 			success:function(res){
-			console.log("res전체확인:", res);
-			console.log("첫 번째 항목:", res[0]);
 				let h = "";
 				$.each(res,function(i,item){
 					h+= "<li><button class='btntheater btn-basiclist'>"+item.theater_name+"</button></li>";
@@ -244,6 +243,7 @@ $(function() {
 
 	//상영관 클릭시 정보
 	$(document).on("click",".btntheater",function(){
+
 		const theaterName = $(this).text();
 		//alert(theater);
 		//alert(currentMovie_id);
@@ -256,10 +256,55 @@ $(function() {
 			dataType:"json",
 			url:"<%=request.getContextPath()%>/book/booking/showTimes.jsp",
 			success:function(res){
-				alert("성공");
+				console.log(res);
+				let show = "";
+				$.each(res,function(i,item){
+
+				let start = new Date(item.start_time); // 시작시간  Date객체변환
+				let runtime = parseInt(item.runtime); //런타임 형변환
+				let end = new Date(start.getTime() + runtime * 60000); //끝나는 시간 계산 1분= 60000ms
+
+				//format과정
+				let startStr = start.getHours().toString().padStart(2,"0") + ":" +
+									start.getMinutes().toString().padStart(2,"0");
+				let endStr = end.getHours().toString().padStart(2,"0") + ":" +
+								  end.getMinutes().toString().padStart(2,"0");
+
+
+				show+= "<li>"+
+							"<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>"+
+							"<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
+							"<input type='hidden' name='poster' value='"+ item.poster + "'>" +
+							"<button class='btntime btn-basiclist' type='submit'>"+
+						    "<div class='timebox'>"+
+						    "<span class='starttime'><b style='font-size: 1.2em'>"+startStr+"</b>~<br>&nbsp;&nbsp;&nbsp;"+endStr +"</span>"+
+						    "<span class='movietitle'>"+item.title+"</span>"+
+						    "<span class='screeninfo'>"+item.theater_name+"<br>"+item.auditorium_name+"<br>"+item.remaining_seat+"/"+item.total_seat+"</span>"+
+						    "</div>"+
+						    "</button>"+
+						    "</form>"+
+						    "</li>";
+
+				});
+				$(".showtimes").html(show);
 			}
 		});
 
+	});
+
+
+	//btn 토글클래스
+	$(document).on("click",".movielist",function(){
+		$(".movielist").removeClass("btn-active");
+		$(this).addClass("btn-active");
+	});
+	$(document).on("click",".btnlocal",function(){
+		$(".btnlocal").removeClass("btn-active");
+		$(this).addClass("btn-active");
+	});
+	$(document).on("click",".btntheater",function(){
+		$(".btntheater").removeClass("btn-active");
+		$(this).addClass("btn-active");
 	});
 })
 </script>
@@ -324,26 +369,9 @@ String root = getServletContext().getRealPath("/");
 					</div>
 			</div>
 			<div class="time">
-			<form action="../seat/seatForm.jsp">
 			<h4>&nbsp; &nbsp; &nbsp;시간</h4>
-			<%
-			 Date today = new Date();
-			SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
-			String todate = sdf.format(today);
-			%>
-				<input type="date" class="form-control" style="max-width: 40%; margin:40px 100px;" value="<%=todate%>">
 				<ul class="showtimes">
-					<li>
-						<button class="btntime btn-basiclist" type="submit">
-							<div class="timebox">
-								<span class="starttime"><b style="font-size: 1.2em">14:00</b>~16:22</span>
-								<span class="movietitle">영화1이야</span>
-								<span class="screeninfo">강원 <br>6관 <br>123/234</span>
-							</div>
-						</button>
-					</li>
 				</ul>
-				</form>
 			</div>
 		</div>
 	</div>

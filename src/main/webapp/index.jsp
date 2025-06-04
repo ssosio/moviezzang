@@ -46,7 +46,21 @@ String root = request.getContextPath();
 		</div>
 
 		<div id="mainPage" class="">
-			<jsp:include page="<%=mainPage%>" />
+		<%
+			if(mainPage.contains("bookMain"))
+			{
+		%>
+			<iframe src="<%=mainPage%>" style="width:100%; min-height:1000px; border:none;"></iframe>
+		<%	
+			}
+			else
+			{
+		%>
+			<jsp:include page="<%=mainPage%>" />		
+		<%	
+			}
+		%>
+					
 
 		</div>
 

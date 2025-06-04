@@ -8,7 +8,6 @@
     pageEncoding="UTF-8"%>
 <%
 String movie_id =request.getParameter("movie_id");
-System.out.println("🔥 movieid: " + movie_id);
 ScreeningDAO dao = ScreeningDAO.getInstance();
 
 //HashMap을 담을 list 생성

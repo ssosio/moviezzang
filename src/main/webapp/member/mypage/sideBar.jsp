@@ -40,7 +40,11 @@
     	
     }
     </style>
+ 
 </head>
+<%
+	
+%>
 <body>
 
    <!-- mypageSidebar.jsp -->
