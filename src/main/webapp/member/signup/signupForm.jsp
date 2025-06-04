@@ -171,8 +171,7 @@ i.dash {
 </style>
 </head>
 <body>
-<jsp:include page="../../component/menu/header.jsp"/>
-<%@ include file="../../component/menu/headerResources.jsp" %>
+
 <div class="wrap">
 
 <form action="signupAction.jsp" method="post" onsubmit="return check(this)" name="frm">
@@ -273,5 +272,4 @@ i.dash {
 
 
 </body>
-<jsp:include page="../../component/menu/footer.jsp"/>
 </html>

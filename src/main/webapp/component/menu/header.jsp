@@ -38,10 +38,10 @@
             >
               <i class="ri-search-line ri-lg"></i>
             </div>
-            <a href="member/login/loginForm.jsp" class="text-sm hover:text-primary transition-colors"
+            <a href="../member/login/loginForm.jsp" class="text-sm hover:text-primary transition-colors"
               >로그인</a
             >
-            <a href="member/signup/signupForm.jsp" class="text-sm hover:text-primary transition-colors"
+            <a href="" class="text-sm hover:text-primary transition-colors"
               >회원가입</a
             >
             <a
