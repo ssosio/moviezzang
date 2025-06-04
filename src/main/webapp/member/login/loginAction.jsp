@@ -12,7 +12,7 @@
 </head>
 <%
 
-String userid=request.getParameter("id");
+String userid=request.getParameter("userid");
 String save=request.getParameter("chkid");
 String password=request.getParameter("password");
 
@@ -20,17 +20,26 @@ UserDAO dao=UserDAO.getInstance();
 boolean chk=dao.userIdCheck(userid, password);
 
 
+
 if(chk)
 {
+	
 	session.setAttribute("loginok", "yes");
 	session.setAttribute("userid", userid);
 	session.setAttribute("chkidok", save);
+	
+	%>
+	<script type="text/javascript">
+			alert("아이디와 비밀번호가 맞다");
+		</script>
+	<%
 	
 	session.setMaxInactiveInterval(60*60*8);
 	
 	response.sendRedirect("../../index.jsp");
 	
-}else{%>
+}else{
+%>
 	<script type="text/javascript">
 			alert("아이디와 비밀번호가 맞지않습니다");
 			history.back();

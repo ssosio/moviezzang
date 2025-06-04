@@ -12,7 +12,7 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <title>로그인</title>
 <%
-	String userid=(String)session.getAttribute("id");
+	String userid=(String)session.getAttribute("userid");
 	String saveid=(String)session.getAttribute("chkidok");
 	
 	boolean save=true;
@@ -22,6 +22,8 @@
 		userid="";
 		save=false;
 	  }
+	
+	
 %>
 <style type="text/css">
 </style>
@@ -116,18 +118,13 @@
           </div>
           <div class="modal-body">
           
-          <input type="text" name="id" id="id" class="form-control id" placeholder="아이디" value="${userid}">
-          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required">
+          <input type="text" name="userid" id="userid" class="form-control id" placeholder="아이디" value="${userid}">
+          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required" value="${password}">
           <input type="checkbox" name="chkid" id="chkid" ${save ? "checked" : ""}>아이디 저장
           
-          
-         <%--  <input type="text" name="id" id="id" class="form-control id" placeholder="아이디" required="required" value="<%=userid%>">
-          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required">
-          <input type="checkbox" name="chkid" id="chkid"  <%=save?"checked":"" %>>아이디 저장 --%>
           </div>
           <div class="modal-footer">
-            <%-- <button type="submit" class="btn loginbtn" id="loginBtn" onclick="location.href='<%=root%>'">로그인</button> --%>
-            <button type="submit" class="btn loginbtn" id="loginBtn" onclick="location.href='member/login/loginAction.jsp'">로그인</button>
+            <button type="button" class="btn loginbtn" id="loginBtn" onclick="">로그인</button>
           </div>
         </div>
       </div>
@@ -146,6 +143,10 @@
   shadow.getElementById('closeBtn').onclick = () => {
     shadow.getElementById('myModal').classList.remove('show');
   };
+  
+  shadow.getElementById('loginBtn').onclick = () => {
+	  location.href='member/login/loginAction.jsp?userid=' + shadow.getElementById('userid').value + '&password=' + shadow.getElementById('password').value;
+  }
   
 
 </script>

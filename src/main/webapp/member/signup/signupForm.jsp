@@ -17,7 +17,7 @@
 		//아이디 중복체크
 		$("#idCheck").click(function () {
 			
-			var userid=$("#id").val();
+			var userid=$("#userid").val();
 			//alert(userid);
 			
 			$.ajax({
@@ -26,7 +26,6 @@
 				url:"member/signup/idCheck.jsp",
 				dataType:"json",
 				data:{"userid":userid},
-				success:function(res){
 					//console.log(res.idCheck);
 					
 					if(res.idCheck==1){
@@ -182,7 +181,7 @@ i.dash {
 	
 	<div class="boxs">
 	<label for="id">아이디</label>
-		<input type="text" name="id" id="id" class="form-control" required="required" placeholder="아이디를 입력해주세요">
+		<input type="text" name="userid" id="userid" class="form-control" required="required" placeholder="아이디를 입력해주세요">
 	<button type="button" class="btn check" id="idCheck">중복확인</button>
 	</div>
 	
