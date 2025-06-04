@@ -270,6 +270,35 @@ public class UserDAO {
 		return b;
 	}
 	
+	//아이디,비밀번호 체크
+	public boolean userIdCheck(String userid,String password)
+	{
+		boolean b=false;
+		
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		String sql="select * from user where userid=? and password=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			pstmt.setString(2, password);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next())
+				b=true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return b;
+	}
+	
 	//전체user List
 	public List<UserDTO> getAllMembers()
 	{
@@ -316,4 +345,7 @@ public class UserDAO {
 		
 		return list;
 	}
+	
+	
+	
 }
