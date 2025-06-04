@@ -11,7 +11,8 @@ request.setCharacterEncoding("UTF-8");
   boolean b=dao.EqualPass(id, password);
   
   if(b){
-		dao.deleteMember(id);%>
+	  	dao.deleteMember(id);
+		%>
 		
 		<script type="text/javascript">
 			alert("탈퇴되었습니다.");

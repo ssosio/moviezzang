@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+
 
 import data.dto.UserDTO;
 import mysql.db.DBConnect;
@@ -273,7 +273,7 @@ public class UserDAO {
 	//전체user List
 	public List<UserDTO> getAllMembers()
 	{
-		List<UserDTO> list=new Vector<UserDTO>();
+		List<UserDTO> list=new ArrayList<UserDTO>();
 		
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
@@ -301,6 +301,7 @@ public class UserDAO {
 				dto.setPhone(rs.getString("phone"));
 				dto.setUser_type(rs.getString("user_type"));
 				dto.setSignup_at(rs.getTimestamp("signup_at"));
+				dto.setBirth(rs.getString("birth"));
 				
 				list.add(dto);
 				
