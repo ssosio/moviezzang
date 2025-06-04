@@ -11,16 +11,16 @@
 	href="${pageContext.request.contextPath}/resources/domainIcon.png">
 <link rel="apple-touch-icon"
 	href="${pageContext.request.contextPath}/resources/domainIcon.png">
+
+
 <%@ include file="component/menu/headerResources.jsp"%>
+
 <%
 String mainPage = "layout/main.jsp";
 
 if (request.getParameter("main") != null) {
 	mainPage = request.getParameter("main");
 
-	
-	
-	
 }
 String root = request.getContextPath();
 %>
@@ -46,7 +46,7 @@ String root = request.getContextPath();
 
 		<div id="mainPage" class="">
 			<jsp:include page="<%=mainPage%>" />
-			
+
 		</div>
 
 
@@ -57,11 +57,11 @@ String root = request.getContextPath();
 	<script>
 		// 페이지 로드 후 로딩 화면 숨기고 mainContent 보이기
 		window.onload = function() {
-			
+
 			document.getElementById('mainContent').style.opacity = 1; // 메인 콘텐츠 보이기
 			document.getElementById('loading').style.display = 'none'; // 로딩 화면 숨기기
-		
-		}; 
+
+		};
 	</script>
 </body>
 </html>
