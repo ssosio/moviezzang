@@ -23,7 +23,7 @@
 			$.ajax({
 				
 				type:"get",
-				url:"idCheck.jsp",
+				url:"member/signup/idCheck.jsp",
 				dataType:"json",
 				data:{"userid":userid},
 				success:function(res){
@@ -169,12 +169,16 @@ i.dash {
 }
 
 </style>
+<%
+	String root=request.getContextPath();
+
+%>
 </head>
 <body>
 
 <div class="wrap">
 
-<form action="signupAction.jsp" method="post" onsubmit="return check(this)" name="frm">
+<form action="<%=root %>/member/signup/signupAction.jsp" method="post" onsubmit="return check(this)" name="frm">
 	
 	<div class="boxs">
 	<label for="id">아이디</label>
