@@ -122,13 +122,8 @@
           <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required" value="${password}">
           <input type="checkbox" name="chkid" id="chkid" ${save ? "checked" : ""}>아이디 저장
           
-          
-         <%--  <input type="text" name="id" id="id" class="form-control id" placeholder="아이디" required="required" value="<%=userid%>">
-          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required">
-          <input type="checkbox" name="chkid" id="chkid"  <%=save?"checked":"" %>>아이디 저장 --%>
           </div>
           <div class="modal-footer">
-            <%-- <button type="submit" class="btn loginbtn" id="loginBtn" onclick="location.href='<%=root%>'">로그인</button> --%>
             <button type="button" class="btn loginbtn" id="loginBtn" onclick="">로그인</button>
           </div>
         </div>
