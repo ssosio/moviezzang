@@ -4,6 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
+	String root = request.getContextPath();
 	String keyword = request.getParameter("keyword");
 	MovieDAO dao = MovieDAO.getInstance();
 	
@@ -16,7 +17,11 @@
 %>
 	<div class="mCard poster relative flex-shrink-0 w-64">
 		<div class="relative">
-			<img src="https://image.tmdb.org/t/p/w500<%=dto.getPoster_url()%>"
+		<%
+			String tmdbPath = "https://image.tmdb.org/t/p/w500";
+			String originalPath = dto.getPoster_url();
+		%>
+			<img src="<%=originalPath.startsWith("https://") ? originalPath : tmdbPath + originalPath%>"
 				alt="" class="w-64 h-96 object-cover rounded" />
 			<div class="hover-info absolute inset-0 !bg-black !bg-opacity-70 rounded flex flex-col justify-center items-center p-4"  style="width: 256px;">
 				<div class="text-white text-center mb-4">
@@ -28,7 +33,7 @@
 					예매하기</button>
 				<button
 					class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full"
-					onclick="location.href='./movieDetail.jsp?num=<%=dto.getId()%>'">
+					onclick="location.href='<%=root%>/index.jsp?main=/movie/movieDetail.jsp?num=<%=dto.getId()%>'">
 					상세정보</button>
 			</div>
 		</div>
