@@ -14,7 +14,7 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #f7f7f7;
+      background-color: white;
       
     }
 
@@ -89,8 +89,7 @@ UserDTO dto=dao.getData(id);
   <!-- sideBar -->
 <jsp:include page="sideBar.jsp"></jsp:include>
 
-<!-- header -->
-<jsp:include page="../../component/menu/header.jsp"></jsp:include>
+
 
   <!-- Main content -->
   <div class="mypage-content">
@@ -124,6 +123,5 @@ UserDTO dto=dao.getData(id);
 </div>
 
 </body>
-<!-- footer -->
-<jsp:include page="../../component/menu/footer.jsp"></jsp:include>
+
 </html>

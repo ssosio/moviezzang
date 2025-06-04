@@ -64,7 +64,7 @@
 	dto.setAge(age);
 	dao.insertMember(dto);
 	
-	response.sendRedirect("");
+	response.sendRedirect("../../index.jsp");
 	
 %>
 
