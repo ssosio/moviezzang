@@ -28,7 +28,7 @@
 <div class="container-fluid px-0">
     <h2 class="mb-4 table-title">회원 목록</h2>
     <div class="table-responsive rounded-4 shadow-sm">
-        <table class="table align-middle mb-0 table-hover text-center" style="background:#fff;">
+        <table id="tableContainer" class="table align-middle mb-0 table-hover text-center" style="background:#fff;">
             <thead class="table-light" style="background:#eaf0fa;">
                 <tr>
                     <th>번호</th>
@@ -64,7 +64,7 @@
                             <option value="F" <%=gender.equals("F") ? "selected" : ""%>>F</option>
                             <option value="M" <%=gender.equals("M") ? "selected" : ""%>>M</option>
                         </select>
-                    </td>
+                    </td>              
                     <td class="mAdminAge"><input type="number" class="form-control form-control-sm" value="<%=dto.getAge()%>"></td>
                     <td class="mAdminPhone"><input type="text" class="form-control form-control-sm" value="<%=dto.getPhone()%>"></td>
                     <td class="mAdminAddress"><input type="text" class="form-control form-control-sm" value="<%=dto.getAddress()%>"></td>
@@ -89,6 +89,6 @@
         </table>
     </div>
     <div class="text-end mt-3">
-        <button type="button" class="btn btn-primary px-4 py-2 rounded-3 shadow-sm">수정</button>
+        <button id="btnUpdate" type="button" class="btn btn-primary px-4 py-2 rounded-3 shadow-sm">수정</button>
     </div>
 </div>
