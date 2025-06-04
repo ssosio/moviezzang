@@ -24,6 +24,9 @@
 			else
 				$("#email2").val($(this).val());
 		});
+		
+		
+		
 	});
   	
   	function check(f) {
@@ -154,7 +157,7 @@ p{
       <h6 style="color: #D3D3D3;">회원님의 정보를 정확히 입력해주세요.</h6>
       <p style="font-size: 15pt;">ID ( <%=dto.getUserid() %> ) 님</p>
       <div class="mileage"><button type="button" class="btn btn-outline-info" style="color: white;"
-      onclick="location.href='deleteAction.jsp?id=<%=dto.getId() %>&password=<%=dto.getPassword()%>'">회원탈퇴</button></div>
+      onclick="location.href='deleteAction.jsp?id=<%=dto.getId()%>%>'">회원탈퇴</button></div>
     </div>
 
     <div class="myinfo-section">
@@ -268,7 +271,9 @@ p{
             alert("우편번호를 클릭하여 주소를 검색해주세요.");
             $("#zipCode").focus();
         }
-    }
+    };
+    
+  
 </script>
 </body>
 
