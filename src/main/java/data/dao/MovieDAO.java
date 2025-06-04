@@ -233,14 +233,14 @@ public class MovieDAO {
 		return list;
 	}
 	
-	// ID 기준으로 영화 1개 조회 (title, release_date, score, poster_url)
+	// ID 기준으로 영화 1개 조회 (*)
 	public MovieDTO getMovieById(String id) {
 	    Connection conn = db.getConnection();
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
 	    MovieDTO dto = null;
 
-	    String sql = "SELECT title, release_date, score, poster_url FROM movie WHERE id = ?";
+	    String sql = "SELECT * FROM movie WHERE id = ?";
 
 	    try {
 	        pstmt = conn.prepareStatement(sql);
@@ -249,10 +249,18 @@ public class MovieDAO {
 
 	        if (rs.next()) {
 	            dto = new MovieDTO();
-	            dto.setTitle(rs.getString("title"));
-	            dto.setRelease_date(rs.getDate("release_date"));
-	            dto.setScore(rs.getFloat("score"));
-	            dto.setPoster_url(rs.getString("poster_url"));
+	        	dto.setId(rs.getString("id"));
+				dto.setTitle(rs.getString("title"));
+				dto.setSynopsis(rs.getString("synopsis"));
+				dto.setRelease_date(rs.getDate("release_date"));
+				dto.setCertification(rs.getString("certification"));
+				dto.setRuntime(rs.getInt("runtime"));
+				dto.setStudio(rs.getString("studio"));
+				dto.setDistributor(rs.getString("distributor"));
+				dto.setPoster_url(rs.getString("poster_url"));
+				dto.setScore(rs.getFloat("score"));
+				dto.setLocal_score(rs.getFloat("local_score"));
+				dto.setGenre(rs.getString("genre"));
 	        }
 
 	    } catch (SQLException e) {

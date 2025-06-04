@@ -22,6 +22,7 @@ if (request.getParameter("main") != null) {
 	mainPage = request.getParameter("main");
 
 }
+
 String root = request.getContextPath();
 %>
 
