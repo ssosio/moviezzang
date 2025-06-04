@@ -346,6 +346,34 @@ public class UserDAO {
 		return list;
 	}
 	
-	
+	public String getId(String userid)
+	{
+		String id="";
+		
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		String sql="select id from user where userid=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next())
+			{
+				id=rs.getString("id");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return id;
+	}
 	
 }
