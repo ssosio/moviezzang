@@ -1,9 +1,13 @@
+<%@page import="mysql.db.DBConnect"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@page import="data.api.YouTube"%>
+<%@ page import="data.dao.MovieDAO, data.dto.MovieDTO"%>
 <%
 YouTube fetcher = new YouTube();
 String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널4");
+
+MovieDAO dao = MovieDAO.getInstance();
 %>
 <!DOCTYPE html>
 
@@ -134,45 +138,91 @@ body {
 			<div class="flex overflow-x-auto space-x-6 pb-4 -mx-4 px-4">
 				<!-- 영화 포스터 1 -->
 				<%
-				for (int i = 0; i < 5; i++) {
+				for (int i = 1; i <= 5; i++) {
+					String id = String.valueOf(i);
+					MovieDTO dto = dao.getMovieById(id);
+					String posterUrl = "https://image.tmdb.org/t/p/w500";
+					System.out.print("");
+					if (dto != null) {
 				%>
 				<div class="poster relative flex-shrink-0 w-64">
 					<div class="relative">
-						<img src="" alt="" class="w-64 h-96 object-cover rounded" />
+
+						<img
+							src="<%=dto.getPoster_url().startsWith("https") ? "" : posterUrl%><%=dto.getPoster_url()%>"
+							alt="<%=dto.getTitle()%>"
+							class="w-64 h-96 object-cover rounded" />
 						<div
 							class="hover-info absolute inset-0 bg-black bg-opacity-70 rounded flex flex-col justify-center items-center p-4">
 							<div class="text-white text-center mb-4">
 								<p class="font-bold mb-2">
-									영화제목<%=i + 1%>
+									<%=dto.getTitle()%>
 								</p>
 								<p class="text-sm mb-1">
-									예매율<%=i + 1%></p>
+									평점<i class="ri-star-fill"></i>
+									<%=dto.getScore()%></p>
 								<p class="text-sm">
-									개봉일<%=i + 1%></p>
+									개봉일&nbsp;<%=dto.getRelease_date()%></p>
 							</div>
 							<button
 								class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2">
-								예매하기<%=i + 1%></button>
+								예매하기</button>
 							<button onclick="location.href='?main=movie/movieList.jsp'"
 								class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full">
-								상세정보<%=i + 1%></button>
+								상세정보</button>
 						</div>
 					</div>
 
 
 					<div class="mt-3">
 						<p class="font-bold">
-							영화제목<%=i + 1%></p>
+							<%=dto.getTitle()%></p>
 						<div class="flex items-center text-sm text-gray-600 mt-1">
-							<span>예매율${i} </span> <span class="mx-2">|</span> <span>개봉일<%=i + 1%>
+							<span> 평점<i class="ri-star-fill"></i> <%=dto.getScore()%>
+							</span> <span class="mx-2">|</span> <span>개봉일&nbsp;<%=dto.getRelease_date()%>
 							</span>
 						</div>
 					</div>
 				</div>
 				<%
+				} else {
+				%>
+				<p>
+					ID
+					<%=i%>에 해당하는 영화가 없습니다.
+				</p>
+				<%
+				}
 				}
 				%>
+				<%-- <%
+				for (int i = 1; i <= 5; i++) {
+					String id = String.valueOf(i);
+					MovieDTO dto = dao.getMovieById(id);
 
+					if (dto != null) {
+				%>
+				<div class="movie-box">
+					<h2><%=dto.getTitle()%></h2>
+					<p>
+						개봉일:
+						<%=dto.getRelease_date()%></p>
+					<p>
+						평점:
+						<%=dto.getScore()%></p>
+					<img src="<%=dto.getPoster_url()%>" width="150" alt="포스터">
+				</div>
+				<%
+				} else {
+				%>
+				<p>
+					ID
+					<%=i%>에 해당하는 영화가 없습니다.
+				</p>
+				<%
+				}
+				}
+				%> --%>
 			</div>
 		</div>
 	</section>
