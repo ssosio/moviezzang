@@ -34,7 +34,9 @@
 	        age = Period.between(birthDate, today).getYears();
 
 	        
-	    } 
+	    } else {
+	        out.println("생년월일이 제공되지 않았습니다.");
+	    }
 	    
 	    UserDTO dto=new UserDTO();
 	    
