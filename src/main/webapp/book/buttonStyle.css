@@ -18,6 +18,10 @@
 .btn-basiclist:hover {
 	background: #ccc;
 }
+.btn-active{
+	background: #9f468f;
+	color: white;
+}
 .btn-mov {
 	border: 1px purple solid;
 	background: white;
