@@ -148,7 +148,7 @@ $(function () {
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
       				<td><%=map.get("start_time") %></td>
-      				<td><%=price %></td>
+      				<td><%=nf.format("price")%></td>
       				<a><i class="bi bi-x-circle"></i></a>
       			</tr>
       			
