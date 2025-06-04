@@ -94,8 +94,8 @@ UserDTO dto=dao.getData(id);
         <table class="table">
         	<tr>
         		<th>영화정보</th>
-        		<th>관랑평</th>
-        		<th>영화정보</th>
+        		<th>한줄평</th>
+        		<th>평점</th>
         	</tr>
         </table>
       </div>

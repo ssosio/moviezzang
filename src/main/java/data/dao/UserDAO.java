@@ -250,7 +250,7 @@ public class UserDAO {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		
-		String sql="select * from user where id=? and password=?";
+		String sql="select count(*) from user where id=? and password=?";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -259,7 +259,12 @@ public class UserDAO {
 			rs=pstmt.executeQuery();
 			
 			if(rs.next())
-				b=true;
+			{
+				if(rs.getInt(1)==1)
+					b=true;
+			}
+				
+				
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
