@@ -1,3 +1,4 @@
+<%@page import="java.text.NumberFormat"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="data.dto.UserDTO"%>
 <%@page import="java.util.List"%>
@@ -11,6 +12,7 @@
 <meta charset="UTF-8">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <title>Insert title here</title>
@@ -100,6 +102,7 @@ $(function () {
   	
   	List<HashMap<String, String>> list=dao.getReserveList(userid);
   	
+  	NumberFormat nf=NumberFormat.getCurrencyInstance();
   %>
 </head>
 <body>
@@ -124,9 +127,35 @@ $(function () {
       </div>
       <br>
       	<div class="booklist-list">
+      		<table class="table">
+      		<tr>
+      			<th style="background-color: whitesmoke">예매일시</th>
+      			<th style="background-color: whitesmoke">영화명</th>
+      			<th style="background-color: whitesmoke">극장</th>
+      			<th style="background-color: whitesmoke">상영일시</th>
+      			<th style="background-color: whitesmoke">결제금액</th>
+      		</tr>
       		<%
+      			for(int i=0;i<list.size();i++)
+      			{
+      				HashMap<String, String> map=list.get(i);
+      				
+      				int price=Integer.parseInt(map.get("price"));
+      			%>
       			
+      			<tr>
+      				<td><%=map.get("reserved_at") %></td>
+      				<td><%=map.get("title") %></td>
+      				<td><%=map.get("name") %></td>
+      				<td><%=map.get("start_time") %></td>
+      				<td><%=price %></td>
+      				<a><i class="bi bi-x-circle"></i></a>
+      			</tr>
+      			
+      			<%}
       		%>
+      		
+      		</table>
       	</div>
     </div>
     <br>

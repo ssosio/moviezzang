@@ -111,6 +111,8 @@
 	}
 </style>
 <%
+	String root = request.getContextPath();
+
 	MovieDAO dao = MovieDAO.getInstance();
 	List<MovieDTO> list = dao.getAllDatas();
 	
@@ -124,7 +126,7 @@
 	    const keyword = $("#movieSearch").val().toLowerCase();
 	    
 		// 해당 키워드를 가진 영화 목록을 찾아와서
-	    $.get("/movie/movieSearch.jsp", { keyword }, function(data){    	
+	    $.get("./movie/movieSearch.jsp", { keyword }, function(data){    	
 			// 기존 목록을 지우고
 			$("#mCardList").empty();
 			
@@ -166,15 +168,19 @@
 			%>
 			<div class="mCard poster relative flex-shrink-0 w-64">
 				<div class="relative">
-					<img src="https://image.tmdb.org/t/p/w500<%=dto.getPoster_url()%>" alt="" class="w-64 h-96 object-cover rounded" />
+			<%
+				String tmdbPath = "https://image.tmdb.org/t/p/w500";
+				String originalPath = dto.getPoster_url();
+			%>
+					<img src="<%=originalPath.startsWith("https://") ? originalPath : tmdbPath + originalPath%>" alt="" class="w-64 h-96 object-cover rounded" />
 					<div class="hover-info absolute inset-0 !bg-black !bg-opacity-70 rounded flex flex-col justify-center items-center p-4" style="width: 256px;">
 						<div class="text-white text-center mb-4">
 							<p class="mTitle font-bold mb-2"><%=dto.getTitle()%></p>
 							<p class="text-sm"><%=dto.getRelease_date()%></p>
 						</div>
 						<button class="!bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2">
-							예매하기</button>
-						<button class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full" onclick="location.href='./movieDetail.jsp?num=<%=dto.getId()%>'">
+							예매하기</button>																											
+						<button class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full" onclick="location.href='<%=root%>/index.jsp?main=/movie/movieDetail.jsp?num=<%=dto.getId()%>'">
 							상세정보</button>
 					</div>
 				</div>

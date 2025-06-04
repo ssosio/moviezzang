@@ -233,5 +233,37 @@ public class MovieDAO {
 		return list;
 	}
 	
+	// ID 기준으로 영화 1개 조회 (title, release_date, score, poster_url)
+	public MovieDTO getMovieById(String id) {
+	    Connection conn = db.getConnection();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    MovieDTO dto = null;
+
+	    String sql = "SELECT title, release_date, score, poster_url FROM movie WHERE id = ?";
+
+	    try {
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, id);
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            dto = new MovieDTO();
+	            dto.setTitle(rs.getString("title"));
+	            dto.setRelease_date(rs.getDate("release_date"));
+	            dto.setScore(rs.getFloat("score"));
+	            dto.setPoster_url(rs.getString("poster_url"));
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        db.dbClose(rs, pstmt, conn);
+	    }
+
+	    return dto;
+	}
+	
+	
 	// delete
 }
