@@ -9,6 +9,14 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>Insert title here</title>
 </head>
+<%
+
+String userid=(String)session.getAttribute("userid");
+String chkid=(String)session.getAttribute("chkid");
+String password=(String)session.getAttribute("password");
+
+%>
+
 <body>
 
 </body>

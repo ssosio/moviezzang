@@ -1,3 +1,5 @@
+<%@page import="data.dto.UserDTO"%>
+<%@page import="data.dao.UserDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ include file="../../component/menu/headerResources.jsp" %>
@@ -12,13 +14,13 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #f7f7f7;
+      background-color: white;
       
     }
 
     .mypage-wrapper {
       display: flex;
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 100px auto 50px auto;
       padding: 20px;
       gap: 30px;
@@ -73,6 +75,13 @@
   
   </style>
 </head>
+<%
+String id=request.getParameter("id");
+
+UserDAO dao=UserDAO.getInstance();
+UserDTO dto=dao.getData(id);
+
+%>
 <body>
 
 <div class="mypage-wrapper">
@@ -80,15 +89,14 @@
   <!-- sideBar -->
 <jsp:include page="sideBar.jsp"></jsp:include>
 
-<!-- header -->
-<jsp:include page="../../component/menu/header.jsp"></jsp:include>
+
 
   <!-- Main content -->
   <div class="mypage-content">
     <div class="mypage-header">
-      <h1 class="text-2xl font-bold">안녕하세요! ***님</h1>
+      <h1 class="text-2xl font-bold">안녕하세요! <%=dto.getName() %>(<%=dto.getUserid() %>)님</h1>
       <h6 style="color: gray;">Welcome!</h6>
-      <div class="mileage">보유 마일리지 (0P)</div>
+      <div class="mileage">보유 마일리지 (<%=dto.getMileage() %>P)</div>
     </div>
 
     <div class="mypage-section">
@@ -115,6 +123,5 @@
 </div>
 
 </body>
-<!-- footer -->
-<jsp:include page="../../component/menu/footer.jsp"></jsp:include>
+
 </html>

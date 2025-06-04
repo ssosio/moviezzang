@@ -11,21 +11,34 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <title>로그인</title>
+<%
+	String userid=(String)session.getAttribute("userid");
+	String chkid=(String)session.getAttribute("chkid");
+	
+	if(chkid!=null){
+		
+		userid=(String)session.getAttribute("userid");
+	  }
 
+
+%>
 <style type="text/css">
 </style>
 </head>
 <body>
+
 	<div id="shadow-login-host"></div>
 	<script>
   // 1. Shadow Root 생성
   const host = document.getElementById('shadow-login-host');
   const shadow = host.attachShadow({ mode: 'open' });
 
+
   // 2. Shadow DOM 내부에 모달 삽입
   shadow.innerHTML = `
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    
     <style>
     .form-control {
         display: block;
@@ -101,15 +114,16 @@
             <button type="button" class="btn close" id="closeBtn"><i class="bi bi-x-lg"></i></button>
           </div>
           <div class="modal-body">
-            <input type="text" name="id" class="form-control id" placeholder="아이디" required="required">
-            <input type="password" name="password" class="form-control pass" placeholder="비밀번호" required="required">
-            <input type="checkbox">아이디 저장
+          <input type="text" name="id" id="id" class="form-control id" placeholder="아이디" required="required" value="<%=userid%>">
+          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required">
+          <input type="checkbox" name="chkid" id="chkid"  <%=chkid==null?"":"checked" %>>아이디 저장
           </div>
           <div class="modal-footer">
             <button type="button" class="btn loginbtn" id="loginBtn">로그인</button>
           </div>
         </div>
       </div>
+
     </div>
   `;
 
