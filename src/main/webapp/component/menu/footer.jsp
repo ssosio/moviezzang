@@ -25,8 +25,8 @@
 					<div>
 						<h3 class="!text-lg !font-bold !mb-4">이용안내</h3>
 						<ul class="!space-y-2">
-							<li><a href="#"
-								class="!text-gray-400 hover:!text-white !no-underline !transition-colors">극장</a>
+							<li><a href="?main=movie/movieList.jsp"
+								class="!text-gray-400 hover:!text-white !no-underline !transition-colors">영화</a>
 							</li>
 							<li><a href="#"
 								class="!text-gray-400 hover:!text-white !no-underline !transition-colors">요금안내</a>

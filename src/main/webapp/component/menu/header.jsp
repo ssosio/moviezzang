@@ -23,9 +23,7 @@
 					class="hidden md:flex items-center space-x-12 justify-center mx-auto"
 					style="padding-left: 13rem">
 					<a href="?main=movie/movieList.jsp"
-						class="!text-primary  !transition-colors !no-underline">영화</a> <a
-						href=""
-						class="hover:!text-primary !text-white !transition-colors !no-underline">극장</a>
+						class="!text-primary  !transition-colors !no-underline">영화</a> 
 					<a href=""
 						class="hover:!text-primary !text-white !transition-colors !no-underline">예매</a>
 					<a onclick="location.href='<%=request.getContextPath()%>/'"
