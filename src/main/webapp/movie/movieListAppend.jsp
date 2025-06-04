@@ -20,7 +20,11 @@
 	%>
 	<div class="mCard poster relative flex-shrink-0 w-64">
 		<div class="relative">
-			<img src="https://image.tmdb.org/t/p/w500<%=dto.getPoster_url()%>"
+		<%
+			String tmdbPath = "https://image.tmdb.org/t/p/w500";
+			String originalPath = dto.getPoster_url();
+		%>
+			<img src="<%=originalPath.startsWith("https://") ? originalPath : tmdbPath + originalPath%>"
 				alt="" class="w-64 h-96 object-cover rounded" />
 			<div
 				class="hover-info absolute inset-0 !bg-black !bg-opacity-70 rounded flex flex-col justify-center items-center p-4"  style="width: 256px;">
