@@ -26,7 +26,7 @@
 						class="!text-primary  !transition-colors !no-underline">영화</a> <a
 						href=""
 						class="hover:!text-primary !text-white !transition-colors !no-underline">극장</a>
-					<a href=""
+					<a href="<%=request.getContextPath()%>/index.jsp?main=book/booking/bookMain.jsp"
 						class="hover:!text-primary !text-white !transition-colors !no-underline">예매</a>
 					<a onclick="location.href='<%=request.getContextPath()%>/'"
 						class="flex items-center space-x-2"> <img
@@ -45,7 +45,7 @@
 						<!--     <i class="ri-search-line ri-lg"></i> -->
 					</div>
 
-					<a id="openLoginModal" 
+					<a id="openLoginModal"
 						class="!text-white hover:!text-primary !transition-colors !no-underline"href="#">
 						로그인 </a> <a href="?main=member/signup/signupForm.jsp"
 						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">회원가입</a>

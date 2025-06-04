@@ -46,7 +46,6 @@ String root = request.getContextPath();
 
 		<div id="mainPage" class="">
 			<jsp:include page="<%=mainPage%>" />
-
 		</div>
 
 

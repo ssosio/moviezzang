@@ -1,3 +1,8 @@
+<%@page import="java.sql.Timestamp"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
+<%@page import="data.dao.SeatDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -162,17 +167,32 @@ div.pay>span:last-child {
 </style>
 <%
 String screening_id = request.getParameter("screening_id");
-String poster = request.getParameter("poster");
+System.out.println(">>> screening_idzz: " + screening_id);
+SeatDAO dao = SeatDAO.getInstance();
+List<HashMap<String,String>> list = dao.getSeatInfo(screening_id);
+if(list == null || list.isEmpty()) {
+    out.println("<h3>좌석 정보를 불러오지 못했습니다. 상영 정보가 없거나 DB 오류입니다.</h3>");
+    return;
+}
+HashMap<String,String> map = list.get(0);
+String title = map.get("movie_title");
+String poster = map.get("poster");
+String auditorium_name = map.get("auditorium_name");
+String theater_name = map.get("theater_name");
+String start_time = map.get("start_time");
+String price = map.get("price");
+
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 %>
 </head>
 <script type="text/javascript">
 $(function() {
+	//screening id와 posterurl 가져오기
+	const screening_id = "<%=screening_id%>";
+	//console.log(poster);
 	$(".selseat").on("click",function(){
 		$(this).toggleClass("select");
 	});
-	const screening_id = "<%=screening_id%>";
-	console.log("<%=poster%>")
-
 
 })
 </script>
@@ -226,14 +246,14 @@ $(function() {
 		</div>
 		<div class="paybox">
 			<div class="pay-title">
-				<p>스파이더맨</p>
+				<p><%=title %></p>
 			</div>
 			<hr>
 			<div class="pay-info">
 				<div class="pay-infosrting">
-				<p class="theater">강원</p>
-				<p class="auditorium">6관</p>
-				<p class="date">2025.05.29(목)</p>
+				<p class="theater"><%=theater_name %></p>
+				<p class="auditorium"><%=auditorium_name %></p>
+				<p class="date"><%=start_time %></p>
 				</div>
 				<img alt="" src="">
 			</div>
