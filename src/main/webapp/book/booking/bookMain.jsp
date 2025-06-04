@@ -352,7 +352,7 @@ String root = getServletContext().getRealPath("/");
 						<li>
 						<button type="button" class="movielist btn-basiclist" movie_id="<%=dto.getId() %>">
 						<div class="btn-content">
-						<img src="../../resources/ratingimg/<%=certification %>.png" width="30px;" style="margin-right: 10px;">
+						<img src="../../resources/ratingimg/<%=certification %>.png" width="24px;" style="margin-right: 10px;">
 						<span><%=dto.getTitle() %></span>
 						</div>
 						</button></li>

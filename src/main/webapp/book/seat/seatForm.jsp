@@ -255,7 +255,11 @@ $(function() {
 				<p class="auditorium"><%=auditorium_name %></p>
 				<p class="date"><%=start_time %></p>
 				</div>
-				<img alt="" src="">
+				<%
+				String posterUrl = "https://image.tmdb.org/t/p/w500";
+				String photo = poster.startsWith("https:")?poster:posterUrl+poster;
+				%>
+				<img alt="" src="<%=photo%>">
 			</div>
 			<hr>
 			<div class="seat-choice-info">
