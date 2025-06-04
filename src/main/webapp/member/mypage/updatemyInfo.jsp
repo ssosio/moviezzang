@@ -28,10 +28,10 @@
   	
   	function check(f) {
 			
-			if(f.pass.value!=f.pass2.value){
+			if(f.password.value!=f.password2.value){
 				alert("비밀번호가 서로 다릅니다");
-				f.pass.value="";
-				f.pass2.value="";
+				f.password.value="";
+				f.password2.value="";
 				return false;
 			}
   	}
@@ -40,7 +40,7 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #f7f7f7;
+      background-color: white;
       
     }
 
@@ -145,8 +145,7 @@ p{
   <!-- sideBar -->
 <jsp:include page="sideBar.jsp"></jsp:include>
 
-<!-- header -->
-<jsp:include page="../../component/menu/header.jsp"></jsp:include>
+
 
   <!-- Main content -->
   <div class="myinfo-content">
@@ -154,7 +153,8 @@ p{
       <h1 class="text-2xl font-bold">개인정보 수정</h1>
       <h6 style="color: #D3D3D3;">회원님의 정보를 정확히 입력해주세요.</h6>
       <p style="font-size: 15pt;">ID ( <%=dto.getUserid() %> ) 님</p>
-      <div class="mileage"><button type="button" class="btn btn-outline-info" style="color: white;">회원탈퇴</button></div>
+      <div class="mileage"><button type="button" class="btn btn-outline-info" style="color: white;"
+      onclick="location.href='deleteAction.jsp?id=<%=dto.getId() %>&password=<%=dto.getPassword()%>'">회원탈퇴</button></div>
     </div>
 
     <div class="myinfo-section">
@@ -271,6 +271,5 @@ p{
     }
 </script>
 </body>
-<!-- footer -->
-<jsp:include page="../../component/menu/footer.jsp"></jsp:include>
+
 </html>

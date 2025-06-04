@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import data.dto.UserDTO;
 import mysql.db.DBConnect;
@@ -267,5 +268,19 @@ public class UserDAO {
 		}
 		
 		return b;
+	}
+	
+	//전체user List
+	public List<UserDTO> getAllMembers()
+	{
+		List<UserDTO> list=new Vector<UserDTO>();
+		
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		String sql="select * from user order by id";
+		
+		return list;
 	}
 }
