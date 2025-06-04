@@ -12,15 +12,16 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <title>로그인</title>
 <%
-	String userid=(String)session.getAttribute("userid");
-	String chkid=(String)session.getAttribute("chkid");
+	String userid=(String)session.getAttribute("id");
+	String saveid=(String)session.getAttribute("chkidok");
 	
-	if(chkid!=null){
+	boolean save=true;
+	
+	if(saveid==null){
 		
-		userid=(String)session.getAttribute("userid");
+		userid="";
+		save=false;
 	  }
-
-
 %>
 <style type="text/css">
 </style>
@@ -114,12 +115,19 @@
             <button type="button" class="btn close" id="closeBtn"><i class="bi bi-x-lg"></i></button>
           </div>
           <div class="modal-body">
-          <input type="text" name="id" id="id" class="form-control id" placeholder="아이디" required="required" value="<%=userid%>">
+          
+          <input type="text" name="id" id="id" class="form-control id" placeholder="아이디" value="${userid}">
           <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required">
-          <input type="checkbox" name="chkid" id="chkid"  <%=chkid==null?"":"checked" %>>아이디 저장
+          <input type="checkbox" name="chkid" id="chkid" ${save ? "checked" : ""}>아이디 저장
+          
+          
+         <%--  <input type="text" name="id" id="id" class="form-control id" placeholder="아이디" required="required" value="<%=userid%>">
+          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required">
+          <input type="checkbox" name="chkid" id="chkid"  <%=save?"checked":"" %>>아이디 저장 --%>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn loginbtn" id="loginBtn">로그인</button>
+            <%-- <button type="submit" class="btn loginbtn" id="loginBtn" onclick="location.href='<%=root%>'">로그인</button> --%>
+            <button type="submit" class="btn loginbtn" id="loginBtn" onclick="location.href='member/login/loginAction.jsp'">로그인</button>
           </div>
         </div>
       </div>
@@ -138,6 +146,8 @@
   shadow.getElementById('closeBtn').onclick = () => {
     shadow.getElementById('myModal').classList.remove('show');
   };
+  
+
 </script>
 
 </body>
