@@ -19,11 +19,11 @@
 <style type="text/css">
 div.container{
 position: absolute;
-
 }
 div.title{
 margin-top: 100px;
 margin-left: 100px;
+width: 900px;
 }
 div.listbox{
 border: 1px #ccc solid;
@@ -56,6 +56,7 @@ display: flex;
 width: 100%;
 align-items: center;
 justify-content: center;
+padding-bottom: 10px;
 }
 div.local{
 width: 50%;
@@ -105,7 +106,6 @@ padding: 0px;
 button.btntime{
 width: 100%;
 }
-
 /*time박스내용 정렬 */
 .timebox {
   display: flex;
@@ -158,6 +158,7 @@ margin-top: 30px;
 }
 .btn-content img {
   position: absolute;
+  left:0px;
   width: 30px;
 }
 .btn-content span {
@@ -167,7 +168,101 @@ margin-top: 30px;
   word-break: keep-all;
   padding-left: 40px;
 }
+div.movielist-section{
+margin-top: 50px;
+}
 </style>
+<script type="text/javascript">
+$(function() {
+	let currentMovie_id = null;
+
+	//영화 클릭하면.
+	$("button.movielist").click(function() {
+		const movie_id = $(this).attr("movie_id");
+		currentMovie_id = movie_id;
+		//alert(movieid);
+
+		$.ajax({
+			type:"get",
+			url:"<%=request.getContextPath()%>/book/booking/bookList.jsp",
+			dataType:"json",
+			data:{movie_id:currentMovie_id},
+			success:function(res){
+				//alert("성공");
+				console.log(res);
+
+			    $("button.btnlocal").each(function() {
+			          let originalText = $(this).text().split("(")[0].trim(); // "서울 (3)" -> "서울" 기존 텍스트 초기화
+			          $(this).text(originalText);
+			        });
+				$.each(res,function(i,item){
+
+					$("button.btnlocal").each(function(){
+
+						let regionName = $(this).text().trim();
+						if(regionName == item.region){
+							$(this).text(item.region + "(" +item.theater_count +")");
+						}
+					});
+
+				});
+			}
+		})
+	});
+
+		//지역선택하면 상영극장 출력
+	$(document).on("click","button.btnlocal",function(){
+		const region =  $(this).text().split("(")[0].trim();
+
+		if(!currentMovie_id){
+		alert("먼저 영화를 선택해주세요");
+		return;
+		}
+		$.ajax({
+
+			type:"get",
+			dataType:"json",
+			data:{movie_id : currentMovie_id,
+					region : region
+			},
+			url : "<%=request.getContextPath()%>/book/booking/theaterList.jsp",
+			success:function(res){
+			console.log("res전체확인:", res);
+			console.log("첫 번째 항목:", res[0]);
+				let h = "";
+				$.each(res,function(i,item){
+					h+= "<li><button class='btntheater btn-basiclist'>"+item.theater_name+"</button></li>";
+				});
+				console.log(h);
+				$("#theater").html(h);
+			},
+		    error: function(xhr, status, error) {
+		      console.log("지역별 극장 요청 실패:", error);
+		    }
+		});
+	});
+
+	//상영관 클릭시 정보
+	$(document).on("click",".btntheater",function(){
+		const theaterName = $(this).text();
+		//alert(theater);
+		//alert(currentMovie_id);
+		$.ajax({
+
+			type:"get",
+			data:{theaterName : theaterName,
+					movie_id : currentMovie_id
+			},
+			dataType:"json",
+			url:"<%=request.getContextPath()%>/book/booking/showTimes.jsp",
+			success:function(res){
+				alert("성공");
+			}
+		});
+
+	});
+})
+</script>
 </head>
 <%
 MovieDAO dao = MovieDAO.getInstance();
@@ -176,16 +271,18 @@ List<MovieDTO> list = dao.getAllDatas();
 //절대경로
 String root = getServletContext().getRealPath("/");
 %>
+
 <body>
 	<div class="container">
 		<div class="title">
 			<h3>빠른예매</h3>
 			<hr>
 		</div>
+		<div></div>
 		<div class="listbox">
 			<div class="movie">
 				<h4>&nbsp;&nbsp;&nbsp;영화</h4>
-				<%= "불러온 영화 수: " + list.size() %>
+				<div class="movielist-section">
 				<ul>
 					<%
 					for(int i=0;i<list.size();i++){
@@ -195,7 +292,7 @@ String root = getServletContext().getRealPath("/");
 										dto.getCertification().contains("15")?"15세":"19세";
 					%>
 						<li>
-						<button type="button" class="movielist btn-basiclist">
+						<button type="button" class="movielist btn-basiclist" movie_id="<%=dto.getId() %>">
 						<div class="btn-content">
 						<img src="../../resources/ratingimg/<%=certification %>.png" width="30px;" style="margin-right: 10px;">
 						<span><%=dto.getTitle() %></span>
@@ -204,12 +301,13 @@ String root = getServletContext().getRealPath("/");
 					<%}
 					%>
 				</ul>
+				</div>
 			</div>
 			<div class="theater-local">
 				<div class="local">
 					<h4>&nbsp;&nbsp;&nbsp;극장</h4>
-					<ul>
-						<li><button class="btnlocal btn-basiclist">서울</button></li>
+					<ul id="locals">
+					<li><button class="btnlocal btn-basiclist">서울</button></li>
 						<li><button class="btnlocal btn-basiclist">경기</button></li>
 						<li><button class="btnlocal btn-basiclist">인천</button></li>
 						<li><button class="btnlocal btn-basiclist">대전/충청/세종</button></li>
@@ -221,18 +319,7 @@ String root = getServletContext().getRealPath("/");
 				</div>
 				<div class="vertical-line"></div>
 					<div class="theater">
-						<ul>
-							<li><button class="btntheater btn-basiclist">1</button></li>
-							<li><button class="btntheater btn-basiclist">2</button></li>
-							<li><button class="btntheater btn-basiclist">3</button></li>
-							<li><button class="btntheater btn-basiclist">4</button></li>
-							<li><button class="btntheater btn-basiclist">5</button></li>
-							<li><button class="btntheater btn-basiclist">6</button></li>
-							<li><button class="btntheater btn-basiclist">7</button></li>
-							<li><button class="btntheater btn-basiclist">8</button></li>
-							<li><button class="btntheater btn-basiclist">9</button></li>
-							<li><button class="btntheater btn-basiclist">10</button></li>
-							<li><button class="btntheater btn-basiclist">11</button></li>
+						<ul id="theater">
 						</ul>
 					</div>
 			</div>
@@ -245,40 +332,13 @@ String root = getServletContext().getRealPath("/");
 			String todate = sdf.format(today);
 			%>
 				<input type="date" class="form-control" style="max-width: 40%; margin:40px 100px;" value="<%=todate%>">
-				<ul>
+				<ul class="showtimes">
 					<li>
 						<button class="btntime btn-basiclist" type="submit">
 							<div class="timebox">
 								<span class="starttime"><b style="font-size: 1.2em">14:00</b>~16:22</span>
 								<span class="movietitle">영화1이야</span>
 								<span class="screeninfo">강원 <br>6관 <br>123/234</span>
-							</div>
-						</button>
-					</li>
-					<li>
-						<button class="btntime btn-basiclist" type="submit">
-							<div class="timebox">
-								<span class="starttime"><b style="font-size: 1.2em">15:10</b>~17:32</span>
-								<span class="movietitle">영화1이야</span>
-								<span class="screeninfo">강원<br>4관 <br>26/114</span>
-							</div>
-						</button>
-					</li>
-					<li>
-						<button class="btntime btn-basiclist" type="submit">
-							<div class="timebox">
-								<span class="starttime"><b style="font-size: 1.2em">15:40</b>~18:24</span>
-								<span class="movietitle">영화1이야</span>
-								<span class="screeninfo">강원 <br>1관 <br>78/144</span>
-							</div>
-						</button>
-					</li>
-					<li>
-						<button class="btntime btn-basiclist" type="submit">
-							<div class="timebox">
-								<span class="starttime"><b style="font-size: 1.2em">16:20</b>~18:42</span>
-								<span class="movietitle">영화1이야</span>
-								<span class="screeninfo">강원 <br>5관 <br>111/132</span>
 							</div>
 						</button>
 					</li>

@@ -44,7 +44,7 @@ input.pass {
 </head>
 <body>
 <jsp:include page="../../component/menu/header.jsp"/>
-<%@ include file="../../component/menu/headrResources.jsp" %>
+<%@ include file="../../component/menu/headerResources.jsp" %>
 <div class="container mt-3">
   <img alt="" src="../../resources/moviezzang_yellow.png">
     Login

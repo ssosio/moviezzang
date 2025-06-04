@@ -1,18 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@page import="data.api.YouTube"%>
-<% 
-	YouTube fetcher = new YouTube();
-String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널"); 
+<%@page import="data.api.YouTube"%>
+<%
+YouTube fetcher = new YouTube();
+String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널4");
 %>
 <!DOCTYPE html>
 
 <html lang="ko">
 <head>
-<%@ include file="../component/menu/headrResources.jsp"%>
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+<link rel="icon"
+	href="${pageContext.request.contextPath}/resources/domainIcon.png">
+<link rel="apple-touch-icon"
+	href="${pageContext.request.contextPath}/resources/domainIcon.png">
 <title>영화짱닷컴</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <script>
@@ -31,13 +34,14 @@ String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널");
               "3xl": "32px",
               full: "9999px",
               button: "8px",
+             
             },
           },
         },
       };
     </script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com"  />
+<link rel="preconnect" href="https://fonts.gstatic.com" />
 <link
 	href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
 	rel="stylesheet" />
@@ -46,7 +50,7 @@ String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널");
 	rel="stylesheet" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
-	
+
 <style>
 :where([class^="ri-"])::before {
 	content: "\f3c2";
@@ -99,13 +103,12 @@ body {
 	flex: 0 0 100%;
 	scroll-snap-align: start;
 }
-
 </style>
 </head>
 
 <body class="bg-white">
 
-	<jsp:include page="../component/menu/header.jsp"></jsp:include>
+
 	<!-- 메인 비주얼 영역 -->
 
 	<jsp:include page="../component/movieContent/movieTrailer.jsp"></jsp:include>
@@ -125,7 +128,7 @@ body {
 			<div class="flex overflow-x-auto space-x-6 pb-4 -mx-4 px-4">
 				<!-- 영화 포스터 1 -->
 				<%
-				for (int i = 0; i <5; i++) {
+				for (int i = 0; i < 5; i++) {
 				%>
 				<div class="poster relative flex-shrink-0 w-64">
 					<div class="relative">
@@ -133,24 +136,29 @@ body {
 						<div
 							class="hover-info absolute inset-0 bg-black bg-opacity-70 rounded flex flex-col justify-center items-center p-4">
 							<div class="text-white text-center mb-4">
-								<p class="font-bold mb-2">영화제목<%=i+1 %> </p>
-								<p class="text-sm mb-1">예매율<%=i+1 %></p>
-								<p class="text-sm">개봉일<%=i+1 %></p>
+								<p class="font-bold mb-2">
+									영화제목<%=i + 1%>
+								</p>
+								<p class="text-sm mb-1">
+									예매율<%=i + 1%></p>
+								<p class="text-sm">
+									개봉일<%=i + 1%></p>
 							</div>
 							<button
 								class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2">
-								예매하기<%=i+1 %></button>
-							<button
+								예매하기<%=i + 1%></button>
+							<button onclick="location.href='?main=movie/movieDetail.jsp'"
 								class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full">
-								상세정보<%=i+1 %></button>
+								상세정보<%=i + 1%></button>
 						</div>
 					</div>
 
 
 					<div class="mt-3">
-						<p class="font-bold">영화제목<%=i+1 %></p>
+						<p class="font-bold">
+							영화제목<%=i + 1%></p>
 						<div class="flex items-center text-sm text-gray-600 mt-1">
-							<span>예매율${i} </span> <span class="mx-2">|</span> <span>개봉일<%=i+1 %>
+							<span>예매율${i} </span> <span class="mx-2">|</span> <span>개봉일<%=i + 1%>
 							</span>
 						</div>
 					</div>
@@ -389,8 +397,7 @@ body {
 			</div>
 		</div>
 	</section>
-	<!-- 푸터  -->
-	<jsp:include page="../component/menu/footer.jsp"></jsp:include>
+
 	<script>
      
       document.addEventListener("DOMContentLoaded", function () {

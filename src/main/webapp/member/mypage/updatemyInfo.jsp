@@ -1,6 +1,9 @@
+<%@page import="java.util.StringTokenizer"%>
+<%@page import="data.dto.UserDTO"%>
+<%@page import="data.dao.UserDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ include file="../../component/menu/headrResources.jsp" %>
+    <%@ include file="../../component/menu/headerResources.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,7 +46,7 @@
 
     .myinfo-wrapper {
       display: flex;
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 100px auto 50px auto;
       padding: 20px;
       gap: 30px;
@@ -88,11 +91,53 @@
 		align-content: center;
 		width: 200px;
 	}
-    
+    i.dash {
+	color: rgba(0, 0, 0, 1);
+	line-height: 40px;
+	margin: 0 10px;
+}
+
+p{
+	
+}
 
   
   </style>
 </head>
+<%
+	String id=request.getParameter("id");
+
+	UserDAO dao=UserDAO.getInstance();
+	UserDTO dto=dao.getData(id);
+	
+	//이메일
+	StringTokenizer st=new StringTokenizer(dto.getEmail(),"@");
+	String email1=st.nextToken();
+	String email2=st.nextToken();
+	
+	//주소
+	String fullAddr = dto.getAddress();
+	String zipCode = "";
+	
+
+	if (fullAddr != null && fullAddr.length() > 5) {
+    zipCode = fullAddr.substring(0, 5);   
+	}
+	
+	//핸드폰
+	String h1 = "";
+	String h2 = "";
+	String h3 = "";
+
+	if (dto.getAddress() != null && dto.getPhone().contains("-")) {
+    String[] addrParts = dto.getPhone().split("-");
+    if (addrParts.length >= 3) {
+    	h1 = addrParts[0];
+    	h2 = addrParts[1];
+    	h3 = addrParts[2];
+    }
+}
+%>
 <body>
 
 <div class="myinfo-wrapper">
@@ -108,61 +153,62 @@
     <div class="myinfo-header">
       <h1 class="text-2xl font-bold">개인정보 수정</h1>
       <h6 style="color: #D3D3D3;">회원님의 정보를 정확히 입력해주세요.</h6>
-      <p>아이디</p>
+      <p style="font-size: 15pt;">ID ( <%=dto.getUserid() %> ) 님</p>
       <div class="mileage"><button type="button" class="btn btn-outline-info" style="color: white;">회원탈퇴</button></div>
     </div>
 
     <div class="myinfo-section">
       <h4 class="text-2xl font-bold" style="color: #000080">기본정보</h4>
       <span style="color: red; margin-left: 640px;">*<b style="color: black;">는 필수</b></span>
-      <form action="">
+      <form action="updateAction.jsp" method="post" onsubmit="return check(this)">
+      <input type="hidden" name="id" value="<%=id%>">
         <table class="table" style="width: 700px;">
         	<tr>
         	<hr width="700">
         	<th style="background-color: whitesmoke;">이름<label style="color: red;">*</label></th>
         	<td>
-        		<input type="text" class="form-control" style="width: 150px;" name="name" id="name" value=""
+        		<input type="text" class="form-control" style="width: 150px;" name="name" id="name" value="<%=dto.getName() %>"
         		required="required" placeholder="변경 할 이름">
         	</td>
         	</tr>
         	<tr>
         	<th style="background-color: whitesmoke;">비밀번호<label style="color: red;">*</label></th>
         	<td>
-        		<input type="password" class="form-control"  name="pass" id="password" style="width: 150px;" value=""
+        		<input type="text" class="form-control"  name="password" id="password" style="width: 150px;" value="<%=dto.getPassword() %>"
         		required="required" placeholder="변경 할 비밀번호">
-        		<input type="password" name="pass2" id="password" class="form-control" style="width: 150px;" required="required" placeholder="비밀번호 확인">
+        		<input type="password" name="password2" id="password2" class="form-control" style="width: 150px;" required="required" placeholder="비밀번호 확인">
         	</td>
         	</tr>
         	<tr>
         	<th style="background-color: whitesmoke;">생년월일<label style="color: red;">*</label></th>
         	<td>
-        		<input type="date" class="form-control" style="width: 150px;" name="birth" id="birth" value="">
+        		<input type="date" class="form-control" style="width: 150px;" name="birth" id="birth" value="<%=dto.getBirth()%>">
         	</td>
         	</tr>
         	<tr>
         	<th style="background-color: whitesmoke;">휴대폰<label style="color: red;">*</label></th>
         	<td class="input-group">
         	<select name="hp1" class="form-control">
-						<option>02</option>
-						<option>011</option>
-						<option>010</option>
+						<option value="02" <%= "02".equals(h1) ? "selected" : "" %>>02</option>
+						<option value="011" <%= "011".equals(h1) ? "selected" : "" %>>011</option>
+						<option value="010" <%= "010".equals(h1) ? "selected" : "" %>>010</option>
 					</select>
-					<a style="color: "><i class="bi bi-dash-lg dash"></i></a>
+					<a><i class="bi bi-dash-lg dash"></i></a>
         		<input type="text" class="form-control"  name="hp2" style="width: 30px;" onkeyup="goFocus(this)"
-        		value="">
+        		value="<%=h2%>">
         			<i class="bi bi-dash-lg dash" style="color: black;"></i>
         		<input type="text" class="form-control"  name="hp3" style="width: 30px;"
-        		value="">
+        		value="<%=h3%>">
         	</td>
         	</tr>
         	<tr>
         	<th style="background-color: whitesmoke;">이메일<label style="color: red;">*</label></th>
         	<td class="input-group">
         		<input type="text" name="email1" id="email1" class="form-control" required="required" placeholder="이메일을 입력해주세요"
-        		style="width: 100px;" value="">
+        		style="width: 100px;" value="<%=email1%>">
 				<span>@</span>
 				<input type="text" name="email2" id="email2" class="form-control" required="required"
-				style="width: 100px;" value="">
+				style="width: 100px;" value="<%=email2%>">
 				<select id="selemail" class="form-control">
 					<option value="-">직접입력</option>
 					<option value="naver.com">naver.com</option>	
@@ -176,10 +222,10 @@
         	<td>
         		<div class="col-sm-6 mb-3 mb-sm-0">
     		<input type="text" class="form-control form-control-user" id="zipCode" name="zipCode" placeholder="우편번호" readonly onclick="sample4_execDaumPostcode()"
-    		value="" style="width: 90px;">
-    		<input type="text" class="" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly
+    		value="<%=zipCode %>" style="width: 90px;">
+    		<input type="text" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly
     		value="">
-    		<input type="text" class="" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()"
+    		<input type="text" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()"
     		value="">
     			</div>
         	</td>
@@ -187,8 +233,10 @@
         	<tr>
         		<th style="background-color: whitesmoke;">성별</th>
         		<td>
-        			<input type="radio" name="gender" id="gender1" value="M">남자
-					<input type="radio" name="gender" id="gender2" value="F">여자
+        			<input type="radio" name="gender" id="gender1" value="M"
+        			 <%= "M".equals(dto.getGender())?"checked" : "" %>>남자
+					<input type="radio" name="gender" id="gender2" value="F"
+					 <%= "F".equals(dto.getGender())?"checked" : "" %>>여자
         		</td>
         	</tr>
         	<tr>

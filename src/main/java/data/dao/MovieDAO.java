@@ -34,7 +34,7 @@ public class MovieDAO {
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
 
-		String sql = "insert into movie values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into movie values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -48,6 +48,7 @@ public class MovieDAO {
 			pstmt.setString(8, dto.getPoster_url());
 			pstmt.setFloat(9, dto.getScore());
 			pstmt.setFloat(10, dto.getLocal_score());
+			pstmt.setString(11, dto.getGenre());
 
 			pstmt.execute();
 		} catch (SQLException e) {
@@ -86,7 +87,7 @@ public class MovieDAO {
 		PreparedStatement pstmt = null;
 		
 		// 배급사는 받아올 수 없어서 null로 일단 삽입
-		String sql = "insert into movie values(null, ?, ?, ?, ?, ?, ?, null, ?, ?, ?)";
+		String sql = "insert into movie values(null, ?, ?, ?, ?, ?, ?, null, ?, ?, ?, ?)";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -120,6 +121,20 @@ public class MovieDAO {
 				pstmt.setFloat(8, Math.round(((Number) jobj.get("score")).floatValue() * 10) / 10.0f);
 				pstmt.setFloat(9, 0.0f);
 				
+				// 장르는 또다른 JSON배열로 저장되므로 String으로 변환하는 추가 과정이 필요
+				JSONArray genres = (JSONArray) jobj.get("genres");
+				
+				if (genres != null) 
+				{
+					// , 로 구분해서 저장
+				    String genresStr = String.join(",", genres);
+				    pstmt.setString(10, genresStr);
+				} 
+				else 
+				{
+				    pstmt.setString(10, "준비중");
+				}
+				
 				pstmt.executeUpdate();
 			}
 		} catch (SQLException e) {
@@ -150,12 +165,16 @@ public class MovieDAO {
 
 				dto.setId(rs.getString("id"));
 				dto.setTitle(rs.getString("title"));
+				dto.setSynopsis(rs.getString("synopsis"));
 				dto.setRelease_date(rs.getDate("release_date"));
 				dto.setCertification(rs.getString("certification"));
 				dto.setRuntime(rs.getInt("runtime"));
 				dto.setStudio(rs.getString("studio"));
 				dto.setDistributor(rs.getString("distributor"));
 				dto.setPoster_url(rs.getString("poster_url"));
+				dto.setScore(rs.getFloat("score"));
+				dto.setLocal_score(rs.getFloat("local_score"));
+				dto.setGenre(rs.getString("genre"));
 
 				list.add(dto);
 			}
@@ -169,5 +188,50 @@ public class MovieDAO {
 		return list;
 	}
 
+	// 영화 검색용		// 특정 문자열을 포함하는 제목을 가진 영화목록 출력
+	public List<MovieDTO> getDatasByTitle(String keyword)
+	{
+		List<MovieDTO> list = new ArrayList<MovieDTO>();
+
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = "select * from movie where title like ?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + keyword + "%");
+			rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				MovieDTO dto = new MovieDTO();
+
+				dto.setId(rs.getString("id"));
+				dto.setTitle(rs.getString("title"));
+				dto.setSynopsis(rs.getString("synopsis"));
+				dto.setRelease_date(rs.getDate("release_date"));
+				dto.setCertification(rs.getString("certification"));
+				dto.setRuntime(rs.getInt("runtime"));
+				dto.setStudio(rs.getString("studio"));
+				dto.setDistributor(rs.getString("distributor"));
+				dto.setPoster_url(rs.getString("poster_url"));
+				dto.setScore(rs.getFloat("score"));
+				dto.setLocal_score(rs.getFloat("local_score"));
+				dto.setGenre(rs.getString("genre"));
+
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return list;
+	}
+	
 	// delete
 }
