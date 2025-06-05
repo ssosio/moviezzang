@@ -28,15 +28,11 @@ if(chk)
 	session.setAttribute("userid", userid);
 	session.setAttribute("chkidok", save);
 	
-	%>
-	<script type="text/javascript">
-			alert("아이디와 비밀번호가 맞다");
-		</script>
-	<%
-	
+
 	session.setMaxInactiveInterval(60*60*8);
 	
 	response.sendRedirect("../../index.jsp");
+	
 	
 }else{
 %>

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import data.dto.UserDTO;
 import mysql.db.DBConnect;
@@ -122,6 +122,49 @@ public class UserDAO {
 		}
 		
 		
+	}
+	
+	// 관리자페이지에서 유저 정보 수정 중 전체를 update하는 것이 아니라 변경 사항이 있는 것만 업데이트
+	// 프론트쪽 진행방식은 adminMember 참고
+	public void updateMemberByColumns(int id, Map<String, String> colMap)
+	{
+		// 변경된 내용이 없다면 아무것도 안하고 return
+		// 프론트쪽에도 안전장치 있음
+		if(colMap == null || colMap.isEmpty())
+		{
+			return;	
+		}
+		
+	    StringBuilder sql = new StringBuilder("UPDATE user SET ");
+	    List<String> cols = new ArrayList<>();
+	    List<Object> values = new ArrayList<>();	// Object타입인 것은 value의 자료형이 다양할 것을 고려
+	    
+	    // 전달받은 map에 따라 sql문을 작성해주는 코드
+	    for(Map.Entry<String, String> entry : colMap.entrySet()) 
+	    {
+	        cols.add(entry.getKey() + "=?");
+	        values.add(entry.getValue());
+	    }
+	    sql.append(String.join(", ", cols)).append(" WHERE id=?");
+	    values.add(id);
+
+	    Connection conn = db.getConnection();
+	    PreparedStatement pstmt = null;
+	    
+	    try {
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			for (int i = 0; i < values.size(); i++)
+			{
+				pstmt.setObject(i + 1, values.get(i));
+			}
+			
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(pstmt, conn);
+		}
 	}
 	
 	//예매내역 리스트

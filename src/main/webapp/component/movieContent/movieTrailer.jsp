@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
-DBConnect db = new DBConnect();
+
 YouTube fetcher = new YouTube();
 String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널");
 %>
@@ -52,7 +52,7 @@ String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널");
 		<!-- 텍스트 콘텐츠 -->
 		<div class="absolute inset-0 flex items-center z-20">
 			<div class="container mx-auto px-4">
-				<h1 class="text-4xl md:text-5xl font-bold text-white mb-4">영화제목</h1>
+				<h1 class="text-4xl md:text-5xl font-bold text-white mb-4"><%=trailerId%></h1>
 				<p class="text-xl text-white mb-6">영화소개</p>
 				<div class="flex space-x-4">
 					<button

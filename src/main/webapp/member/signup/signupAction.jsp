@@ -24,19 +24,18 @@
 	String password=request.getParameter("password");
 	String name=request.getParameter("name");
 	String gender=request.getParameter("gender");
-	//String birth=request.getParameter("birth");
 	String phone=request.getParameter("hp1")+"-"+request.getParameter("hp2")+"-"+request.getParameter("hp3");
 	String address=request.getParameter("zipCode")+request.getParameter("streetAdr")+request.getParameter("detailAdr");
 	String email=request.getParameter("email1")+"@"+request.getParameter("email2");
 	
-	 String birthStr = request.getParameter("birth"); // 예: "2000-05-30"
+	 String birth = request.getParameter("birth");
 	 int age=0;   
 	 
 	 
-	    if (birthStr != null && !birthStr.isEmpty()) {
+	    if (birth != null && !birth.isEmpty()) {
 	        // 생년월일 문자열을 LocalDate로 변환
 	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	        LocalDate birthDate = LocalDate.parse(birthStr, formatter);
+	        LocalDate birthDate = LocalDate.parse(birth, formatter);
 
 	        // 오늘 날짜
 	        LocalDate today = LocalDate.now();
@@ -57,7 +56,7 @@
 	dto.setPassword(password);
 	dto.setName(name);
 	dto.setGender(gender);
-	dto.setBirth(birthStr);
+	dto.setBirth(birth);
 	dto.setPhone(phone);
 	dto.setAddress(address);
 	dto.setEmail(email);
