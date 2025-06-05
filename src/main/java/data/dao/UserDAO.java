@@ -127,21 +127,21 @@ public class UserDAO {
 	//예매내역 리스트
 	public List<HashMap<String, String>> getReserveList(String userid)
 	{
-		String sql="SELECT \r\n"
-				+ "    res.id, \r\n"
-				+ "    res.reserved_at, \r\n"
-				+ "    m.title, \r\n"
-				+ "    t.name, \r\n"
-				+ "    s.start_time, \r\n"
-				+ "    s.price\r\n"
-				+ "FROM \r\n"
-				+ "    reservation res\r\n"
-				+ "JOIN screening s ON res.screening_id = s.id\r\n"
-				+ "JOIN movie m ON s.movie_id = m.id\r\n"
-				+ "JOIN auditorium a ON s.auditorium_id = a.id\r\n"
-				+ "JOIN theater t ON a.theater_id = t.id\r\n"
-				+ "JOIN user u ON res.user_id = u.id\r\n"
-				+ "WHERE u.userid = ?";
+		String sql="SELECT "
+		        + "res.id, "
+		        + "res.reserved_at, "
+		        + "m.title, "
+		        + "t.name, "
+		        + "s.start_time, "
+		        + "s.price "
+		        + "FROM "
+		        + "reservation res "
+		        + "JOIN screening s ON res.screening_id = s.id "
+		        + "JOIN movie m ON s.movie_id = m.id "
+		        + "JOIN auditorium a ON s.auditorium_id = a.id "
+		        + "JOIN theater t ON a.theater_id = t.id "
+		        + "JOIN user u ON res.user_id = u.id "
+		        + "WHERE u.userid = ?";
 		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
 		
 		Connection conn=db.getConnection();
@@ -381,4 +381,42 @@ public class UserDAO {
 		return id;
 	}
 	
+	//예매취소
+	public void deleteReserved(String id)
+	{
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		
+		String sql="delete from reservation where id=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}
+	}
+	
+	//예매리스트 좌석수
+	public void bookSeatCnt(String id){
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		
+		String sql="select seat_id from seat_reserved where reservation_id="+id;
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}
+	}
 }

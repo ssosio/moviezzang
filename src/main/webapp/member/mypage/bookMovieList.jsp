@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="data.dto.UserDTO"%>
@@ -36,7 +37,22 @@ $(function () {
 	    option.value = `\${year}-\${month.toString().padStart(2, '0')}`;
 	    option.text = `\${year}년 \${month}월`;
 	    select.appendChild(option);
-	  }
+	  };
+	  
+	  // 필터링 이벤트
+	  $("#monthSelect").on("change", function () {
+	    const selectedMonth = $(this).val(); // "YYYY-MM"
+	    $("table tr[data-reserved]").each(function () {
+	      const reservedDate = $(this).data("reserved");
+	      if (selectedMonth === "all" || reservedDate === selectedMonth) {
+	        $(this).show();
+	      } else {
+	        $(this).hide();
+	      }
+	    });
+	  });
+	  
+	 
 	});
 
 </script>
@@ -50,7 +66,7 @@ $(function () {
 
     .booklist-wrapper {
       display: flex;
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 100px auto 50px auto;
       padding: 20px;
       gap: 30px;
@@ -97,8 +113,12 @@ $(function () {
   
   </style>
   <%
-  String userid=(String)session.getAttribute("userid");
-  	UserDAO dao=UserDAO.getInstance();
+	String userid=(String)session.getAttribute("userid");
+	UserDAO dao=UserDAO.getInstance();
+	
+	/* System.out.println("userid="+userid); */
+  	
+	
   	
   	List<HashMap<String, String>> list=dao.getReserveList(userid);
   	
@@ -122,7 +142,7 @@ $(function () {
       <div class="booklist-box">
         <p>예매날짜</p>
         <select id="monthSelect" class="w-40 p-2 border border-gray-300 rounded-md">
-  			
+  			<option value="all">전체보기</option>
 		</select>
       </div>
       <br>
@@ -134,26 +154,28 @@ $(function () {
       			<th style="background-color: whitesmoke">극장</th>
       			<th style="background-color: whitesmoke">상영일시</th>
       			<th style="background-color: whitesmoke">결제금액</th>
+      			<th style="background-color: whitesmoke">예매취소</th>
       		</tr>
       		<%
       			for(int i=0;i<list.size();i++)
       			{
-      				HashMap<String, String> map=list.get(i);
+      				HashMap<String,String> map=list.get(i);
       				
       				int price=Integer.parseInt(map.get("price"));
       			%>
       			
-      			<tr>
+      			<tr data-id=<%=map.get("id") %> data-reserved="<%=map.get("reserved_at").substring(0,7)%>">
       				<td><%=map.get("reserved_at") %></td>
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
       				<td><%=map.get("start_time") %></td>
-      				<td><%=nf.format("price")%></td>
-      				<a><i class="bi bi-x-circle"></i></a>
+      				<td><%=nf.format(price)%></td>
+      				<td><a class="cancel-btn" onclick="cancelReserve(this)"
+      				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
       			</tr>
       			
-      			<%}
-      		%>
+      			<%}%>
+      		
       		
       		</table>
       	</div>
@@ -164,7 +186,7 @@ $(function () {
     </div>
     <br>
     	<div class="booklist-list">
-      		<table class="table">
+      		<table class="table" id="canceltable">
       		  <tr>
       			<th style="background-color: whitesmoke">취소일시</th>
       			<th style="background-color: whitesmoke">영화명</th>
@@ -172,7 +194,8 @@ $(function () {
       			<th style="background-color: whitesmoke">상영일시</th>
       			<th style="background-color: whitesmoke">취소금액</th>
       	     </tr>
-      	     <tr>
+      	     <tr class="canceltr">
+      	     	
 				     	     
       	     </tr>
       	     
@@ -181,6 +204,52 @@ $(function () {
     
   </div>
 </div>
+<script type="text/javascript">
+function cancelReserve(element) {
+	  const row = element.closest("tr");
+	  const reserveId = row.getAttribute("data-id");
+
+	  if (!confirm("이 예매를 취소하시겠습니까?")) return;
+
+	  $.ajax({
+	    url: "member/mypage/cancelReserve.jsp",
+	    type: "post",
+	    data: {"id": reserveId },
+	    dataType:"json",
+	    success: function(res) {
+
+	      if (res.result === "success") {
+	        // 현재 시간
+	        const now = new Date().toLocaleString();
+
+	        // 원래 셀들 읽기
+	        const cells = row.querySelectorAll("td");
+
+	        // 취소 내역 테이블에 추가
+	        if()
+	        const cancelRow = `
+	          
+	            <td>\${now}</td>
+	            <td>\${cells[1].innerText}</td>
+	            <td>\${cells[2].innerText}</td>
+	            <td>\${cells[3].innerText}</td>
+	            <td>\${cells[4] ? cells[4].innerText : ""}</td>
+	          
+	        `;
+	        document.querySelector("#canceltable .canceltr").insertAdjacentHTML("beforeend", cancelRow);
+
+	        // 예매내역에서 삭제
+	        row.remove();
+	      } else {
+	        alert("예매 취소에 실패했습니다.");
+	      }
+	    },
+	    error: function() {
+	      alert("서버 통신 오류 발생");
+	    }
+	  });
+	}
+</script>
 </body>
 
 
