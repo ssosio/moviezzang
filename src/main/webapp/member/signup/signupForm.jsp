@@ -76,11 +76,10 @@
 	
 	width: 800px;
 	margin: 0 auto;
-	margin-top: 150px;
+	margin-top: 60px;
 }
 
 .wrap>form {
-
 	display: flex;
 	flex-direction: column;
 }
@@ -89,6 +88,8 @@
 	display: flex;
 	flex-direction: row;
 	margin-bottom: 30px;
+	width: 700px;
+	margin-left: 90px;
 }
 
 .wrap>form .email {
