@@ -16,16 +16,15 @@
 		
 		//아이디 중복체크
 		$("#idCheck").click(function () {
-			
 			var userid=$("#userid").val();
 			//alert(userid);
 			
-			$.ajax({
-				
+			$.ajax({	
 				type:"get",
 				url:"member/signup/idCheck.jsp",
 				dataType:"json",
 				data:{"userid":userid},
+				success: function(res){
 					//console.log(res.idCheck);
 					
 					if(res.idCheck==1){
@@ -33,9 +32,7 @@
 					}else{
 						alert("가입가능한 아이디입니다");
 					} 
-				}
-				
-				
+				}	
 			});
 			
 		});
