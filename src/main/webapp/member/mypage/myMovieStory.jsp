@@ -97,7 +97,9 @@ UserDTO dto=dao.getData(id);
         		<th>한줄평</th>
         		<th>평점</th>
         	</tr>
-        	<<tr></tr>
+        	<<tr>
+        		
+        	</tr>
         </table>
       </div>
     </div>

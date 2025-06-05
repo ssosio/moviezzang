@@ -121,7 +121,7 @@ $(function () {
 	
   	
   	List<HashMap<String, String>> list=dao.getReserveList(userid);
-  	
+  	List<HashMap<String, String>> clist=dao.getCancelList(userid);
   	NumberFormat nf=NumberFormat.getCurrencyInstance();
   %>
 </head>
@@ -145,7 +145,7 @@ $(function () {
   			<option value="all">전체보기</option>
 		</select>
       </div>
-      <br>
+      <br><br><br>
       	<div class="booklist-list">
       		<table class="table">
       		<tr>
@@ -153,15 +153,20 @@ $(function () {
       			<th style="background-color: whitesmoke">영화명</th>
       			<th style="background-color: whitesmoke">극장</th>
       			<th style="background-color: whitesmoke">상영일시</th>
+      			<th style="background-color: whitesmoke">티켓수</th>
       			<th style="background-color: whitesmoke">결제금액</th>
       			<th style="background-color: whitesmoke">예매취소</th>
       		</tr>
+ 				<div>
       		<%
       			for(int i=0;i<list.size();i++)
       			{
       				HashMap<String,String> map=list.get(i);
       				
+      				
+      				int seat=map.get("seat_id").length();
       				int price=Integer.parseInt(map.get("price"));
+      				
       			%>
       			
       			<tr data-id=<%=map.get("id") %> data-reserved="<%=map.get("reserved_at").substring(0,7)%>">
@@ -169,16 +174,18 @@ $(function () {
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
       				<td><%=map.get("start_time") %></td>
-      				<td><%=nf.format(price)%></td>
+      				<td><%=seat %></td>
+      				<td><%=nf.format(price*seat)%></td>
       				<td><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
       			</tr>
       			
       			<%}%>
       		
-      		
+      		</div>
       		</table>
       	</div>
+      	<br><br>
     </div>
     <br>
      <div class="booklist-header">
@@ -192,12 +199,31 @@ $(function () {
       			<th style="background-color: whitesmoke">영화명</th>
       			<th style="background-color: whitesmoke">극장</th>
       			<th style="background-color: whitesmoke">상영일시</th>
+      			<th style="background-color: whitesmoke">티켓수</th>
       			<th style="background-color: whitesmoke">취소금액</th>
       	     </tr>
-      	     <tr class="canceltr">
-      	     	
-				     	     
-      	     </tr>
+      	     <%
+      			for(int i=0;i<clist.size();i++)
+      			{
+      				HashMap<String,String> map=clist.get(i);
+      				
+      				
+      				int seat=map.get("seat_id").length();
+      				int price=Integer.parseInt(map.get("price"));
+      				
+      			%>
+      			
+      			<tr data-id=<%=map.get("id") %> data-reserved="<%=map.get("reserved_at").substring(0,7)%>">
+      				<td><%=map.get("reserved_at") %></td>
+      				<td><%=map.get("title") %></td>
+      				<td><%=map.get("name") %></td>
+      				<td><%=map.get("start_time") %></td>
+      				<td><%=seat %></td>
+      				<td><%=nf.format(price*seat)%></td>
+      				
+      			</tr>
+      			
+      			<%}%>
       	     
       		</table>
       	</div>
@@ -206,49 +232,26 @@ $(function () {
 </div>
 <script type="text/javascript">
 function cancelReserve(element) {
-	  const row = element.closest("tr");
-	  const reserveId = row.getAttribute("data-id");
+	const reserveId = element.closest("tr").getAttribute("data-id");
+    if (!confirm("이 예매를 취소하시겠습니까?")) return;
 
-	  if (!confirm("이 예매를 취소하시겠습니까?")) return;
-
-	  $.ajax({
-	    url: "member/mypage/cancelReserve.jsp",
-	    type: "post",
-	    data: {"id": reserveId },
-	    dataType:"json",
-	    success: function(res) {
-
-	      if (res.result === "success") {
-	        // 현재 시간
-	        const now = new Date().toLocaleString();
-
-	        // 원래 셀들 읽기
-	        const cells = row.querySelectorAll("td");
-
-	        // 취소 내역 테이블에 추가
-	        if()
-	        const cancelRow = `
-	          
-	            <td>\${now}</td>
-	            <td>\${cells[1].innerText}</td>
-	            <td>\${cells[2].innerText}</td>
-	            <td>\${cells[3].innerText}</td>
-	            <td>\${cells[4] ? cells[4].innerText : ""}</td>
-	          
-	        `;
-	        document.querySelector("#canceltable .canceltr").insertAdjacentHTML("beforeend", cancelRow);
-
-	        // 예매내역에서 삭제
-	        row.remove();
-	      } else {
-	        alert("예매 취소에 실패했습니다.");
-	      }
-	    },
-	    error: function() {
-	      alert("서버 통신 오류 발생");
-	    }
-	  });
-	}
+    $.ajax({
+        url: "member/mypage/cancelReserve.jsp",
+        type: "post",
+        data: { id: reserveId },
+        dataType: "json",
+        success: function(res) {
+            if (res.result === "success") {
+               alert("취소되었습니다.")
+            } else {
+                alert("예매 취소에 실패했습니다.");
+            }
+        },
+        error: function() {
+            alert("서버 통신 오류가 발생했습니다.");
+        }
+    });
+}
 </script>
 </body>
 
