@@ -56,3 +56,15 @@
 	background: purple;
 	color: white;
 }
+.btn-pay{
+	background: #481658;
+	color: white;
+	border-radius: 5px;
+	border: 1px #481658 solid;
+	width: 100px;
+	height: 30px;
+}
+.btn-pay:hover{
+	background: white;
+	color: purple;
+}

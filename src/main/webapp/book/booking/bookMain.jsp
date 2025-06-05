@@ -83,7 +83,7 @@
 
 .bookcontainer div.theater {
   width: 50%;
-  margin-top: 68px;
+  margin-top: 78px;
 }
 
 .bookcontainer div.theater ul {
@@ -146,6 +146,11 @@
   text-align: right;
   font-size: 12px;
   line-height: 1.3;
+}
+
+.bookcontainer .showtimes-section {
+  overflow-y: auto;
+  margin-top: 25px;
 }
 
 .bookcontainer .vertical-line {
@@ -310,6 +315,8 @@ $(function() {
 	//btn 토글클래스
 	$(document).on("click",".movielist",function(){
 		$(".movielist").removeClass("btn-active");
+		$(".btnlocal").removeClass("btn-active");
+		$(".btntheater").removeClass("btn-active");
 		$(this).addClass("btn-active");
 	});
 	$(document).on("click",".btnlocal",function(){
@@ -383,8 +390,10 @@ String root = getServletContext().getRealPath("/");
 			</div>
 			<div class="time">
 			<h4>&nbsp; &nbsp; &nbsp;시간</h4>
-				<ul class="showtimes">
-				</ul>
+				<div class="showtimes-section">
+					<ul class="showtimes">
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
