@@ -42,7 +42,7 @@ $(function () {
 	  // 필터링 이벤트
 	  $("#monthSelect").on("change", function () {
 	    const selectedMonth = $(this).val(); // "YYYY-MM"
-	    $("table tr[data-reserved]").each(function () {
+	    $("#reserveTable tr[data-reserved]").each(function () {
 	      const reservedDate = $(this).data("reserved");
 	      if (selectedMonth === "all" || reservedDate === selectedMonth) {
 	        $(this).show();
@@ -147,7 +147,7 @@ $(function () {
       </div>
       <br><br><br>
       	<div class="booklist-list">
-      		<table class="table">
+      		<table class="table" id="reserveTable">
       		<tr>
       			<th style="background-color: whitesmoke">예매일시</th>
       			<th style="background-color: whitesmoke">영화명</th>
@@ -213,7 +213,7 @@ $(function () {
       				
       			%>
       			
-      			<tr data-id=<%=map.get("id") %> data-reserved="<%=map.get("reserved_at").substring(0,7)%>">
+      			<tr >
       				<td><%=map.get("reserved_at") %></td>
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>

@@ -543,4 +543,62 @@ public class UserDAO {
 		}
 		
 	}
+	
+	//무비스토리 리스트
+	public List<HashMap<String, String>> getStoryList(String userid)
+	{
+		String sql="SELECT  "
+				+ "    res.id, "
+				+ "    res.reserved_at, "
+				+ "    m.title, "
+				+ "    t.name, "
+				+ "    s.start_time, "
+				+ "    s.price, "
+				+ "    m.poster_url, "
+				+ "    sr.seat_id "
+				+ "FROM  "
+				+ "    reservation res "
+				+ "JOIN screening s ON res.screening_id = s.id "
+				+ "JOIN movie m ON s.movie_id = m.id "
+				+ "JOIN auditorium a ON s.auditorium_id = a.id "
+				+ "JOIN theater t ON a.theater_id = t.id "
+				+ "JOIN user u ON res.user_id = u.id "
+				+ "JOIN seat_reserved sr ON res.id = sr.reservation_id "
+				+ "WHERE u.userid =? AND res.booked = 'Y'";
+		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
+		
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+			rs=pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				HashMap<String, String> map=new HashMap<String, String>();
+				map.put("id", rs.getString("id"));
+				map.put("reserved_at", rs.getString("reserved_at"));
+				map.put("title", rs.getString("title"));
+				map.put("name", rs.getString("name"));
+				map.put("start_time", rs.getString("start_time"));
+				map.put("price", rs.getString("price"));
+				map.put("poster_url", rs.getString("poster_url"));
+				map.put("seat_id", rs.getString("seat_id"));
+				
+				list.add(map);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+			
+		}
+		
+		return list;
+	}
 }
