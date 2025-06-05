@@ -65,20 +65,33 @@ String root=request.getContextPath();
 						<%
 						
 						
-						if(loginok!=null)
+						if(loginok!=null && sessionuserid.equals("admin"))
 						{
-							
-							
 						%>
-							<a id="" 
-						class="!text-white hover:!text-primary !transition-colors !no-underline" href="">
+						
+							<a id="logout" 
+						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
 						로그아웃</a> 
+						<a id="logout" 
+						class="!text-white hover:!text-primary !transition-colors !no-underline" href="?main=indexAdmin.jsp?id=<%=id %>">
+						관리자페이지</a>
 						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
 						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a>
-							
-							
 						<%
-						}else{
+						}
+						
+						else if(loginok!=null)
+						{
+						%>	
+							<a id="logout" 
+						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
+						로그아웃</a> 
+						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
+						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a> 
+						<%
+						}
+						
+						else{
 						%>
 							<a id="openLoginModal" 
 						class="!text-white hover:!text-primary !transition-colors !no-underline"href="#">
@@ -107,6 +120,7 @@ String root=request.getContextPath();
       alert('로그인 모달이 준비되지 않았습니다.');
     }
   };
+
 </script>
 <%-- <% for (int i = 0; i < 100; i++) { %>
     <br>
