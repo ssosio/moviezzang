@@ -18,7 +18,7 @@ String password=request.getParameter("password");
 
 UserDAO dao=UserDAO.getInstance();
 boolean chk=dao.userIdCheck(userid, password);
-
+String usertype=dao.getUserType(userid);
 
 
 if(chk)
@@ -27,7 +27,7 @@ if(chk)
 	session.setAttribute("loginok", "yes");
 	session.setAttribute("userid", userid);
 	session.setAttribute("chkidok", save);
-	
+	session.setAttribute("usertype", usertype);
 
 	session.setMaxInactiveInterval(60*60*8);
 	

@@ -424,4 +424,34 @@ public class UserDAO {
 		return id;
 	}
 	
+	public String getUserType(String userid)
+	{
+		String usertype="";
+		
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		String sql="select user_type from user where userid=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next())
+			{
+				usertype=rs.getString("user_type");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return usertype;
+	}
+	
 }
