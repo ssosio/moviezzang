@@ -12,8 +12,8 @@
 	TMDB tmdb = new TMDB();
 
 	JSONArray list = tmdb.getMovieDatas();
-	int size = list.size();	
-	
+	int size = list.size();
+
 	//MovieDAO.getInstance().insertData(list);
 %>
 <title>Insert title here</title>
@@ -28,7 +28,7 @@
 	<br>
 	<%
 		}
-	
+
 		for(Object obj : list)
 		{
 			JSONObject jobj = (JSONObject)obj;
