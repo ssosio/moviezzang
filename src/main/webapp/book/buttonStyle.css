@@ -66,5 +66,10 @@
 }
 .btn-pay:hover{
 	background: white;
-	color: purple;
+	color: #481658;
+}
+.div-showSeat{
+	background:#481658 !important;
+	color: white !important;
+	border: 1px solid #481658 !important;
 }

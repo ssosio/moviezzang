@@ -273,7 +273,9 @@ $(function() {
 		let teen = parseInt($(".teenager-inwoncount").text());
 		let total = adult + teen;
 
+
 		let selectCount = $(".selseat.select").length;
+
 
 		if($(this).hasClass("select")){
 			$(this).removeClass("select");
@@ -415,6 +417,7 @@ $(function() {
 		$(".pay span:last-child").text(formatTotalPay+"원");
 	}
 
+	//좌석 선택하면 div박스에 선택한 좌석 보이게하기.
 	function updateShowSelSeat(){
 		const selectSeats = $(".selseat.select");
 		const $showBox = $(".myseat-show");
@@ -423,7 +426,8 @@ $(function() {
 
 		selectSeats.each(function(){
 			const seatNo = $(this).attr("seat-no");
-			$showBox.append("<div>"+seatNo+"</div>");
+			$showBox.append("<div class='div-showSeat'>"+seatNo+"</div>");
+
 		});
 		//선택이 8개보다 작으면 빈 박스 채움
 		const emptyBoxCount = 8 - selectSeats.length;
@@ -493,13 +497,15 @@ $(function() {
 							//is_reserved의 값이1이면(예약이 되어있으면) reserved -> 버튼을 disabled로 바꿈(버튼 선택불가)
 							if(seat_row.equals(row) && seat_col.equals(col)){
 								if("1".equals(m.get("is_reserved"))){
-									reserved = "disabled class='reserved'";
+									reserved = "disabled reserved'";
 								}
 							}
 						}
 						%>
-							<button class="btn-seat selseat" type="button" style="margin-left: <%=margin%>"
-								row="<%=row%>" col="<%=col%>" <%=reserved %> seat-no="<%=seatrows[i-1]%><%=j%>"><%=j %></button>
+							<button class="btn-seat selseat <%=reserved.contains("reserved")?" reserved":"" %>" type="button" style="margin-left: <%=margin%>"
+								row="<%=row%>" col="<%=col%>" seat-no="<%=seatrows[i-1]%><%=j%>"
+								<%=reserved.contains("disabled")?"disabled":"" %>
+								><%=j %></button>
 						<%}%>
 						</div>
 					<%}
