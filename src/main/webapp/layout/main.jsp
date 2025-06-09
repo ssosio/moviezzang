@@ -9,6 +9,7 @@ String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널4");
 
 MovieDAO dao = MovieDAO.getInstance();
 
+
 %>
 <!DOCTYPE html>
 

@@ -1,3 +1,5 @@
+<%@page import="data.dto.MovieDTO"%>
+<%@page import="data.dao.MovieDAO"%>
 <%@page import="mysql.db.DBConnect"%>
 <%@page import="data.api.YouTube"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -7,6 +9,10 @@
 YouTube fetcher = new YouTube();
 String trailerId = fetcher.getTrailerVideoId("진격의거인 파이널");
 boolean hasTrailer = trailerId != null && !trailerId.trim().isEmpty();
+
+
+MovieDAO dao = MovieDAO.getInstance();
+MovieDTO dto = dao.getMovieById("1");
 %>
 <!DOCTYPE html>
 <html>
@@ -46,10 +52,10 @@ boolean hasTrailer = trailerId != null && !trailerId.trim().isEmpty();
 	
 	<section class="relative w-full aspect-[16/9] overflow-hidden">
 		<!-- 영상 재생 iframe 삽입 -->
-		<%-- <iframe class="absolute inset-0 w-full h-full"
+		<iframe class="absolute inset-0 w-full h-full"
 			src="https://www.youtube.com/embed/<%=trailerId%>?autoplay=1&mute=1&controls=0&loop=1&playlist=<%=trailerId%>&enablejsapi=1"
 			frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-		</iframe> --%>
+		</iframe>
 
 		<!-- 반투명 오버레이 -->
 		<div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
@@ -57,12 +63,12 @@ boolean hasTrailer = trailerId != null && !trailerId.trim().isEmpty();
 		<!-- 텍스트 콘텐츠 -->
 		<div class="absolute inset-0 flex items-center z-20">
 			<div class="container mx-auto px-4">
-				<h1 class="text-4xl md:text-5xl font-bold text-white mb-4"><%=trailerId%></h1>
+				<h1 class="text-4xl md:text-5xl font-bold text-white mb-4"><%=dto.getTitle()%></h1>
 				<p class="text-xl text-white mb-6"></p>
 				<div class="flex space-x-4">
 					<button
 						class="bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors"
-						onclick="location.href='?main=movie/movieDetail.jsp'">
+						onclick="location.href='?main=movie/movieDetail.jsp?id=<%=dto.getId()%>&name=<%=dto.getTitle()%>'">
 						상세정보</button>
 					<button
 						class="bg-white text-primary px-6 py-3 !rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors">

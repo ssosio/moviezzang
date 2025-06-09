@@ -658,7 +658,7 @@ input:checked+.switch-slider:before {
 					%>
 					<div>
 						<div class="relative">
-							<%=rec.getId()%>
+							
 							<img
 								onclick="location.href='?main=movie/movieDetail.jsp?id=<%=rec.getId()%>&name=<%=rec.getTitle()%>'"
 								src="<%=rec.getPoster_url().startsWith("https") ? "" : posterUrl%><%=rec.getPoster_url()%>"
