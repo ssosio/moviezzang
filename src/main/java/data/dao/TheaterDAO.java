@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import data.dto.TheaterDTO;
 import mysql.db.DBConnect;
 
 public class TheaterDAO {
@@ -32,6 +33,40 @@ public class TheaterDAO {
 
 	// delete
 
+	// 전체 데이터 조회
+	public List<TheaterDTO> getAllDatas()
+	{
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<TheaterDTO> list = new ArrayList<TheaterDTO>(); 
+		
+		String sql = "select * from theater order by id";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				TheaterDTO dto = new TheaterDTO();
+				
+				dto.setId(rs.getString("id"));
+				dto.setRegion(rs.getString("region"));
+				dto.setName(rs.getString("name"));
+				dto.setAddress(rs.getString("address"));
+				
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return list;
+	}
+	
 	//영화에따른 지역에서 상영하는 극장 전체조회
 	public List<HashMap<String, String>> getTheaterName(String movie_id, String region){;
 		List<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
