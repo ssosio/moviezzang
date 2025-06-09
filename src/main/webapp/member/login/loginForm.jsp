@@ -11,20 +11,7 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <title>로그인</title>
-<%
-	String userid=(String)session.getAttribute("userid");
-	String saveid=(String)session.getAttribute("chkidok");
-	
-	boolean save=true;
-	
-	if(saveid==null){
-		
-		userid="";
-		save=false;
-	  }
-	
-	
-%>
+
 <style type="text/css">
 </style>
 </head>
@@ -94,6 +81,7 @@
         margin: 0 auto;
     	height: 50px;
     	font-size: 1.3rem;
+    	margin-bottom: 15px;
     }
       .modal { display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); }
       .modal.show { display: block; }
@@ -103,11 +91,11 @@
     	    color: #fff;
     	    height: 50px;
     	}
-      input.id { margin-bottom: 30px; }
-      input.pass { margin-bottom: 30px; }
+      input.id { margin: 10px 0 25px; }
+      input.pass { margin-bottom: 15px; }
       .modal-header.close {color: #fff;}
       .loginbtn:hover { background: #351f67; }
-      .close { color: white; position: absolute; right:15px; }
+      .close { color: white; position: absolute; right:5px; }
       .close:hover {color: lightgrey;}
     </style>
     
@@ -120,13 +108,13 @@
           </div>
           <div class="modal-body">
           
-          <input type="text" name="userid" id="userid" class="form-control id" placeholder="아이디" value="">
-          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required" value="${password}">          
-          <input type="checkbox" name="chkid" id="chkid"><label for="chkid" style="margin-left:10px;">아이디 저장</label>
+          <input type="text" name="userid" id="userid" class="form-control id" placeholder="아이디" required="required">
+          <input type="password" name="password" id="password" class="form-control pass" placeholder="비밀번호" required="required">          
+          <input type="checkbox" name="chkid" id="chkid" style="margin-left:3px;"><label for="chkid" style="margin-left:10px;">아이디 저장</label>
           
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn loginbtn" id="loginBtn" onclick="">로그인</button>
+            <button type="button" class="btn loginbtn" id="loginBtn">로그인</button>
           </div>
         </div>
       </div>
@@ -134,23 +122,32 @@
     </div>
   `;
 
-  // 3. 외부 버튼 클릭 시 모달 show
+  // 웹 브라우저에 데이터를 저장할 수 있게 해주는 브라우저 내장 저장소 'localStorage'에
+  // 현재페이지 주소 저장하기
+  localStorage.setItem('currentPage', window.location.href);
+  
+  // 외부 버튼 클릭 시 모달 show
   window.openShadowLoginModal = function() {
     shadow.getElementById('myModal').classList.add('show');
     document.body.style.overflow = "hidden";
   };
   
-
-  // 4. 모달 닫기
+  // 모달 닫기
   shadow.getElementById('closeBtn').onclick = () => {
     shadow.getElementById('myModal').classList.remove('show');
   };
   
+  // currentPage키에 저장된 현재페이지주소 or null값 가져오기
+  const currentPage = localStorage.getItem('currentPage') || '';
+  
   // 로그인버튼 클릭
   shadow.getElementById('loginBtn').onclick = () => {
-	  location.href='member/login/loginAction.jsp?userid=' + shadow.getElementById('userid').value + '&password=' + shadow.getElementById('password').value;
+	  location.href='member/login/loginAction.jsp?userid=' + shadow.getElementById('userid').value + '&password=' + shadow.getElementById('password').value +
+      '&currentPage=' + encodeURIComponent(currentPage);
   }
   
+  // 로그인 성공 후 currentPage 제거 
+  localStorage.removeItem('currentPage');
 
   const useridInput = shadow.getElementById('userid');
   const chkid = shadow.getElementById('chkid');
@@ -177,6 +174,19 @@
       localStorage.setItem('savedUserid', useridInput.value);
     }
   });
+  
+  // 엔터 이벤트
+  shadow.getElementById('userid').addEventListener('keydown', function(event) {
+	  if (event.key === 'Enter') {
+	    shadow.getElementById('loginBtn').click();
+	  }
+	});
+
+  shadow.getElementById('password').addEventListener('keydown', function(event) {
+	  if (event.key === 'Enter') {
+	    shadow.getElementById('loginBtn').click();
+	  }
+	});
 
 </script>
 
