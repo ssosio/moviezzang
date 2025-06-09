@@ -139,7 +139,7 @@
 	// 수정 버튼 클릭 시
 	$("#btnUpdate").click(function() {
 	    if(changedCells.length == 0){
-	        alert("수정된 내용이 없습니다.");
+	        alert("수정된 내용이 없습니다");
 	        return;
 	    }
 	    

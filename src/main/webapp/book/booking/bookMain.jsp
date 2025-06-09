@@ -10,105 +10,114 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link href="https://fonts.googleapis.com/css2?family=Dongle&family=Gaegu&family=Hi+Melody&family=Nanum+Myeongjo&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="<%=request.getContextPath()%>/book/buttonStyle.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>Insert title here</title>
 <style type="text/css">
-div.container{
-position: absolute;
+.bookcontainer > div.title {
+  margin-top: 100px;
+  margin-left: 100px;
+  width: 900px;
 }
-div.title{
-margin-top: 100px;
-margin-left: 100px;
-width: 900px;
+
+.bookcontainer div.listbox {
+  border: 1px #ccc solid;
+  width: 900px;
+  height: 600px;
+  margin: 1px 100px;
+  display: flex;
+  overflow-y : auto;
 }
-div.listbox{
-border: 1px #ccc solid;
-width: 900px;
-height: 600px;
-margin: 1px 100px;
-display: flex;
+
+.bookcontainer div.theater-local {
+  width: 300px;
+  height: 100%;
+  border-right: 1px #ccc solid;
+  display: flex;
 }
-div.theater-local{
-width: 300px;
-height: 100%;
-border-right: 1px #ccc solid;
-display: flex;
+
+.bookcontainer div.movie {
+  width: 200px;
+  height: 100%;
+  border-right: 1px #ccc solid;
+  overflow-y: auto;
 }
-div.movie{
-width: 200px;
-height: 100%;
-border-right: 1px #ccc solid;
-overflow-y: auto;
+
+.bookcontainer div.movie ul > li {
+  list-style: none;
+  text-align: center;
 }
-div.movie ul>li{
-list-style: none;
-text-align: center;
+
+.bookcontainer div.movie ul {
+  margin-top: 10px;
 }
-div.movie ul{
-margin-top: 10px;
+
+.bookcontainer button.movielist {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 10px;
 }
-button.movielist{
-display: flex;
-width: 100%;
-align-items: center;
-justify-content: center;
-padding-bottom: 10px;
+
+.bookcontainer div.local {
+  width: 50%;
 }
-div.local{
-width: 50%;
+
+.bookcontainer div.local ul > li {
+  list-style: none;
 }
-div.local ul>li{
-list-style: none;
+
+.bookcontainer div.local ul {
+  margin-top: 40px;
 }
-div.local ul{
-margin-top: 40px;
+
+.bookcontainer div.movie ul,
+.bookcontainer div.local ul {
+  padding-left: 0px;
 }
-div.local ul>li{
-list-style: none;
+
+.bookcontainer button.btnlocal {
+  width: 100%;
 }
-div.local ul{
-margin-top: 40px;
+
+.bookcontainer div.theater {
+  width: 50%;
+  margin-top: 78px;
 }
-div.movie ul, div.local ul{
-padding-left: 0px;
+
+.bookcontainer div.theater ul {
+  padding: 0px;
 }
-button.btnlocal{
-width: 100%;
+
+.bookcontainer div.theater ul > li {
+  list-style: none;
 }
-div.theater{
-width: 50%;
-margin-top: 68px;
+
+.bookcontainer button.btntheater {
+  width: 100%;
+  text-align: center;
 }
-div.theater ul{
-padding: 0px;
+
+.bookcontainer div.time {
+  border: none;
+  width: 400px;
+  overflow-y: auto;
 }
-div.theater ul>li{
-list-style: none;
+
+.bookcontainer div.time ul > li {
+  list-style: none;
 }
-button.btntheater{
-width: 100%;
-text-align: center;
+
+.bookcontainer div.time ul {
+  padding: 0px;
 }
-div.time{
-border: none;
-width: 400px;
-overflow-y: auto;
+
+.bookcontainer button.btntime {
+  width: 100%;
 }
-div.time ul>li{
-list-style: none;
-}
-div.time ul{
-padding: 0px;
-}
-button.btntime{
-width: 100%;
-}
-/*time박스내용 정렬 */
-.timebox {
+
+.bookcontainer .timebox {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -117,61 +126,72 @@ width: 100%;
   box-sizing: border-box;
 }
 
-.timebox span {
+.bookcontainer .timebox span {
   display: inline-block;
   font-size: 14px;
 }
 
-.timebox .starttime {
+.bookcontainer .timebox .starttime {
   flex: 1;
   text-align: left;
 }
 
-.timebox .movietitle {
+.bookcontainer .timebox .movietitle {
   flex: 1;
   text-align: center;
 }
 
-.timebox .screeninfo {
+.bookcontainer .timebox .screeninfo {
   flex: 1;
   text-align: right;
   font-size: 12px;
   line-height: 1.3;
 }
 
-.vertical-line {
+.bookcontainer .showtimes-section {
+  overflow-y: auto;
+  margin-top: 25px;
+}
+
+.bookcontainer .vertical-line {
   width: 1px;
   height: 75%;
   background-color: #ccc;
-  margin: auto 10px; /* 상하 가운데 정렬 */
+  margin: auto 10px;
 }
-div.listbox h4{
-margin-top: 30px;
+
+.bookcontainer div.listbox h4 {
+  margin-top: 30px;
 }
-.btn-content {
+
+.bookcontainer .btn-content {
   display: flex;
   align-items: center;
-  justify-content: center;   /* span 텍스트를 가로 중앙 */
+  justify-content: center;
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  position: relative;
 }
-.btn-content img {
+
+.bookcontainer .btn-content img {
   position: absolute;
-  left:0px;
+  left: 0px;
   width: 30px;
 }
-.btn-content span {
+
+.bookcontainer .btn-content span {
   width: 100%;
   text-align: center;
   line-height: 1.4;
   word-break: keep-all;
   padding-left: 40px;
 }
-div.movielist-section{
-margin-top: 50px;
+
+.bookcontainer div.movielist-section {
+  margin-top: 50px;
 }
+
+
 </style>
 <script type="text/javascript">
 $(function() {
@@ -249,7 +269,7 @@ $(function() {
 		//alert(currentMovie_id);
 		$.ajax({
 
-			type:"get",
+			type:"post",
 			data:{theaterName : theaterName,
 					movie_id : currentMovie_id
 			},
@@ -274,7 +294,6 @@ $(function() {
 				show+= "<li>"+
 							"<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>"+
 							"<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
-							"<input type='hidden' name='poster' value='"+ item.poster + "'>" +
 							"<button class='btntime btn-basiclist' type='submit'>"+
 						    "<div class='timebox'>"+
 						    "<span class='starttime'><b style='font-size: 1.2em'>"+startStr+"</b>~<br>&nbsp;&nbsp;&nbsp;"+endStr +"</span>"+
@@ -296,6 +315,8 @@ $(function() {
 	//btn 토글클래스
 	$(document).on("click",".movielist",function(){
 		$(".movielist").removeClass("btn-active");
+		$(".btnlocal").removeClass("btn-active");
+		$(".btntheater").removeClass("btn-active");
 		$(this).addClass("btn-active");
 	});
 	$(document).on("click",".btnlocal",function(){
@@ -316,11 +337,10 @@ List<MovieDTO> list = dao.getAllDatas();
 //절대경로
 String root = getServletContext().getRealPath("/");
 %>
-
 <body>
-	<div class="container">
+	<div class="bookcontainer">
 		<div class="title">
-			<h3>빠른예매</h3>
+			<h3 >빠른예매</h3>
 			<hr>
 		</div>
 		<div></div>
@@ -339,7 +359,7 @@ String root = getServletContext().getRealPath("/");
 						<li>
 						<button type="button" class="movielist btn-basiclist" movie_id="<%=dto.getId() %>">
 						<div class="btn-content">
-						<img src="../../resources/ratingimg/<%=certification %>.png" width="30px;" style="margin-right: 10px;">
+						<img src="../../resources/ratingimg/<%=certification %>.png" width="24px;" style="margin-right: 10px;">
 						<span><%=dto.getTitle() %></span>
 						</div>
 						</button></li>
@@ -370,8 +390,10 @@ String root = getServletContext().getRealPath("/");
 			</div>
 			<div class="time">
 			<h4>&nbsp; &nbsp; &nbsp;시간</h4>
-				<ul class="showtimes">
-				</ul>
+				<div class="showtimes-section">
+					<ul class="showtimes">
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -121,7 +121,7 @@
           <div class="modal-body">
           
           <input type="text" name="userid" id="userid" class="form-control id" placeholder="아이디" value="">
-          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required" value="${password}">
+          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required" value="${password}">          
           <input type="checkbox" name="chkid" id="chkid"><label for="chkid" style="margin-left:10px;">아이디 저장</label>
           
           </div>

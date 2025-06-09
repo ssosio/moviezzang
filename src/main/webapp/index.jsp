@@ -51,17 +51,15 @@ String root = request.getContextPath();
 			{
 		%>
 			<iframe src="<%=mainPage%>" style="width:100%; min-height:1000px; border:none;"></iframe>
-		<%	
+		<%
 			}
 			else
 			{
 		%>
-			<jsp:include page="<%=mainPage%>" />		
-		<%	
+			<jsp:include page="<%=mainPage%>" />
+		<%
 			}
 		%>
-					
-
 		</div>
 
 
