@@ -565,7 +565,7 @@ public class UserDAO {
 				+ "JOIN user u ON res.user_id = u.id "
 				+ "JOIN seat_reserved sr ON res.id = sr.reservation_id "
 				+ "WHERE u.userid =? AND res.booked = 'Y'";
-		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
+		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();		
 		
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
@@ -591,6 +591,7 @@ public class UserDAO {
 				
 				list.add(map);
 			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -600,5 +601,35 @@ public class UserDAO {
 		}
 		
 		return list;
+	}
+	
+	public String getUserType(String userid)
+	{
+		String usertype="";
+		
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		String sql="select user_type from user where userid=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next())
+			{
+				usertype=rs.getString("user_type");
+			}
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+			
+		}
+		
+		return usertype;
 	}
 }

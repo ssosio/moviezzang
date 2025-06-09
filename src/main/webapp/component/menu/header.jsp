@@ -15,7 +15,7 @@
 UserDAO dao=UserDAO.getInstance();
 
 String sessionuserid=(String)session.getAttribute("userid");
-
+String usertype=(String)session.getAttribute("usertype");
 
 String id=dao.getId(sessionuserid);
 	
@@ -57,8 +57,9 @@ String root=request.getContextPath();
 						class="w-8 h-8 flex items-center justify-center hover:!text-primary !transition-colors !no-underline !cursor-pointer">
 						<!--     <i class="ri-search-line ri-lg"></i> -->
 					</div>			
-						<%				
-						if(loginok!=null && sessionuserid.equals("admin"))
+		
+						<%
+						if(loginok!=null && "ADMIN".equalsIgnoreCase(usertype))
 						{
 						%>
 						
