@@ -528,7 +528,7 @@ public class UserDAO {
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
 		
-		String sql="update reservation set booked='N' where id="+id;
+		String sql="update reservation set reserved_at=now(), booked='N' where id="+id;
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -547,24 +547,20 @@ public class UserDAO {
 	//무비스토리 리스트
 	public List<HashMap<String, String>> getStoryList(String userid)
 	{
-		String sql="SELECT  "
-				+ "    res.id, "
-				+ "    res.reserved_at, "
+		String sql="SELECT "
+				+ "    re.id, "
+				+ "    re.created_at, "
+				+ "    re.content, "
+				+ "    re.rating, "
 				+ "    m.title, "
-				+ "    t.name, "
-				+ "    s.start_time, "
-				+ "    s.price, "
 				+ "    m.poster_url, "
-				+ "    sr.seat_id "
-				+ "FROM  "
-				+ "    reservation res "
-				+ "JOIN screening s ON res.screening_id = s.id "
-				+ "JOIN movie m ON s.movie_id = m.id "
-				+ "JOIN auditorium a ON s.auditorium_id = a.id "
-				+ "JOIN theater t ON a.theater_id = t.id "
-				+ "JOIN user u ON res.user_id = u.id "
-				+ "JOIN seat_reserved sr ON res.id = sr.reservation_id "
-				+ "WHERE u.userid =? AND res.booked = 'Y'";
+				+ "    m.score, "
+				+ "    m.release_date "
+				+ "FROM "
+				+ "    review re "
+				+ "JOIN movie m ON re.movie_id = m.id "
+				+ "JOIN user u ON re.user_id = u.id "
+				+ "WHERE u.userid=? ";
 		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();		
 		
 		Connection conn=db.getConnection();
@@ -581,13 +577,16 @@ public class UserDAO {
 			{
 				HashMap<String, String> map=new HashMap<String, String>();
 				map.put("id", rs.getString("id"));
-				map.put("reserved_at", rs.getString("reserved_at"));
+				map.put("created_at", rs.getString("created_at"));
+				map.put("content", rs.getString("content"));
+				map.put("rating", rs.getString("rating"));
 				map.put("title", rs.getString("title"));
-				map.put("name", rs.getString("name"));
-				map.put("start_time", rs.getString("start_time"));
-				map.put("price", rs.getString("price"));
 				map.put("poster_url", rs.getString("poster_url"));
-				map.put("seat_id", rs.getString("seat_id"));
+				map.put("score", rs.getString("score"));
+				map.put("release_date", rs.getString("release_date"));
+				
+				
+				
 				
 				list.add(map);
 			}
@@ -632,4 +631,7 @@ public class UserDAO {
 		
 		return usertype;
 	}
+	
+	
+	
 }
