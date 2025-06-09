@@ -6,6 +6,7 @@
 <%@page import="data.dao.MovieDAO"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="data.dto.ReviewDTO, data.dao.ReviewDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -45,7 +46,6 @@ String userid = (String) session.getAttribute("userid");
 UserDAO userDao = UserDAO.getInstance();
 String numId = userDao.getId(userid);
 
-
 if (id == null || id.trim().isEmpty()) {
 %>
 <p>❌ 영화 ID가 지정되지 않았습니다.</p>
@@ -65,6 +65,9 @@ return;
 %>
 <%
 String posterUrl = "https://image.tmdb.org/t/p/w500";
+
+ReviewDAO reviewDao = ReviewDAO.getInstance();
+List<ReviewDTO> reviews = reviewDao.getReviewsByMovieId(id);
 /* MovieDAO dao = MovieDAO.getInstance(); */
 /* String id = request.getParameter("id");
 MovieDTO dto = dao.getMovieById(id); */
@@ -251,7 +254,7 @@ input:checked+.switch-slider:before {
 									<i class="ri-share-line"></i>
 								</div>
 							</button>
-					
+
 						</div>
 					</div>
 
@@ -295,7 +298,7 @@ input:checked+.switch-slider:before {
 									</div>
 									<div class="flex">
 										<span class="text-gray-600 w-20">장르</span><%=dto.getGenre()%>
-										 <%=userid %>
+
 										<span></span>
 									</div>
 									<div class="flex"></div>
@@ -372,6 +375,7 @@ input:checked+.switch-slider:before {
 		</div>
 
 		<!-- 평점 및 관람평 -->
+
 		<div class="border-t border-gray-200">
 			<div class="p-8">
 				<div class="flex justify-between items-center mb-6">
@@ -387,11 +391,7 @@ input:checked+.switch-slider:before {
 								class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-3xl font-bold mr-4">
 								9.2</div>
 							<div>
-								<div class="flex text-yellow-400 mb-1">
-									<i class="ri-star-fill"></i> <i class="ri-star-fill"></i> <i
-										class="ri-star-fill"></i> <i class="ri-star-fill"></i> <i
-										class="ri-star-half-fill"></i>
-								</div>
+								<div id="star-container" class="flex text-yellow-400 mb-1"></div>
 								<p class="text-sm text-gray-600">5,432명 참여</p>
 							</div>
 						</div>
@@ -442,9 +442,25 @@ input:checked+.switch-slider:before {
 							data-tab="all">전체</button>
 					</div>
 				</div>
+
 				<!-- 관람평 목록 -->
+
 				<div id="all" class="review-tab-content active">
 					<div class="space-y-6">
+						<% if (reviews == null || reviews.size() == 0) { %>
+						<p class="text-gray-500 text-sm">등록된 리뷰가 없습니다.</p>
+						<% } else { 
+      for (ReviewDTO r : reviews) {
+    	
+  %>				
+  		<% 
+			String user_id =r.getUserId();
+  		UserDTO userDto = userDao.getData(user_id); // id는 문자열로 전달
+  		String userName = userDto.getName();
+    	  %>
+  					
+  
+  					
 						<!-- 관람평 1 -->
 						<div class="border-b border-gray-200 pb-6">
 							<div class="flex justify-between items-start mb-2">
@@ -455,16 +471,22 @@ input:checked+.switch-slider:before {
 											class="w-5 h-5 flex items-center justify-center text-gray-500">
 											<i class="ri-user-line"></i>
 										</div>
-									</div>
+									</div> 
 									<div>
-										<p class="font-medium">김현우</p>
+									
+									<%=r.getUserId() %>
+									<%=dto.getId() %>
+									<%=r.getRating() %>
+									<%=userName %>
+									
+										<p class="font-medium"></p>
 										<div class="flex items-center text-sm text-gray-500">
 											<div class="flex text-yellow-400 mr-2">
 												<i class="ri-star-fill"></i> <i class="ri-star-fill"></i> <i
 													class="ri-star-fill"></i> <i class="ri-star-fill"></i> <i
 													class="ri-star-fill"></i>
 											</div>
-											<span>2025.05.29</span>
+											<span><%=r.getCreatedAt() %></span>
 										</div>
 									</div>
 								</div>
@@ -485,12 +507,15 @@ input:checked+.switch-slider:before {
 									</button>
 								</div>
 							</div>
-							<p class="text-gray-700">마동석의 액션은 언제 봐도 시원하다! 범죄도시 시리즈 중에서도
-								이번 편이 가장 스케일이 크고 액션 장면도 더 업그레이드된 느낌. 특히 베트남 현지 촬영 장면들이 영화의 분위기를
-								한층 더 살려줬다. 마석도와 장이수 콤비의 케미도 여전히 최고!</p>
+							<p class="text-gray-700"><%=r.getContent()%>
+							</p>
 						</div>
-
-
+						<%
+				}
+				%>
+	<%
+				}
+				%>
 						<!-- 페이지네이션 -->
 						<div class="flex justify-center mt-8">
 							<div class="inline-flex items-center">
@@ -514,76 +539,77 @@ input:checked+.switch-slider:before {
 							</div>
 						</div>
 					</div>
-					
-						
-						</div>
-					</div>
-				</div>
-			
-
-
-			<!-- 여기서부터 영화 추천기능입니다 ~~~~~~ 장르에따라서 같은장르 평점높은순으로 평점 5점이상 영화들만 추천합니다.-->
-			<%
-			List<MovieDTO> recommends = dao.getRecommends(request.getParameter("id"));
-			if (recommends != null && !recommends.isEmpty()) {
-			%>
-			<div class="border-t border-gray-200">
-
-				<div class="p-8">
-
-
-					<h2 class="text-2xl font-bold mb-6">이런 영화를 좋아하실것 같아요 !</h2>
-
-
-					<div
-						class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-						<!-- 추천 영화  -->
-						<%
-						for (MovieDTO rec : recommends) {
-							String encodedTitle = URLEncoder.encode(rec.getTitle(), "UTF-8");
-						%>
-						<div>
-							<div class="relative">
-								<%=rec.getId()%>
-								<img
-									onclick="location.href='?main=movie/movieDetail.jsp?id=<%=rec.getId()%>&name=<%=rec.getTitle()%>'"
-									src="<%=rec.getPoster_url().startsWith("https") ? "" : posterUrl%><%=rec.getPoster_url()%>"
-									alt="<%=rec.getTitle()%>"
-									class="w-full h-60 object-cover object-top rounded" />
-							</div>
-							<div class="mt-2">
-								<p class="font-medium"><%=rec.getTitle()%></p>
-								<div class="flex items-center text-sm text-gray-600">
-									<div class="flex items-center">
-										<span><%=rec.getGenre()%></span>
-										<div
-											class="w-4 h-4 flex items-center justify-center text-yellow-500 mr-1">
-											<i class="ri-star-fill"></i>
-										</div>
-										<span><%=rec.getScore()%></span>
-
-									</div>
-
-								</div>
-							</div>
-						</div>
-						<%
-						}
-						%>
-					</div>
 
 
 				</div>
 
 			</div>
-			<%
-			} else {
-			%>
-			<p>같은 장르의 추천 영화가 없습니다 😢</p>
-			<%
-			}
-			%>
-			<!-- 	영화추천 끝~~~~ -->
+		</div>
+
+
+
+		<!-- 여기서부터 영화 추천기능입니다 ~~~~~~ 장르에따라서 같은장르 평점높은순으로 평점 5점이상 영화들만 추천합니다.-->
+		<%
+		List<MovieDTO> recommends = dao.getRecommends(request.getParameter("id"));
+		if (recommends != null && !recommends.isEmpty()) {
+		%>
+		<div class="border-t border-gray-200">
+
+			<div class="p-8">
+
+
+				<h2 class="text-2xl font-bold mb-6">이런 영화를 좋아하실것 같아요 !</h2>
+
+
+				<div
+					class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+					<!-- 추천 영화  -->
+					<%
+					for (MovieDTO rec : recommends) {
+						String encodedTitle = URLEncoder.encode(rec.getTitle(), "UTF-8");
+					%>
+					<div>
+						<div class="relative">
+							<%=rec.getId()%>
+							<img
+								onclick="location.href='?main=movie/movieDetail.jsp?id=<%=rec.getId()%>&name=<%=rec.getTitle()%>'"
+								src="<%=rec.getPoster_url().startsWith("https") ? "" : posterUrl%><%=rec.getPoster_url()%>"
+								alt="<%=rec.getTitle()%>"
+								class="w-full h-full object-cover object-top rounded" />
+						</div>
+						<div class="mt-2">
+							<p class="font-medium"><%=rec.getTitle()%></p>
+							<div class="flex items-center text-sm text-gray-600">
+								<div class="flex items-center">
+									<span><%=rec.getGenre()%></span>
+									<div
+										class="w-4 h-4 flex items-center justify-center text-yellow-500 mr-1">
+										<i class="ri-star-fill"></i>
+									</div>
+									<span><%=rec.getScore()%></span>
+
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<%
+					}
+					%>
+				</div>
+
+
+			</div>
+
+		</div>
+		<%
+		} else {
+		%>
+		<p>같은 장르의 추천 영화가 없습니다 😢</p>
+		<%
+		}
+		%>
+		<!-- 	영화추천 끝~~~~ -->
 		</div>
 		</div>
 	</section>
@@ -605,64 +631,70 @@ input:checked+.switch-slider:before {
 	</div>
 	<!-- 관람평 작성 모달 -->
 	<div
-	class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
-	id="reviewModal">
-	<div class="bg-white rounded-lg w-full max-w-lg p-6">
-		<form action="insertReview.jsp" method="post" id="reviewForm">
-			<div class="flex justify-between items-center mb-4">
-				<!-- <h3 class="text-xl font-bold">관람평 작성</h3> -->
-				<button id="closeReviewModal"
-					class="text-gray-500 hover:text-gray-700" type="button">
-					<div class="w-6 h-6 flex items-center justify-center">
-						<i class="ri-close-line"></i>
-					</div>
-				</button>
-			</div>
-
-			<div class="mb-4">
-				<p class="font-medium mb-2">영화 평점</p>
-				<div class="flex review-stars text-2xl text-gray-300 mb-2">
-					<i class="ri-star-fill" data-value="1"></i>
-					<i class="ri-star-fill" data-value="2"></i>
-					<i class="ri-star-fill" data-value="3"></i>
-					<i class="ri-star-fill" data-value="4"></i>
-					<i class="ri-star-fill" data-value="5"></i>
-				
-					
+		class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+		id="reviewModal">
+		<div class="bg-white rounded-lg w-full max-w-lg p-6">
+			<form action="movie/insertReview.jsp" method="post" id="reviewForm">
+				<div class="flex justify-between items-center mb-4">
+					<!-- <h3 class="text-xl font-bold">관람평 작성</h3> -->
+					<button id="closeReviewModal"
+						class="text-gray-500 hover:text-gray-700" type="button">
+						<div class="w-6 h-6 flex items-center justify-center">
+							<i class="ri-close-line"></i>
+						</div>
+					</button>
 				</div>
 
-				<%= userid %> <%= numId %>
+				<div class="mb-4">
+					<p class="font-medium mb-2"><%=dto.getTitle()%>
+						영화 평점
+					</p>
+					<div class="flex review-stars text-2xl text-gray-300 mb-2">
+						<i class="ri-star-fill" data-value="1"></i> <i
+							class="ri-star-fill" data-value="2"></i> <i class="ri-star-fill"
+							data-value="3"></i> <i class="ri-star-fill" data-value="4"></i> <i
+							class="ri-star-fill" data-value="5"></i>
 
-				<p class="text-sm text-gray-500" id="ratingText">평점을 선택해주세요</p>
 
-				<!-- 추가: 별점 값 -->
-			<input type="hidden" id="rating" name="rating" />
-		  <p id="selectedRatingText" class="text-sm text-blue-600 font-semibold mt-2"></p>
-			</div>
+					</div>
 
-			<div class="mb-4">
-				<p class="font-medium mb-2">관람평</p>
-				<textarea name="content" required minlength="10"
-					class="w-full border border-gray-300 rounded p-3 h-32 focus:outline-none focus:ring-2 focus:ring-primary"
-					placeholder="영화에 대한 감상을 자유롭게 작성해주세요. (최소 10자 이상)"></textarea>
-			</div>
+					<%=userid%>
+					<%=numId%>
 
-			<!-- 추가: 유저 ID, 영화 ID 전달 -->
-			<input type="hidden" name="user_id" value="<%= numId %>">
-			<input type="hidden" name="movie_id" value="<%= request.getParameter("id") %>">
+					<p class="text-sm text-gray-500" id="ratingText">평점을 선택해주세요</p>
 
-			<div class="flex space-x-3">
-			<p id="selectedRatingText" class="text-sm text-blue-600 font-semibold mt-2"></p>
-				<button
-					class="border border-gray-300 px-4 py-2 !rounded-button whitespace-nowrap flex-1 hover:bg-gray-50 transition-colors"
-					id="cancelReview" type="button">취소</button>
-				<button
-					class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap flex-1 hover:bg-opacity-90 transition-colors"
-					type="submit">등록</button>
-			</div>
-		</form>
+					<!-- 추가: 별점 값 -->
+					<input type="hidden" id="rating" name="rating" />
+					<p id="selectedRatingText"
+						class="text-sm text-blue-600 font-semibold mt-2"></p>
+				</div>
+
+				<div class="mb-4">
+					<p class="font-medium mb-2">관람평</p>
+					<textarea name="content" required minlength="10"
+						class="w-full border border-gray-300 rounded p-3 h-32 focus:outline-none focus:ring-2 focus:ring-primary"
+						placeholder="영화에 대한 감상을 자유롭게 작성해주세요. (최소 10자 이상)"></textarea>
+				</div>
+
+				<!-- 추가: 유저 ID, 영화 ID 전달 영화제목전달 << 리다이렉션시 필요 -->
+				<input type="hidden" name="movieName" value="<%=dto.getTitle()%>">
+				<input type="hidden" name="user_id" value="<%=numId%>"> <input
+					type="hidden" name="movie_id"
+					value="<%=request.getParameter("id")%>">
+
+				<div class="flex space-x-3">
+					<p id="selectedRatingText"
+						class="text-sm text-blue-600 font-semibold mt-2"></p>
+					<button
+						class="border border-gray-300 px-4 py-2 !rounded-button whitespace-nowrap flex-1 hover:bg-gray-50 transition-colors"
+						id="cancelReview" type="button">취소</button>
+					<button
+						class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap flex-1 hover:bg-opacity-90 transition-colors"
+						type="submit">등록</button>
+				</div>
+			</form>
+		</div>
 	</div>
-</div>
 
 
 	<script>
@@ -835,7 +867,52 @@ input:checked+.switch-slider:before {
 		            alert("링크 복사에 실패했습니다.");
 		        });
 		}
-	
+		
+		//별점평균
+	function renderStars(score) {
+  const container = document.getElementById("star-container");
+  container.innerHTML = ""; // 기존 별 초기화
+
+  const starCount = score / 2; // 10점 만점 → 5점 만점
+  const fullStars = Math.floor(starCount);
+  const decimal = starCount - fullStars;
+
+  let totalFullStars = fullStars;
+  let totalHalfStars = 0;
+
+  // 별 로직: 0.6 이상이면 1개, 0.1~0.59는 반개
+  if (decimal >= 0.6) {
+    totalFullStars += 1;
+  } else if (decimal >= 0.1) {
+    totalHalfStars = 1;
+  }
+
+  const totalEmptyStars = 5 - totalFullStars - totalHalfStars;
+
+  // 꽉 찬 별 추가
+  for (let i = 0; i < totalFullStars; i++) {
+    const star = document.createElement("i");
+    star.className = "ri-star-fill";
+    container.appendChild(star);
+  }
+
+  // 반개 별 추가
+  if (totalHalfStars === 1) {
+    const star = document.createElement("i");
+    star.className = "ri-star-half-fill";
+    container.appendChild(star);
+  }
+
+  // 빈 별 추가
+  for (let i = 0; i < totalEmptyStars; i++) {
+    const star = document.createElement("i");
+    star.className = "ri-star-line";
+    container.appendChild(star);
+  }
+}
+
+		const score = <%=dto.getScore()%>; 
+		renderStars(score);
     </script>
 </body>
 </html>

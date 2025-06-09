@@ -48,4 +48,40 @@ public class ReviewDAO {
 		}
 		return 0;
 	}
+	
+	
+	// 리뷰 목록 조회 메서드
+	public List<ReviewDTO> getReviewsByMovieId(String movieId) {
+	    List<ReviewDTO> list = new ArrayList<>();
+	    String sql = "SELECT user_id, content, rating, created_at FROM review WHERE movie_id = ? ORDER BY created_at DESC";
+
+	    Connection conn = db.getConnection();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, movieId);
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            ReviewDTO dto = new ReviewDTO();
+	            dto.setUserId(rs.getString("user_id"));
+	            dto.setContent(rs.getString("content"));
+	            dto.setRating(rs.getInt("rating"));
+	            dto.setCreatedAt(rs.getTimestamp("created_at")); // Date/Time 객체면 Timestamp로
+
+	            list.add(dto);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        db.dbClose(rs, pstmt, conn);
+	    }
+
+	    return list;
+	}
+
+	
+	
 }
