@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
 <%@page import="data.dto.UserDTO"%>
 <%@page import="data.dao.UserDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -67,11 +69,13 @@
   </style>
 </head>
 <%
+String userid=(String)session.getAttribute("userid");
 String id=request.getParameter("id");
 
 UserDAO dao=UserDAO.getInstance();
 UserDTO dto=dao.getData(id);
 
+List<HashMap<String, String>> list=dao.getStoryList(userid);
 %>
 <body>
 
@@ -92,11 +96,22 @@ UserDTO dto=dao.getData(id);
       
       <div class="mystory-box">
         <table class="table">
+
+        	<%
+        	for(int i=0;i<list.size();i++)
+        	{
+        		HashMap<String,String> map=list.get(i);
+        		
+        		int seat=map.get("seat_id").length();
+  				int price=Integer.parseInt(map.get("price"));
+  				
+  				String tmdbPath = "https://image.tmdb.org/t/p/w500";
+				String originalPath = map.get("poster_url");
+        	%>
         	<tr>
-        		<th>영화정보</th>
-        		<th>관랑평</th>
-        		<th>영화정보</th>
+        		<td><img src="<%=originalPath.startsWith("https://") ? originalPath : tmdbPath + originalPath%>" alt="" class="w-60 h-70 object-cover rounded" /></td>
         	</tr>
+        	<%}%>
         </table>
       </div>
     </div>

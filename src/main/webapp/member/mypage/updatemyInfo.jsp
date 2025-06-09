@@ -157,13 +157,13 @@ p{
       <h6 style="color: #D3D3D3;">회원님의 정보를 정확히 입력해주세요.</h6>
       <p style="font-size: 15pt;">ID ( <%=dto.getUserid() %> ) 님</p>
       <div class="mileage"><button type="button" class="btn btn-outline-info" style="color: white;"
-      onclick="location.href='deleteAction.jsp?id=<%=dto.getId()%>%>'">회원탈퇴</button></div>
+      onclick="deleteMember()">회원탈퇴</button></div>
     </div>
 
     <div class="myinfo-section">
       <h4 class="text-2xl font-bold" style="color: #000080">기본정보</h4>
       <span style="color: red; margin-left: 640px;">*<b style="color: black;">는 필수</b></span>
-      <form action="updateAction.jsp" method="post" onsubmit="return check(this)">
+      <form action="member/mypage/updateAction.jsp" method="post" onsubmit="return check(this)">
       <input type="hidden" name="id" value="<%=id%>">
         <table class="table" style="width: 700px;">
         	<tr>
@@ -226,10 +226,8 @@ p{
         		<div class="col-sm-6 mb-3 mb-sm-0">
     		<input type="text" class="form-control form-control-user" id="zipCode" name="zipCode" placeholder="우편번호" readonly onclick="sample4_execDaumPostcode()"
     		value="<%=zipCode %>" style="width: 90px;">
-    		<input type="text" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly
-    		value="">
-    		<input type="text" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()"
-    		value="">
+    		<input type="text" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly>
+    		<input type="text" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()">
     			</div>
         	</td>
         	</tr>
@@ -264,6 +262,13 @@ p{
             }
         }).open();
     }
+    
+    function deleteMember() {
+        var password=prompt("비밀번호를 입력하세요:");
+        if (password != null && password != "") {
+            location.href = "deleteAction.jsp?id=<%=dto.getId()%>&password=" + encodeURIComponent(password);
+        }
+    };
 </script>
 <script type="text/javascript">
     function addrCheck() {

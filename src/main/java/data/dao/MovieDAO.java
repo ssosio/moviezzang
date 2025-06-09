@@ -233,14 +233,14 @@ public class MovieDAO {
 		return list;
 	}
 	
-	// ID 기준으로 영화 1개 조회 (title, release_date, score, poster_url)
+	// ID 기준으로 영화 1개 조회 (*)
 	public MovieDTO getMovieById(String id) {
 	    Connection conn = db.getConnection();
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
 	    MovieDTO dto = null;
 
-	    String sql = "SELECT title, release_date, score, poster_url FROM movie WHERE id = ?";
+	    String sql = "SELECT * FROM movie WHERE id = ?";
 
 	    try {
 	        pstmt = conn.prepareStatement(sql);
@@ -249,10 +249,56 @@ public class MovieDAO {
 
 	        if (rs.next()) {
 	            dto = new MovieDTO();
-	            dto.setTitle(rs.getString("title"));
-	            dto.setRelease_date(rs.getDate("release_date"));
-	            dto.setScore(rs.getFloat("score"));
-	            dto.setPoster_url(rs.getString("poster_url"));
+	        	dto.setId(rs.getString("id"));
+				dto.setTitle(rs.getString("title"));
+				dto.setSynopsis(rs.getString("synopsis"));
+				dto.setRelease_date(rs.getDate("release_date"));
+				dto.setCertification(rs.getString("certification"));
+				dto.setRuntime(rs.getInt("runtime"));
+				dto.setStudio(rs.getString("studio"));
+				dto.setDistributor(rs.getString("distributor"));
+				dto.setPoster_url(rs.getString("poster_url"));
+				dto.setScore(rs.getFloat("score"));
+				dto.setLocal_score(rs.getFloat("local_score"));
+				dto.setGenre(rs.getString("genre"));
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        db.dbClose(rs, pstmt, conn);
+	    }
+
+	    return dto;
+	}
+	// 타이틀로조회
+	public MovieDTO getMovieBytitle(String title) {
+	    Connection conn = db.getConnection();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    MovieDTO dto = null;
+
+	    String sql = "SELECT * FROM movie WHERE title = ?";
+
+	    try {
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, title);
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            dto = new MovieDTO();
+	        	dto.setId(rs.getString("id"));
+				dto.setTitle(rs.getString("title"));
+				dto.setSynopsis(rs.getString("synopsis"));
+				dto.setRelease_date(rs.getDate("release_date"));
+				dto.setCertification(rs.getString("certification"));
+				dto.setRuntime(rs.getInt("runtime"));
+				dto.setStudio(rs.getString("studio"));
+				dto.setDistributor(rs.getString("distributor"));
+				dto.setPoster_url(rs.getString("poster_url"));
+				dto.setScore(rs.getFloat("score"));
+				dto.setLocal_score(rs.getFloat("local_score"));
+				dto.setGenre(rs.getString("genre"));
 	        }
 
 	    } catch (SQLException e) {
@@ -265,5 +311,50 @@ public class MovieDAO {
 	}
 	
 	
+	// 추천영화 ex) 영화장르가 공포 , 스릴러 , 액션 이라면 공포or스릴러or액션 에 해당하는 요소를 뽑아
+	public List<MovieDTO> getRecommends(String id) {
+	    List<MovieDTO> list = new ArrayList<>();
+	    Connection conn = db.getConnection();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+
+	    String sql = """
+	    SELECT DISTINCT m2.id, m2.title, m2.score, m2.poster_url ,m2.genre
+	    FROM movie m1
+	    JOIN movie m2 ON m1.id != m2.id
+	    WHERE m1.id = ?
+	      AND (
+	        m2.genre LIKE CONCAT('%', SUBSTRING_INDEX(m1.genre, ',', 1), '%')
+	        OR m2.genre LIKE CONCAT('%', SUBSTRING_INDEX(SUBSTRING_INDEX(m1.genre, ',', 2), ',', -1), '%')
+	        OR m2.genre LIKE CONCAT('%', SUBSTRING_INDEX(SUBSTRING_INDEX(m1.genre, ',', 3), ',', -1), '%')
+	      )
+	    ORDER BY m2.score DESC
+	    LIMIT 5
+	    """;
+
+	    try {
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, id);
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            MovieDTO dto = new MovieDTO();
+	            dto.setId(rs.getString("id"));
+	            dto.setTitle(rs.getString("title"));
+	            dto.setScore(rs.getFloat("score"));
+	            dto.setPoster_url(rs.getString("poster_url"));
+	            dto.setGenre(rs.getString("genre"));
+	            list.add(dto);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        db.dbClose(rs, pstmt, conn);
+	    }
+	    return list;
+	}
+	
+	
+
 	// delete
 }

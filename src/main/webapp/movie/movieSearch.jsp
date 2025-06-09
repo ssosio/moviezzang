@@ -33,7 +33,7 @@
 					예매하기</button>
 				<button
 					class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full"
-					onclick="location.href='<%=root%>/index.jsp?main=/movie/movieDetail.jsp?num=<%=dto.getId()%>'">
+					onclick="location.href='<%=root%>/index.jsp?main=/movie/movieDetail.jsp?id=<%=dto.getId()%>&name<%=dto.getTitle()%>'">
 					상세정보</button>
 			</div>
 		</div>

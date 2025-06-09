@@ -13,8 +13,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class YouTube {
-
-    private final String apiKey = "AIzaSyDyIMSjfrxbhv_x8ZDWkN2e24BnGxMUuZ4";
+//	AIzaSyDyIMSjfrxbhv_x8ZDWkN2e24BnGxMUuZ4 #손영덕 메인키
+//	AIzaSyAg-aITfIzaj_p1X9zGo779nFMNTN_z85o #팀장 서브키
+    private final String apiKey = "AIzaSyAg-aITfIzaj_p1X9zGo779nFMNTN_z85o";
 
     public YouTube() {
         // 기본 생성자

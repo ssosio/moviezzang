@@ -1,3 +1,5 @@
+<%@page import="data.dto.UserDTO"%>
+<%@page import="data.dao.UserDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -7,6 +9,19 @@
 
 <%@ include file="../../member/login/loginForm.jsp"%>
 
+<%
+	String loginok=(String)session.getAttribute("loginok");
+
+UserDAO dao=UserDAO.getInstance();
+
+String sessionuserid=(String)session.getAttribute("userid");
+String usertype=(String)session.getAttribute("usertype");
+
+String id=dao.getId(sessionuserid);
+	
+String root=request.getContextPath();
+
+%>
 
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -41,12 +56,47 @@
 					<div
 						class="w-8 h-8 flex items-center justify-center hover:!text-primary !transition-colors !no-underline !cursor-pointer">
 						<!--     <i class="ri-search-line ri-lg"></i> -->
-					</div>
-
+					</div>			
+		
+						<%
+						if(loginok!=null && "ADMIN".equalsIgnoreCase(usertype))
+						{
+						%>
+						
+							<a id="logout" 
+						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
+						로그아웃</a> 
+						<a id="logout" 
+						class="!text-white hover:!text-primary !transition-colors !no-underline" href="?main=indexAdmin.jsp?id=<%=id %>">
+						관리자페이지</a>
+						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
+						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a>
+						<%
+						}
+						
+						else if(loginok!=null)
+						{
+						%>	
+							<a id="logout" 
+						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
+						로그아웃</a> 
+						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
+						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a> 
+						<%
+						}
+						
+						else{
+						%>
 					<a id="openLoginModal"
 						class="!text-white hover:!text-primary !transition-colors !no-underline"href="#">
-						로그인 </a> <a href="?main=member/signup/signupForm.jsp"
+						로그인</a>
+						<a href="?main=member/signup/signupForm.jsp"
 						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">회원가입</a>
+							
+						<%
+						}
+						
+						%>
 					<a href=""
 						class="!bg-primary !text-white px-6 py-2 !rounded-button whitespace-nowrap !text-sm hover:!bg-opacity-90 !transition-colors !no-underline">빠른예매</a>
 				</div>
@@ -64,6 +114,7 @@
       alert('로그인 모달이 준비되지 않았습니다.');
     }
   };
+
 </script>
 <%-- <% for (int i = 0; i < 100; i++) { %>
     <br>

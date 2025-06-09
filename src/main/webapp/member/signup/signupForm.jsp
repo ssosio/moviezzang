@@ -16,17 +16,16 @@
 		
 		//아이디 중복체크
 		$("#idCheck").click(function () {
-			
-			var userid=$("#id").val();
+			var userid=$("#userid").val();
 			//alert(userid);
 			
-			$.ajax({
-				
+			$.ajax({	
 				type:"get",
 				url:"member/signup/idCheck.jsp",
 				dataType:"json",
 				data:{"userid":userid},
-				success:function(res){
+				success: function(res){
+
 					//console.log(res.idCheck);
 					
 					if(res.idCheck==1){
@@ -34,9 +33,7 @@
 					}else{
 						alert("가입가능한 아이디입니다");
 					} 
-				}
-				
-				
+				}	
 			});
 			
 		});
@@ -80,11 +77,10 @@
 	
 	width: 800px;
 	margin: 0 auto;
-	margin-top: 150px;
+	margin-top: 60px;
 }
 
 .wrap>form {
-
 	display: flex;
 	flex-direction: column;
 }
@@ -93,6 +89,8 @@
 	display: flex;
 	flex-direction: row;
 	margin-bottom: 30px;
+	width: 700px;
+	margin-left: 90px;
 }
 
 .wrap>form .email {
@@ -182,7 +180,7 @@ i.dash {
 	
 	<div class="boxs">
 	<label for="id">아이디</label>
-		<input type="text" name="id" id="id" class="form-control" required="required" placeholder="아이디를 입력해주세요">
+		<input type="text" name="userid" id="userid" class="form-control" required="required" placeholder="아이디를 입력해주세요">
 	<button type="button" class="btn check" id="idCheck">중복확인</button>
 	</div>
 	
