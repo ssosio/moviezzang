@@ -15,10 +15,12 @@
 String userid=request.getParameter("userid");
 String save=request.getParameter("chkid");
 String password=request.getParameter("password");
+String currentPage=request.getParameter("currentPage");
 
 UserDAO dao=UserDAO.getInstance();
 boolean chk=dao.userIdCheck(userid, password);
 String usertype=dao.getUserType(userid);
+
 
 
 if(chk)
@@ -31,8 +33,14 @@ if(chk)
 
 	session.setMaxInactiveInterval(60*60*8);
 	
-	response.sendRedirect("../../index.jsp");
 	
+	 // currentPage이 null이면 기본 페이지로, 아니면 해당 페이지로
+    if (currentPage == null || currentPage.equals("")) {
+        response.sendRedirect("../../index.jsp");
+    } else {
+        response.sendRedirect(currentPage);
+    }
+
 	
 }else{
 %>
