@@ -15,7 +15,7 @@
 UserDAO dao=UserDAO.getInstance();
 
 String sessionuserid=(String)session.getAttribute("userid");
-
+String usertype=(String)session.getAttribute("usertype");
 
 String id=dao.getId(sessionuserid);
 	
@@ -38,8 +38,8 @@ String root=request.getContextPath();
 					class="hidden md:flex items-center space-x-12 justify-center mx-auto"
 					style="padding-left: 13rem">
 					<a href="?main=movie/movieList.jsp"
-						class="!text-primary  !transition-colors !no-underline">영화</a> 
-					<a href=""
+						class="!text-primary  !transition-colors !no-underline">영화</a>
+					<a href="<%=request.getContextPath() %>/index.jsp?main=book/booking/bookMain.jsp"
 						class="hover:!text-primary !text-white !transition-colors !no-underline">예매</a>
 					<a onclick="location.href='<%=request.getContextPath()%>/'"
 						class="flex items-center space-x-2 transform transition-transform duration-300 hover:[transform:rotateY(180deg)]"> <img
@@ -56,31 +56,38 @@ String root=request.getContextPath();
 					<div
 						class="w-8 h-8 flex items-center justify-center hover:!text-primary !transition-colors !no-underline !cursor-pointer">
 						<!--     <i class="ri-search-line ri-lg"></i> -->
-					</div>
-
-					
-						
-						
-						
+					</div>			
+		
 						<%
-						
-						
-						if(loginok!=null)
+						if(loginok!=null && "ADMIN".equalsIgnoreCase(usertype))
 						{
-							
-							
 						%>
-							<a id="" 
-						class="!text-white hover:!text-primary !transition-colors !no-underline" href="">
+						
+							<a id="logout" 
+						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
 						로그아웃</a> 
+						<a id="logout" 
+						class="!text-white hover:!text-primary !transition-colors !no-underline" href="?main=indexAdmin.jsp?id=<%=id %>">
+						관리자페이지</a>
 						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
 						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a>
-							
-							
 						<%
-						}else{
+						}
+						
+						else if(loginok!=null)
+						{
+						%>	
+							<a id="logout" 
+						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
+						로그아웃</a> 
+						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
+						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a> 
+						<%
+						}
+						
+						else{
 						%>
-							<a id="openLoginModal" 
+					<a id="openLoginModal"
 						class="!text-white hover:!text-primary !transition-colors !no-underline"href="#">
 						로그인</a>
 						<a href="?main=member/signup/signupForm.jsp"
@@ -107,6 +114,7 @@ String root=request.getContextPath();
       alert('로그인 모달이 준비되지 않았습니다.');
     }
   };
+
 </script>
 <%-- <% for (int i = 0; i < 100; i++) { %>
     <br>

@@ -18,7 +18,7 @@ String password=request.getParameter("password");
 
 UserDAO dao=UserDAO.getInstance();
 boolean chk=dao.userIdCheck(userid, password);
-
+String usertype=dao.getUserType(userid);
 
 
 if(chk)
@@ -27,16 +27,12 @@ if(chk)
 	session.setAttribute("loginok", "yes");
 	session.setAttribute("userid", userid);
 	session.setAttribute("chkidok", save);
-	
-	%>
-	<script type="text/javascript">
-			alert("아이디와 비밀번호가 맞다");
-		</script>
-	<%
-	
+	session.setAttribute("usertype", usertype);
+
 	session.setMaxInactiveInterval(60*60*8);
 	
 	response.sendRedirect("../../index.jsp");
+	
 	
 }else{
 %>

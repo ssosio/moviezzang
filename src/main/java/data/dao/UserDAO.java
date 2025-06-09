@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import data.dto.UserDTO;
 import mysql.db.DBConnect;
@@ -124,24 +124,69 @@ public class UserDAO {
 		
 	}
 	
+	// 관리자페이지에서 유저 정보 수정 중 전체를 update하는 것이 아니라 변경 사항이 있는 것만 업데이트
+	// 프론트쪽 진행방식은 adminMember 참고
+	public void updateMemberByColumns(int id, Map<String, String> colMap)
+	{
+		// 변경된 내용이 없다면 아무것도 안하고 return
+		// 프론트쪽에도 안전장치 있음
+		if(colMap == null || colMap.isEmpty())
+		{
+			return;	
+		}
+		
+	    StringBuilder sql = new StringBuilder("UPDATE user SET ");
+	    List<String> cols = new ArrayList<>();
+	    List<Object> values = new ArrayList<>();	// Object타입인 것은 value의 자료형이 다양할 것을 고려
+	    
+	    // 전달받은 map에 따라 sql문을 작성해주는 코드
+	    for(Map.Entry<String, String> entry : colMap.entrySet()) 
+	    {
+	        cols.add(entry.getKey() + "=?");
+	        values.add(entry.getValue());
+	    }
+	    sql.append(String.join(", ", cols)).append(" WHERE id=?");
+	    values.add(id);
+
+	    Connection conn = db.getConnection();
+	    PreparedStatement pstmt = null;
+	    
+	    try {
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			for (int i = 0; i < values.size(); i++)
+			{
+				pstmt.setObject(i + 1, values.get(i));
+			}
+			
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(pstmt, conn);
+		}
+	}
+	
 	//예매내역 리스트
 	public List<HashMap<String, String>> getReserveList(String userid)
 	{
-		String sql="SELECT \r\n"
-				+ "    res.id, \r\n"
-				+ "    res.reserved_at, \r\n"
-				+ "    m.title, \r\n"
-				+ "    t.name, \r\n"
-				+ "    s.start_time, \r\n"
-				+ "    s.price\r\n"
-				+ "FROM \r\n"
-				+ "    reservation res\r\n"
-				+ "JOIN screening s ON res.screening_id = s.id\r\n"
-				+ "JOIN movie m ON s.movie_id = m.id\r\n"
-				+ "JOIN auditorium a ON s.auditorium_id = a.id\r\n"
-				+ "JOIN theater t ON a.theater_id = t.id\r\n"
-				+ "JOIN user u ON res.user_id = u.id\r\n"
-				+ "WHERE u.userid = ?";
+		String sql="SELECT "
+				+ "    res.id, "
+				+ "    res.reserved_at, "
+				+ "    m.title, "
+				+ "    t.name, "
+				+ "    s.start_time, "
+				+ "    s.price, "
+				+ "    sr.seat_id "
+				+ "FROM "
+				+ "    reservation res "
+				+ "JOIN screening s ON res.screening_id = s.id "
+				+ "JOIN movie m ON s.movie_id = m.id "
+				+ "JOIN auditorium a ON s.auditorium_id = a.id "
+				+ "JOIN theater t ON a.theater_id = t.id "
+				+ "JOIN user u ON res.user_id = u.id "
+				+ "JOIN seat_reserved sr ON res.id = sr.reservation_id "
+				+ "WHERE u.userid =? AND res.booked = 'Y'";
 		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
 		
 		Connection conn=db.getConnection();
@@ -163,6 +208,7 @@ public class UserDAO {
 				map.put("name", rs.getString("name"));
 				map.put("start_time", rs.getString("start_time"));
 				map.put("price", rs.getString("price"));
+				map.put("seat_id", rs.getString("seat_id"));
 				
 				list.add(map);
 			}
@@ -176,6 +222,62 @@ public class UserDAO {
 		
 		return list;
 	}
+	
+	//예매취소내역 리스트
+		public List<HashMap<String, String>> getCancelList(String userid)
+		{
+			String sql="SELECT "
+					+ "    res.id, "
+					+ "    res.reserved_at, "
+					+ "    m.title, "
+					+ "    t.name, "
+					+ "    s.start_time, "
+					+ "    s.price, "
+					+ "    sr.seat_id "
+					+ "FROM "
+					+ "    reservation res "
+					+ "JOIN screening s ON res.screening_id = s.id "
+					+ "JOIN movie m ON s.movie_id = m.id "
+					+ "JOIN auditorium a ON s.auditorium_id = a.id "
+					+ "JOIN theater t ON a.theater_id = t.id "
+					+ "JOIN user u ON res.user_id = u.id "
+					+ "JOIN seat_reserved sr ON res.id = sr.reservation_id "
+					+ "WHERE u.userid =? AND res.booked = 'N'";
+			List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
+			
+			Connection conn=db.getConnection();
+			PreparedStatement pstmt=null;
+			ResultSet rs=null;
+			
+			try {
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setString(1, userid);
+				
+				rs=pstmt.executeQuery();
+				
+				while(rs.next())
+				{
+					HashMap<String, String> map=new HashMap<String, String>();
+					map.put("id", rs.getString("id"));
+					map.put("reserved_at", rs.getString("reserved_at"));
+					map.put("title", rs.getString("title"));
+					map.put("name", rs.getString("name"));
+					map.put("start_time", rs.getString("start_time"));
+					map.put("price", rs.getString("price"));
+					map.put("seat_id", rs.getString("seat_id"));
+					
+					list.add(map);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				db.dbClose(rs, pstmt, conn);
+				
+			}
+			
+			return list;
+		}
 	
 	//user시퀀스에 따른 dto
 	public UserDTO getData(String id)
@@ -381,4 +483,153 @@ public class UserDAO {
 		return id;
 	}
 	
+	//예매취소
+	public void deleteReserved(String id)
+	{
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		
+		String sql="delete from reservation where id=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}
+	}
+	
+	//예매리스트 좌석수
+	public void bookSeatCnt(String id){
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		
+		String sql="select seat_id from seat_reserved where reservation_id="+id;
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}
+	}
+	
+	//예매 booked N으로 업데이트
+	public void updateBookN(String id)
+	{
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		
+		String sql="update reservation set booked='N' where id="+id;
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.execute();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}
+		
+	}
+	
+	//무비스토리 리스트
+	public List<HashMap<String, String>> getStoryList(String userid)
+	{
+		String sql="SELECT  "
+				+ "    res.id, "
+				+ "    res.reserved_at, "
+				+ "    m.title, "
+				+ "    t.name, "
+				+ "    s.start_time, "
+				+ "    s.price, "
+				+ "    m.poster_url, "
+				+ "    sr.seat_id "
+				+ "FROM  "
+				+ "    reservation res "
+				+ "JOIN screening s ON res.screening_id = s.id "
+				+ "JOIN movie m ON s.movie_id = m.id "
+				+ "JOIN auditorium a ON s.auditorium_id = a.id "
+				+ "JOIN theater t ON a.theater_id = t.id "
+				+ "JOIN user u ON res.user_id = u.id "
+				+ "JOIN seat_reserved sr ON res.id = sr.reservation_id "
+				+ "WHERE u.userid =? AND res.booked = 'Y'";
+		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();		
+		
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+			rs=pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				HashMap<String, String> map=new HashMap<String, String>();
+				map.put("id", rs.getString("id"));
+				map.put("reserved_at", rs.getString("reserved_at"));
+				map.put("title", rs.getString("title"));
+				map.put("name", rs.getString("name"));
+				map.put("start_time", rs.getString("start_time"));
+				map.put("price", rs.getString("price"));
+				map.put("poster_url", rs.getString("poster_url"));
+				map.put("seat_id", rs.getString("seat_id"));
+				
+				list.add(map);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+			
+		}
+		
+		return list;
+	}
+	
+	public String getUserType(String userid)
+	{
+		String usertype="";
+		
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		String sql="select user_type from user where userid=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next())
+			{
+				usertype=rs.getString("user_type");
+			}
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(rs, pstmt, conn);
+			
+		}
+		
+		return usertype;
+	}
 }

@@ -96,7 +96,7 @@
 	            <a class="nav-link active" href="#" onclick="loadContents('./admin/adminMember.jsp')">회원</a>
 	            <a class="nav-link" href="#">영화</a>
 	            <a class="nav-link" href="#">극장</a>
-	            <a class="nav-link" href="#">상영스케줄</a>
+	            <a class="nav-link" href="#" onclick="loadContents('./admin/adminScreening.jsp')">상영스케줄</a>
 	        </div>
 	    </div>
 	    <div class="flex-grow-1">

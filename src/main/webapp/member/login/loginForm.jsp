@@ -75,8 +75,7 @@
     .modal-footer {
         border-top: seashell;
         background-color: white;
-        display: flex
-    ;
+        display: flex;
         flex-shrink: 0;
         flex-wrap: wrap;
         align-items: center;
@@ -93,6 +92,8 @@
         background: #503396;
         color: #fff;
         margin: 0 auto;
+    	height: 50px;
+    	font-size: 1.3rem;
     }
       .modal { display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); }
       .modal.show { display: block; }
@@ -104,23 +105,24 @@
     	}
       input.id { margin-bottom: 30px; }
       input.pass { margin-bottom: 30px; }
-      .loginbtn { width: 300px; background: #503396; color: #fff; margin: 0 auto; }
+      .modal-header.close {color: #fff;}
       .loginbtn:hover { background: #351f67; }
-      .close i { color: white; margin-left: 330px; }
+      .close { color: white; position: absolute; right:15px; }
+      .close:hover {color: lightgrey;}
     </style>
     
     <div class="modal" id="myModal" tabindex="-1" aria-modal="true" role="dialog">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">로그인</h4>
+            <h5 class="modal-title">로그인</h5>
             <button type="button" class="btn close" id="closeBtn"><i class="bi bi-x-lg"></i></button>
           </div>
           <div class="modal-body">
           
-          <input type="text" name="userid" id="userid" class="form-control id" placeholder="아이디" value="${userid}">
-          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required" value="${password}">
-          <input type="checkbox" name="chkid" id="chkid" ${save ? "checked" : ""}>아이디 저장
+          <input type="text" name="userid" id="userid" class="form-control id" placeholder="아이디" value="">
+          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required" value="${password}">          
+          <input type="checkbox" name="chkid" id="chkid"><label for="chkid" style="margin-left:10px;">아이디 저장</label>
           
           </div>
           <div class="modal-footer">
@@ -144,10 +146,37 @@
     shadow.getElementById('myModal').classList.remove('show');
   };
   
+  // 로그인버튼 클릭
   shadow.getElementById('loginBtn').onclick = () => {
 	  location.href='member/login/loginAction.jsp?userid=' + shadow.getElementById('userid').value + '&password=' + shadow.getElementById('password').value;
   }
   
+
+  const useridInput = shadow.getElementById('userid');
+  const chkid = shadow.getElementById('chkid');
+
+  // 로컬 스토리지에서 저장된 아이디가 있으면 세팅
+  const savedUserid = localStorage.getItem('savedUserid');
+  if (savedUserid) {
+    useridInput.value = savedUserid;
+    chkid.checked = true;
+  }
+
+  // 체크박스 변화 감지해서 아이디 저장/삭제
+  chkid.addEventListener('change', () => {
+    if (chkid.checked) {
+      localStorage.setItem('savedUserid', useridInput.value);
+    } else {
+      localStorage.removeItem('savedUserid');
+    }
+  });
+
+  // 아이디 입력 값이 바뀔 때도 저장
+  useridInput.addEventListener('input', () => {
+    if (chkid.checked) {
+      localStorage.setItem('savedUserid', useridInput.value);
+    }
+  });
 
 </script>
 
