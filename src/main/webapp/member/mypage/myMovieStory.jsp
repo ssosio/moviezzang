@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.List"%>
 <%@page import="data.dto.UserDTO"%>
@@ -37,6 +38,7 @@
       color: white;
       padding: 20px;
       border-radius: 15px;
+      text-align: center;
     }
 
     .mystory-header h3 {
@@ -51,11 +53,13 @@
     }
 
     .mystory-box {
+      display: flex;
       background-color: white;
       border-radius: 10px;
       padding: 20px;
       margin-top: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      color: gray;
     }
 
     .mystory-section h4 {
@@ -63,9 +67,26 @@
       margin-bottom: 10px;
     }
 
-    
-
+    .mphoto{
+    	width: 200px;
+    	height: 300px;
+    	
+    }
+	
+	.postertd{
+		box-shadow: 10px 10px 10px gray;	
+		border: 1px solid gray;
+		width: 200px;
+		height: 300px;
+		
+	}
   
+  .mystory-info {
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
   </style>
 </head>
 <%
@@ -76,6 +97,8 @@ UserDAO dao=UserDAO.getInstance();
 UserDTO dto=dao.getData(id);
 
 List<HashMap<String, String>> list=dao.getStoryList(userid);
+
+
 %>
 <body>
 
@@ -89,31 +112,62 @@ List<HashMap<String, String>> list=dao.getStoryList(userid);
   <!-- Main content -->
   <div class="mystory-content">
     <div class="mystory-header">
-        <h4 class="text-2xl font-bold">나의 무비스토리</h4>
+        <h4 class="text-2xl font-bold">My MovieStory</h4>
     </div>
 
     <div class="mystory-section">
       
-      <div class="mystory-box">
-        <table class="table">
+      
+       
 
         	<%
         	for(int i=0;i<list.size();i++)
         	{
         		HashMap<String,String> map=list.get(i);
         		
-        		int seat=map.get("seat_id").length();
-  				int price=Integer.parseInt(map.get("price"));
-  				
   				String tmdbPath = "https://image.tmdb.org/t/p/w500";
 				String originalPath = map.get("poster_url");
+				
+				  int rating = Integer.parseInt(map.get("rating"));
+				   int stars = rating / 2;
+				   
+					StringBuilder starHtml = new StringBuilder();
+					for (int j = 0; j < stars; j++) {
+					    starHtml.append("⭐");
+					}
         	%>
-        	<tr>
-        		<td><img src="<%=originalPath.startsWith("https://") ? originalPath : tmdbPath + originalPath%>" alt="" class="w-60 h-70 object-cover rounded" /></td>
-        	</tr>
-        	<%}%>
-        </table>
-      </div>
+        	<div class="mystory-box">
+        		<p class="postertd"><img src="<%=originalPath.startsWith("https://") ? originalPath : tmdbPath + originalPath%>" alt="" class="object-cover rounded mphoto" /></p>
+        		
+        	  <div class="mystory-info">
+        	  <div style="margin-left: 70px;">
+        	  	영화제목: 
+        		<b style="color: black;"><%=map.get("title") %></b>
+        		</div>
+        		<div style="margin-left: 70px;">
+        		영화 평점: 
+        		<b style="color: black;"><%=map.get("score") %></b>
+        		</div>
+        		<div style="margin-left: 70px;">
+        		내 관람평:
+        		<b style="color: black;"><%=map.get("content") %></b>
+        		</div>
+        		<div style="margin-left: 70px;">
+        		내 별점:
+        		<b style="color: black;"><%=starHtml%></b>
+        		</div>
+        		<div style="margin-left: 70px;">
+        		상영날짜:
+        		<b style="color: black;"></b>
+        		
+        		</div>
+        	   </div>
+        	</div>
+        	<%}
+        	%>
+        	
+       
+        
     </div>
 
     

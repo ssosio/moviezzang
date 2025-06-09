@@ -242,7 +242,7 @@ p{
         	</tr>
         	<tr>
         		<td colspan="2" align="center">
-        			<button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='mypageMain.jsp'">취소</button>&nbsp;&nbsp;
+        			<button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='index.jsp?main=member/mypage/mypageMain.jsp?id=<%=id%>'">취소</button>&nbsp;&nbsp;
         			<button type="submit" class="btn btn-dark btn-lg">등록</button>
         		</td>
         	</tr>
