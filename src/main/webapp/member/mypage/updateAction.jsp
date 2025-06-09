@@ -52,6 +52,6 @@
 		
 		dao.updateMember(dto);
 		
-		response.sendRedirect("mypageMain.jsp?");
+		response.sendRedirect("../../index.jsp?main=member/mypage/mypageMain.jsp?id="+id);
 	
 %>

@@ -1,3 +1,4 @@
+<%@page import="data.dao.UserDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -43,16 +44,22 @@
  
 </head>
 <%
+	String loginok=(String)session.getAttribute("loginok");
+
+	String userid=(String)session.getAttribute("userid");
 	
+	
+	UserDAO dao=UserDAO.getInstance();
+	String id=dao.getId(userid);
 %>
 <body>
 
    <!-- mypageSidebar.jsp -->
 <div class="mypage-sidebar">
-  <h3 class="mmp" onclick="location.href='mypageMain.jsp'">My MZ Page</h3>
-  <a href="bookMovieList.jsp">예매내역</a>
-  <a href="myMovieStory.jsp">나의 무비스토리</a>
-  <a href="updatemyInfo.jsp">회원정보 수정</a>
+  <h3 class="mmp" onclick="location.href='index.jsp?main=member/mypage/mypageMain.jsp?id=<%=id%>'">My MZ Page</h3>
+  <a href="index.jsp?main=member/mypage/bookMovieList.jsp?id=<%=id%>">예매내역</a>
+  <a href="index.jsp?main=member/mypage/myMovieStory.jsp?id=<%=id%>">나의 무비스토리</a>
+  <a href="index.jsp?main=member/mypage/updatemyInfo.jsp?id=<%=id%>">회원정보 수정</a>
 </div>
      
 </body>

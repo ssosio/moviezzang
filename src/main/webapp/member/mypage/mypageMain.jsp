@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
 <%@page import="data.dto.UserDTO"%>
 <%@page import="data.dao.UserDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -68,9 +70,14 @@
 </head>
 <%
 String id=request.getParameter("id");
+String userid=(String)session.getAttribute("userid");
 
 UserDAO dao=UserDAO.getInstance();
 UserDTO dto=dao.getData(id);
+
+List<HashMap<String, String>> list=dao.getReserveList(userid);
+
+int size=list.size();
 
 %>
 <body>
@@ -100,7 +107,7 @@ UserDTO dto=dao.getData(id);
     <div class="mypage-section">
       <h4 class="text-2xl font-bold" style="color: #000080">영화 예매 내역</h4>
       <div class="mypage-box">
-        <p>영화관람권: 0매</p>
+        <p>영화관람권: <%=size %>매</p>
       </div>
     </div>
 

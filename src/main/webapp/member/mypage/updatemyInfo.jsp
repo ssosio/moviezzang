@@ -163,7 +163,7 @@ p{
     <div class="myinfo-section">
       <h4 class="text-2xl font-bold" style="color: #000080">기본정보</h4>
       <span style="color: red; margin-left: 640px;">*<b style="color: black;">는 필수</b></span>
-      <form action="updateAction.jsp" method="post" onsubmit="return check(this)">
+      <form action="member/mypage/updateAction.jsp" method="post" onsubmit="return check(this)">
       <input type="hidden" name="id" value="<%=id%>">
         <table class="table" style="width: 700px;">
         	<tr>

@@ -25,6 +25,7 @@
 				dataType:"json",
 				data:{"userid":userid},
 				success: function(res){
+
 					//console.log(res.idCheck);
 					
 					if(res.idCheck==1){
