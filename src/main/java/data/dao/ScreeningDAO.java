@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,5 +115,64 @@ public class ScreeningDAO {
 		}
 		return list;
 	};
-
+	
+	// 상영스케줄 중복확인
+	public boolean checkScheduleOverlap(String auditoriumId, Timestamp endTime, Timestamp startTime)
+	{
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		boolean isOverlap = false;
+		
+		String sql = "select count(*) from screening s " +
+	             "join movie m ON s.movie_id = m.id " +
+	             "where s.auditorium_id = ? " +
+	             "and s.start_time < ? " +
+	             "and (s.start_time + interval (m.runtime + 20) minute) > ?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, auditoriumId);
+			pstmt.setTimestamp(2, endTime);
+			pstmt.setTimestamp(3, startTime);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next())
+			{
+				// 0보다 크면 조회되는 스케줄이 있다는 것
+				isOverlap = rs.getInt(1) > 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(null, pstmt, conn);
+		}
+		
+		return isOverlap;
+	}
+	
+	// 상영스케줄 추가
+	public void insertScreening(ScreeningDTO dto)
+	{
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		
+		String sql = "insert into screening values (null, ?, ?, ?, ?)";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getMovie_id());
+			pstmt.setString(2, dto.getAuditorium_id());
+			pstmt.setTimestamp(3, dto.getStart_time());
+			pstmt.setInt(4, dto.getPrice());
+			
+			pstmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(pstmt, conn);
+		}
+	}
 }
