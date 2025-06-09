@@ -18,7 +18,7 @@ String sessionuserid=(String)session.getAttribute("userid");
 String usertype=(String)session.getAttribute("usertype");
 
 String id=dao.getId(sessionuserid);
-	
+
 String root=request.getContextPath();
 
 %>
@@ -56,35 +56,35 @@ String root=request.getContextPath();
 					<div
 						class="w-8 h-8 flex items-center justify-center hover:!text-primary !transition-colors !no-underline !cursor-pointer">
 						<!--     <i class="ri-search-line ri-lg"></i> -->
-					</div>			
-		
+					</div>
+
 						<%
 						if(loginok!=null && "ADMIN".equalsIgnoreCase(usertype))
 						{
 						%>
-						
-							<a id="logout" 
+
+							<a id="logout"
 						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
-						로그아웃</a> 
-						<a id="logout" 
+						로그아웃</a>
+						<a id="logout"
 						class="!text-white hover:!text-primary !transition-colors !no-underline" href="?main=indexAdmin.jsp?id=<%=id %>">
 						관리자페이지</a>
 						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
 						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a>
 						<%
 						}
-						
+
 						else if(loginok!=null)
 						{
-						%>	
-							<a id="logout" 
+						%>
+							<a id="logout"
 						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
-						로그아웃</a> 
+						로그아웃</a>
 						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
-						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a> 
+						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a>
 						<%
 						}
-						
+
 						else{
 						%>
 					<a id="openLoginModal"
@@ -92,10 +92,10 @@ String root=request.getContextPath();
 						로그인</a>
 						<a href="?main=member/signup/signupForm.jsp"
 						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">회원가입</a>
-							
+
 						<%
 						}
-						
+
 						%>
 					<a href=""
 						class="!bg-primary !text-white px-6 py-2 !rounded-button whitespace-nowrap !text-sm hover:!bg-opacity-90 !transition-colors !no-underline">빠른예매</a>

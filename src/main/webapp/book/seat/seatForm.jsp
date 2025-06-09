@@ -268,6 +268,7 @@ $(function() {
 	//screening id와 posterurl 가져오기
 	const screening_id = "<%=screening_id%>";
 	//console.log(poster);
+	/*
 	$(".selseat").on("click",function(){
 		let adult = parseInt($(".adult-inwoncount").text());
 		let teen = parseInt($(".teenager-inwoncount").text());
@@ -288,6 +289,130 @@ $(function() {
 		}
 		updateShowSelSeat();
 	});
+	*/
+	//좌석선택 로직(hover)
+
+	$(".selseat").on("mouseover", function () {
+	    const $this = $(this);
+
+	    // 좌석이 비활성(disabled)이면 hover 효과 안줌
+	    if ($this.prop("disabled")) return;
+	    const col = parseInt($this.attr("col"));
+	    const row = $this.attr("row");
+	    const total = parseInt($(".adult-inwoncount").text()) + parseInt($(".teenager-inwoncount").text());
+	    const selected = $(".selseat.select").length;
+	    const remaining = total - selected;
+
+	    // 인원수 0명이거나, NaN이면 hover 안줌
+	    if (!total || isNaN(total) || total === 0) return;
+
+	    if (remaining >= 2) {
+	        // 항상 "짝수 번호 기준"으로 두 자리
+	        // ex) col=2 -> 1,2 / col=5 -> 5,6
+	        let startCol = (col % 2 === 0) ? col - 1 : col;
+	        if(startCol<1) return;
+	        const $seat1 = $(".selseat[row='" + row + "'][col='" + startCol + "']");
+	        const $seat2 = $(".selseat[row='" + row + "'][col='" + (startCol + 1) + "']");
+
+	        if (
+	            $seat1.length === 0 || $seat2.length === 0 ||
+	            $seat1.hasClass("reserved") || $seat2.hasClass("reserved") ||
+	            $seat1.prop("disabled") || $seat2.prop("disabled")
+	        ) return;
+
+	        $seat1.addClass("hover");
+	        $seat2.addClass("hover");
+	    } else if (remaining === 1) {
+	        if ($this.hasClass("reserved") || $this.prop("disabled")) return;
+	        $this.addClass("hover");
+	    }
+	}).on("mouseleave", function () {
+	    $(".selseat").removeClass("hover");
+	});
+
+
+	// 좌석선택(클릭)
+	$(document).on("click", ".selseat", function(){
+	//$(".selseat").on("click", function () {
+
+	const $this = $(this);
+	console.log("CLICK!", $this.attr("row"), $this.attr("col"));
+    if ($this.prop("disabled") || $this.hasClass("reserved")) return;
+
+    const col = parseInt($this.attr("col"));
+    const row = $this.attr("row");
+    const total = parseInt($(".adult-inwoncount").text()) + parseInt($(".teenager-inwoncount").text());
+    const selectedCount = $(".selseat.select").length;
+    console.log("클릭시점 selectedCount:", selectedCount, "total:", total, "$this.hasClass('select'):", $this.hasClass("select"));
+    let $seat1 = null, $seat2 = null;
+
+    /// 테스트코드
+    if($(this).hasClass("select")){
+		console.log("선택된 단일 좌석 클릭");
+		$(this).removeClass("select");
+    }
+
+    ///
+
+    // 2명 이상일 때 (짝 붙여서 선택)
+    if (total - selectedCount >= 2) {
+
+    	console.log("ss");
+
+		let startCol = (col % 2 === 0) ? col - 1 : col;
+
+        if (startCol < 1){
+		return;
+
+        }
+        const $seat1 = $(".selseat[row='" + row + "'][col='" + startCol + "']");
+        const $seat2 = $(".selseat[row='" + row + "'][col='" + (startCol + 1) + "']");
+
+        // 이미 둘 다 선택되어 있으면 → 해제
+        if ($seat1.hasClass("select") && $seat2.hasClass("select")) {
+			console.log("선택된 좌석 클릭");
+
+			$seat1.removeClass("select");
+            $seat2.removeClass("select");
+            updateShowSelSeat();
+            updatePrice();
+            return;
+        }
+
+        // 둘 다 선택안된경우만 선택
+        if (!$seat1.hasClass("select") && !$seat2.hasClass("select")) {
+            if (selectedCount + 2 > total) {
+                alert("선택한 인원 수를 초과했습니다.");
+                return;
+            }
+            $seat1.addClass("select");
+            $seat2.addClass("select");
+            updateShowSelSeat();
+            updatePrice();
+            return;
+        }
+
+        return;
+
+    }
+    //단일일 경우
+    else if(total - selectedCount === 1) {
+        if ($this.hasClass("select")) {
+            $this.removeClass("select");
+        } else {
+            if (selectedCount + 1 > total) {
+                alert("선택한 인원 수를 초과했습니다.");
+                return;
+            }
+            $this.addClass("select");
+        }
+
+    updateShowSelSeat();
+    updatePrice();
+    }
+});
+
+
 
 	//버튼누르면 인원수 증가하게(성인)
 	$(".btn-up-a").on("click",function(){
@@ -364,6 +489,7 @@ $(function() {
 	$(".btn-up-a, .btn-down-a, .btn-up-t, .btn-down-t").on("click",function(){
 		seatLock();
 		updatePrice();
+		reservationSeatRule();
 	});
 
 	//초기화 버튼 클릭 시 인원수 0 으로초기화
@@ -437,9 +563,34 @@ $(function() {
 
 	}
 
+	//가장자리 제한 함수
+	function reservationSeatRule(){
+
+		const totalSeat = parseInt($(".adult-inwoncount").text())+ parseInt($(".teenager-inwoncount").text());
+
+		$(".selseat").each(function(){
+		const $btn =$(this);
+		const col = parseInt($btn.attr("col"));
+
+		//이미 예약된 좌석은 제외시킨다.
+		if($btn.hasClass("reserved")) return;
+		//가장자리 한칸 띄운자리 4, 11
+		const isEdgeSide = (col === 4 || col === 11);
+
+		if(totalSeat == 1 && isEdgeSide){
+			$btn.prop("disabled",true).addClass("temp-reserved").html("<i class='ri-lock-fill' style='color:gray;'></i>");
+		}else if(totalSeat > 1 && isEdgeSide){
+			if($btn.hasClass("temp-reserved") && !$btn.hasClass("select")){
+			$btn.prop("disabled",false).removeClass("temp-reserved").text(col);
+			}
+		}
+		});
+	}
+
 	//화면로딩시 바로실행
 	seatLock();
 	updatePrice();
+	reservationSeatRule();
 })
 </script>
 <body>
@@ -505,7 +656,13 @@ $(function() {
 							<button class="btn-seat selseat <%=reserved.contains("reserved")?" reserved":"" %>" type="button" style="margin-left: <%=margin%>"
 								row="<%=row%>" col="<%=col%>" seat-no="<%=seatrows[i-1]%><%=j%>"
 								<%=reserved.contains("disabled")?"disabled":"" %>
-								><%=j %></button>
+								>
+								<%if(reserved.contains("reserved")){%>
+									<i class="ri-close-circle-fill" style="color: crimson;"></i>
+								<% }else{%>
+								<%=j %>
+								<%} %>
+								</button>
 						<%}%>
 						</div>
 					<%}

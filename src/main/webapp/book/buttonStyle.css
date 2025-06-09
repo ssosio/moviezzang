@@ -73,3 +73,15 @@
 	color: white !important;
 	border: 1px solid #481658 !important;
 }
+.reserved{
+	background: #481658 !important;
+	border: none !important;
+}
+.temp-reserved{
+	background: #eee !important;
+	cursor: not-allowed !important;
+}
+.selseat.hover {
+	background: #481658 !important;
+	color: white;
+}
