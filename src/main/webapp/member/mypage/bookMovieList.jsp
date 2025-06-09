@@ -17,6 +17,11 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <title>Insert title here</title>
+<%
+/* response.setHeader("Cache-Control", "no-store");
+response.setHeader("Pragma", "no-cache");
+response.setDateHeader("Expires", 0); */
+%>
 <script type="text/javascript">
 
 $(function () {
@@ -58,14 +63,17 @@ $(function () {
 	  
 	  $("#reserveTable tr[data-reserved]").each(function () {
 		    const startTimeText = $(this).find("td").eq(3).text().trim(); 
-		    const isoTimeText = startTimeText.replace(" ", "T");          
-		    const showTime = new Date(isoTimeText);
+		    const [datePart, timePart] = startTimeText.split(" ");
+		    const [year, month, day] = datePart.split("-");
+		    const [hour, minute] = timePart.split(":");
+		    const showTime = new Date(year, month - 1, day, hour, minute); // JS의 month는 0부터 시작
+
 		    const now = new Date();
 
 		    
 		    if (showTime <= now) {
 		      $(this).find("i.bi-x-circle").hide();
-		      $("#starttd").text('취소불가').show;
+		      $(".starttd").text('취소불가').show();
 		    }
 		    
 		    
@@ -189,8 +197,10 @@ $(function () {
       			{
       				HashMap<String,String> map=list.get(i);
       				
-      				
-      				int seat=map.get("seat_id").length();
+      				String seatInfo = map.get("seat_id");
+      	
+      				int seat = (map.get("seat_id") == null || map.get("seat_id").isEmpty()) ? 0 : map.get("seat_id").split(",").length;
+  
       				int price=Integer.parseInt(map.get("price"));
       				
       				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -216,7 +226,7 @@ $(function () {
       				<td><%=formattedTime%></td>
       				<td><%=seat %></td>
       				<td><%=nf.format(price*seat)%></td>
-      				<td id="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
+      				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
       			</tr>
       			
@@ -224,6 +234,7 @@ $(function () {
       			
       		</div>
       		</table>
+      		
       	</div>
       	<br><br>
     </div>
@@ -248,7 +259,7 @@ $(function () {
       				HashMap<String,String> map=clist.get(i);
       				
       				
-      				int seat=map.get("seat_id").length();
+      				int seat = (map.get("seat_id") == null || map.get("seat_id").isEmpty()) ? 0 : map.get("seat_id").split(",").length;
       				int price=Integer.parseInt(map.get("price"));
       				
       				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -295,7 +306,11 @@ function cancelReserve(element) {
         dataType: "json",
         success: function(res) {
             if (res.result === "success") {
-               alert("취소되었습니다.")
+               alert("취소되었습니다.");
+               const row = element.closest("tr");
+               row.remove(); // 예매 내역에서 제거
+               
+				location.reload();
             } else {
                 alert("예매 취소에 실패했습니다.");
             }

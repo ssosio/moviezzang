@@ -177,16 +177,17 @@ public class UserDAO {
 				+ "    t.name, "
 				+ "    s.start_time, "
 				+ "    s.price, "
-				+ "    sr.seat_id "
-				+ "FROM "
-				+ "    reservation res "
+				+ "    GROUP_CONCAT(sr.seat_id ORDER BY sr.seat_id) AS seat_id "
+				+ "FROM reservation res "
 				+ "JOIN screening s ON res.screening_id = s.id "
 				+ "JOIN movie m ON s.movie_id = m.id "
 				+ "JOIN auditorium a ON s.auditorium_id = a.id "
 				+ "JOIN theater t ON a.theater_id = t.id "
 				+ "JOIN user u ON res.user_id = u.id "
-				+ "JOIN seat_reserved sr ON res.id = sr.reservation_id "
-				+ "WHERE u.userid =? AND res.booked = 'Y'";
+				+ "LEFT JOIN seat_reserved sr ON res.id = sr.reservation_id "
+				+ "WHERE u.userid =? AND res.booked = 'Y' "
+				+ "GROUP BY res.id, res.reserved_at, m.title, t.name, s.start_time, s.price "
+				+ "ORDER BY res.reserved_at DESC ";
 		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
 		
 		Connection conn=db.getConnection();
@@ -233,16 +234,17 @@ public class UserDAO {
 					+ "    t.name, "
 					+ "    s.start_time, "
 					+ "    s.price, "
-					+ "    sr.seat_id "
-					+ "FROM "
-					+ "    reservation res "
+					+ "    GROUP_CONCAT(sr.seat_id ORDER BY sr.seat_id) AS seat_id "
+					+ "FROM reservation res "
 					+ "JOIN screening s ON res.screening_id = s.id "
 					+ "JOIN movie m ON s.movie_id = m.id "
 					+ "JOIN auditorium a ON s.auditorium_id = a.id "
 					+ "JOIN theater t ON a.theater_id = t.id "
 					+ "JOIN user u ON res.user_id = u.id "
-					+ "JOIN seat_reserved sr ON res.id = sr.reservation_id "
-					+ "WHERE u.userid =? AND res.booked = 'N'";
+					+ "LEFT JOIN seat_reserved sr ON res.id = sr.reservation_id "
+					+ "WHERE u.userid =? AND res.booked = 'N' "
+					+ "GROUP BY res.id, res.reserved_at, m.title, t.name, s.start_time, s.price "
+					+ "ORDER BY res.reserved_at DESC ";
 			List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
 			
 			Connection conn=db.getConnection();
