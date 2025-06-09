@@ -528,7 +528,7 @@ public class UserDAO {
 		Connection conn=db.getConnection();
 		PreparedStatement pstmt=null;
 		
-		String sql="update reservation set booked='N' where id="+id;
+		String sql="update reservation set reserved_at=now(), booked='N' where id="+id;
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
