@@ -42,9 +42,9 @@ String root=request.getContextPath();
 					<a href="<%=request.getContextPath() %>/index.jsp?main=book/booking/bookMain.jsp"
 						class="hover:!text-primary !text-white !transition-colors !no-underline">예매</a>
 					<a onclick="location.href='<%=request.getContextPath()%>/'"
-						class="flex items-center space-x-2"> <img
-						src="https://static.readdy.ai/image/12bfdaa4bfcf1b50ecec721ef7feb22b/430a084c59d6bf1f60f916f809d7bf0e.png"
-						alt="영화짱닷컴" class="h-12 max-w-none" />
+						class="flex items-center space-x-2 transform transition-transform duration-300 hover:[transform:rotateY(180deg)]"> <img
+						src="<%=request.getContextPath()%>/resources/moviezzang.png"
+						alt="영화짱닷컴" class="cursor-pointer h-12 max-w-none " />
 					</a> <a href=""
 						class="hover:!text-primary !text-white !transition-colors !no-underline">스토어</a>
 					<a href=""
