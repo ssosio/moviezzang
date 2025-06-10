@@ -557,11 +557,13 @@ public class UserDAO {
 				+ "    m.title, "
 				+ "    m.poster_url, "
 				+ "    m.score, "
-				+ "    m.release_date "
+				+ "    s.start_time "
 				+ "FROM "
 				+ "    review re "
 				+ "JOIN movie m ON re.movie_id = m.id "
 				+ "JOIN user u ON re.user_id = u.id "
+				+ "JOIN screening s ON s.movie_id = m.id "
+				+ "JOIN reservation r ON r.screening_id = s.id AND r.user_id = u.id "
 				+ "WHERE u.userid=? ";
 		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();		
 		
@@ -585,7 +587,7 @@ public class UserDAO {
 				map.put("title", rs.getString("title"));
 				map.put("poster_url", rs.getString("poster_url"));
 				map.put("score", rs.getString("score"));
-				map.put("release_date", rs.getString("release_date"));
+				map.put("start_time", rs.getString("start_time"));
 				
 				
 				

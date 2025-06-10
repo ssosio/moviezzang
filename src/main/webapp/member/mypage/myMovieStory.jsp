@@ -97,7 +97,7 @@ UserDAO dao=UserDAO.getInstance();
 UserDTO dto=dao.getData(id);
 
 List<HashMap<String, String>> list=dao.getStoryList(userid);
-
+SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 
 %>
 <body>
@@ -158,8 +158,10 @@ List<HashMap<String, String>> list=dao.getStoryList(userid);
         		</div>
         		<div style="margin-left: 70px;">
         		상영날짜:
-        		<b style="color: black;"></b>
-        		
+        		<b style="color: black;"><%=map.get("start_time") %></b>    		
+        		</div>
+        		<div style="font-size: 10pt; margin-left: 270px;">
+        			<%=map.get("created_at") %> 리뷰 작성
         		</div>
         	   </div>
         	</div>

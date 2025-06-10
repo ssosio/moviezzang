@@ -117,7 +117,7 @@ int storysize=slist.size();
     <div class="mypage-section">
       <h4 class="text-2xl font-bold" style="color: #000080">마일리지 이용내역</h4>
       <div class="mypage-box">
-        <p>적립예정: <%=totalMileage %>P<br />당월소멸예정: 0P</p>
+        <p>적립예정: <%=totalMileage %>P</p>
       </div>
     </div>
     <div class="mypage-section">
@@ -130,7 +130,7 @@ int storysize=slist.size();
     <div class="mypage-section">
       <h4 class="text-2xl font-bold" style="color: #000080">나의 무비스토리</h4>
       <div class="mypage-box">
-        <p>본 영화: <%=storysize %></p>
+        <p>등록된 영화: <%=storysize %>편</p>
       </div>
     </div>
   </div>

@@ -47,17 +47,25 @@ $(function () {
 	  // 필터링 이벤트
 	  $("#monthSelect").on("change", function () {
 	    const selectedMonth = $(this).val(); // "YYYY-MM"
+	    let visibleCount = 0;
+	    
 	    $("#reserveTable tr[data-reserved]").each(function () {
 	      const reservedDate = $(this).data("reserved");
 	      if (selectedMonth === "all" || reservedDate === selectedMonth) {
 	        $(this).show();
-	        $("#reservedinfo").text('예매한 영화가 없습니다.').hide();
+	        visibleCount++;
 	      } else {
 	        $(this).hide();
-	      	$("#reservedinfo").text('예매한 영화가 없습니다.').show();
+	      	
 	      };
 
 	    });
+	    
+	    if (visibleCount === 0) {
+	        $("#reservedinfo").text('예매한 영화가 없습니다.').show();
+	      } else {
+	        $("#reservedinfo").hide();
+	      }
 	  });
 	  
 	  
@@ -73,7 +81,7 @@ $(function () {
 		    
 		    if (showTime <= now) {
 		      $(this).find("i.bi-x-circle").hide();
-		      $(".starttd").text('취소불가').show();
+		      /* $(".starttd").text('취소불가').show(); */
 		    }
 		    
 		    
@@ -122,7 +130,7 @@ $(function () {
       /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); */
       width: 200px;
       background-color: whitesmoke;
-      float: right;
+      margin-left: 700px;
     }
 
     .booklist-section h4 {
@@ -138,6 +146,7 @@ $(function () {
       justify-content: center;    
       align-items: center;         
       height: 100px;
+      margin-top: 150px;
 }
   
   </style>
@@ -165,17 +174,17 @@ $(function () {
   <!-- Main content -->
   <div class="booklist-content">
     <div class="booklist-header">
-     <h2 class="text-2xl font-bold" style="color: #000080">예매 내역</h2>
+     <h2 class="text-3xl font-bold" style="color: #000080">예매 내역</h2>
     </div>
 
     <div class="booklist-section">
       <div class="booklist-box">
-        <div>날짜선택</div>
+        <div>예매날짜선택</div>
         <span><select id="monthSelect" class="w-40 p-2 border border-white-300 rounded-md">
   			<option value="all">전체보기</option>
 		</select></span>
       </div>
-      <br><br><br>
+      
       	<div class="booklist-list">
       		<table class="table" id="reserveTable">
       		<tr>
@@ -190,7 +199,7 @@ $(function () {
       			<tr>
       			<td id="reservedinfo" colspan="7"></td>
       			</tr>
- 				<div>
+ 				
  				
       		<%
       			for(int i=0;i<list.size();i++)
@@ -225,25 +234,26 @@ $(function () {
       				<td><%=map.get("name") %></td>
       				<td><%=formattedTime%></td>
       				<td><%=seat %></td>
-      				<td><%=nf.format(price*seat)%></td>
+      				<td><%=nf.format(price)%></td>
       				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
       			</tr>
       			
       			<%}%>
       			
-      		</div>
+      		
+      		
       		</table>
       		
       	</div>
-      	<br><br>
     </div>
     <br>
+    <div style="margin-top: 80px;">
      <div class="booklist-header">
      <h2 class="text-2xl font-bold" style="color: #000080">예매취소내역</h2>
     </div>
     <br>
-    	<div class="booklist-list">
+    	<div class="booklist-list2">
       		<table class="table" id="canceltable">
       		  <tr>
       			<th style="background-color: whitesmoke">취소일시</th>
@@ -293,6 +303,7 @@ $(function () {
       	</div>
     
   </div>
+  
 </div>
 <script type="text/javascript">
 function cancelReserve(element) {
