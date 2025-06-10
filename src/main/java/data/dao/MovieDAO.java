@@ -355,6 +355,95 @@ public class MovieDAO {
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	// 특정 영화의 평균 평점 계산 (리뷰 기반)
+	public double getAverageRating(String movieId) {
+	   Connection conn = db.getConnection();
+	   PreparedStatement pstmt = null;
+	   ResultSet rs = null;
+	   double averageRating = 0.0;
+
+	   String sql = "SELECT AVG(rating) as avg_rating FROM review WHERE movie_id = ?";
+
+	   try {
+	       pstmt = conn.prepareStatement(sql);
+	       pstmt.setString(1, movieId);
+	       rs = pstmt.executeQuery();
+
+	       if (rs.next()) {
+	           averageRating = rs.getDouble("avg_rating");
+	       }
+
+	   } catch (SQLException e) {
+	       e.printStackTrace();
+	   } finally {
+	       db.dbClose(rs, pstmt, conn);
+	   }
+
+	   return averageRating;
+	}
+
+	// 특정 영화의 평균 평점을 별점(5점 만점)으로 계산
+	public double getAverageStars(String movieId) {
+	   double averageRating = getAverageRating(movieId);
+	   return averageRating / 2.0; // 10점 만점을 5점 만점으로 변환
+	}
+
+	// 특정 영화의 리뷰 개수 조회
+	public int getReviewCount(String movieId) {
+	   Connection conn = db.getConnection();
+	   PreparedStatement pstmt = null;
+	   ResultSet rs = null;
+	   int count = 0;
+
+	   String sql = "SELECT COUNT(*) as review_count FROM review WHERE movie_id = ?";
+
+	   try {
+	       pstmt = conn.prepareStatement(sql);
+	       pstmt.setString(1, movieId);
+	       rs = pstmt.executeQuery();
+
+	       if (rs.next()) {
+	           count = rs.getInt("review_count");
+	       }
+
+	   } catch (SQLException e) {
+	       e.printStackTrace();
+	   } finally {
+	       db.dbClose(rs, pstmt, conn);
+	   }
+
+	   return count;
+	}
+
+	// 영화의 local_score 업데이트 (리뷰 평균으로)
+	public void updateLocalScore(String movieId) {
+	   Connection conn = db.getConnection();
+	   PreparedStatement pstmt = null;
+	   
+	   double averageRating = getAverageRating(movieId);
+	   
+	   String sql = "UPDATE movie SET local_score = ? WHERE id = ?";
+
+	   try {
+	       pstmt = conn.prepareStatement(sql);
+	       pstmt.setFloat(1, (float) averageRating);
+	       pstmt.setString(2, movieId);
+	       pstmt.executeUpdate();
+
+	   } catch (SQLException e) {
+	       e.printStackTrace();
+	   } finally {
+	       db.dbClose(pstmt, conn);
+	   }
+	}
 
 	// delete
 }

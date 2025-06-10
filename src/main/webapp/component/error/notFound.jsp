@@ -112,7 +112,7 @@
   </div>
   <h1 class="title">죄송합니다 페이지로드중 문제가 생겼습니다.</h1>
   <p class="message">Sorry, there was a problem loading the page !</p>
-  <a href="../../index.jsp" class="btn">재시작</a>
+  <a onclick="location.href='<%=request.getContextPath()%>/'" class="btn">재시작</a>
   <div> 
     <a href="https://namu.wiki/w/404%20Not%20Found" class="link">404 오류가 무었인지 궁금하신분들께</a>
   </div>

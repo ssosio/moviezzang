@@ -75,9 +75,41 @@ String movie = dto.getId();
 boolean watched = reviewDao.hasWatchedMovie(numId, movie);
 boolean alreadyReviewed = reviewDao.hasAlreadyReviewed(numId, movie);
 ReviewDTO myReview = reviewDao.getReviewByUser(numId, movie);
+
+//평균 평점 계산 (movie가 null이 아닐 때만)
+double averageRating = 0.0;
+double averageStars = 0.0;
+int reviewCount = 0;
+
+if (movie != null && !movie.trim().isEmpty()) {
+	averageRating = dao.getAverageRating(movie); // 10점 만점
+	averageStars = dao.getAverageStars(movie); // 5점 만점
+	reviewCount = dao.getReviewCount(movie); // 리뷰 개수
+}
 /* MovieDAO dao = MovieDAO.getInstance(); */
 /* String id = request.getParameter("id");
 MovieDTO dto = dao.getMovieById(id); */
+
+/* int totalRating = 0;
+int reviewCount = reviews.size();
+
+for (ReviewDTO review : reviews) {
+	totalRating += review.getRating();
+}
+
+double averageRating = (double) totalRating / reviewCount;
+double averageStars = averageRating / 2.0; // 0~10점을 0~5점으로 변환
+
+// 평균 별점 표시용 계산
+int avgFullStars = (int) averageStars;
+double avgDecimal = averageStars - avgFullStars;
+int avgHalfStars = 0;
+if (avgDecimal >= 0.6) {
+	avgFullStars += 1;
+} else if (avgDecimal >= 0.1) {
+	avgHalfStars = 1;
+}
+int avgEmptyStars = 5 - avgFullStars - avgHalfStars; */
 %>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -271,7 +303,7 @@ input:checked+.switch-slider:before {
 							<!-- 영화 상영 상태 -->
 							<span
 								class="bg-primary text-white text-xs px-2 py-1 rounded mr-2">현재상영중</span>
-							
+
 							<!-- 영화 등급 -->
 							<span class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">
 								<%=dto.getCertification()%></span>
@@ -413,8 +445,8 @@ input:checked+.switch-slider:before {
       <%=(userid == null || userid.trim().equals("")) ? "hidden" : ""%>"
 						id="writeReviewBtn">관람평 작성</button>
 					<%
-}
-%>
+					}
+					%>
 
 
 				</div>
@@ -423,10 +455,10 @@ input:checked+.switch-slider:before {
 						<div class="flex items-center mb-4 md:mb-0">
 							<div
 								class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-3xl font-bold mr-4">
-								9.2</div>
+								<%=String.format("%.1f", averageRating)%></div>
 							<div>
 								<div id="star-container" class="flex text-yellow-400 mb-1"></div>
-								<p class="text-sm text-gray-600"><%=totalReview.size()%>명 참여
+								<p class="text-sm text-gray-600"><%=reviews.size()%>명 참여
 								</p>
 							</div>
 						</div>
@@ -488,15 +520,66 @@ input:checked+.switch-slider:before {
 						<p class="text-gray-500 text-sm">등록된 리뷰가 없습니다.</p>
 						<%
 						} else {
+						// 평균 평점 계산
+						%>
+
+						<!-- 평균 평점 표시 -->
+						<%-- <div class="bg-gray-50 p-4 rounded-lg mb-6">
+							<div class="flex items-center justify-between">
+								<div>
+									<h3 class="text-lg font-semibold mb-2">전체 평점</h3>
+									<div class="flex items-center">
+										<div class="flex text-yellow-400 mr-2">
+											<%
+											for (int i = 0; i < avgFullStars; i++) {
+											%>
+											<i class="ri-star-fill"></i>
+											<%
+											}
+											%>
+											<%
+											if (avgHalfStars == 1) {
+											%>
+											<i class="ri-star-half-fill"></i>
+											<%
+											}
+											%>
+											<%
+											for (int i = 0; i < avgEmptyStars; i++) {
+											%>
+											<i class="ri-star-line"></i>
+											<%
+											}
+											%>
+										</div>
+										<span class="text-lg font-medium"><%=String.format("%.1f", averageStars)%></span>
+										<span class="text-gray-500 ml-2">(<%=reviewCount%>개 리뷰)
+										</span>
+									</div>
+								</div>
+								<div class="text-right">
+									<div class="text-2xl font-bold text-primary"><%=String.format("%.1f", averageRating)%></div>
+									<div class="text-sm text-gray-500">10점 만점</div>
+								</div>
+							</div>
+						</div> --%>
+
+
+
+
+
+						<%
 						for (ReviewDTO r : reviews) {
 						%>
 						<%
-						String user_id = r.getUserId();
-						UserDTO userDto = userDao.getData(user_id); // id는 문자열로 전달
-						String userName = userDto.getName();
-						%>
+String user_id = r.getUserId();
+UserDTO userDto = userDao.getData(user_id); // id는 문자열로 전달
+String userName = userDto.getName();
+String reviewUserId = r.getUserId().trim();
+String sessionUserId = String.valueOf(numId).trim(); // 또는 userid.trim() 사용
 
-
+boolean isAuthor = sessionUserId.equals(reviewUserId);
+%>
 
 						<!-- 관람평 1 -->
 						<div class="border-b border-gray-200 pb-6">
@@ -510,11 +593,7 @@ input:checked+.switch-slider:before {
 										</div>
 									</div>
 									<div>
-
-
-										<%=userName%>
-
-										<p class="font-medium"></p>
+										<p class="font-medium"><%=userName%></p>
 										<div class="flex items-center text-sm text-gray-500">
 											<%
 											int rating = r.getRating(); // 0~10점
@@ -560,32 +639,16 @@ input:checked+.switch-slider:before {
 										</div>
 									</div>
 								</div>
-								<!-- <div class="flex space-x-2">
-									<button
-										class="flex items-center text-gray-500 hover:text-primary">
-										<div class="w-5 h-5 flex items-center justify-center mr-1">
-											<i class="ri-thumb-up-line"></i>
-										</div>
-										<span>128</span>
-									</button>
-									<button
-										class="flex items-center text-gray-500 hover:text-primary">
-										<div class="w-5 h-5 flex items-center justify-center mr-1">
-											<i class="ri-thumb-down-line"></i>
-										</div>
-										<span>12</span>
-									</button>
-								</div> -->
+
 
 								<%
-								boolean isAuthor = myReview != null && numId != null && numId.trim().equals(myReview.getUserId().trim());
 								if (isAuthor) {
 								%>
 								<form action="movie/deleteReview.jsp" method="post"
 									onsubmit="return confirm('정말 리뷰를 삭제하시겠습니까?');">
 									<input type="hidden" name="user_id" value="<%=numId%>">
 									<input type="hidden" name="movie_id"
-										value="<%=request.getParameter("id")%>">
+										value="<%=r.getMovieId()%>">
 									<button type="submit"
 										class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
 										삭제하기</button>
@@ -595,15 +658,12 @@ input:checked+.switch-slider:before {
 								%>
 
 							</div>
-							<p class="text-gray-700"><%=r.getContent()%>
-							</p>
+							<p class="text-gray-700"><%=r.getContent()%></p>
 						</div>
 						<%
-						}
-						%>
-						<%
-						}
-						%>
+}
+}
+%>
 						<!-- 페이지네이션 -->
 						<!-- <div class="flex justify-center mt-8">
 							<div class="inline-flex items-center">
@@ -658,7 +718,7 @@ input:checked+.switch-slider:before {
 					%>
 					<div>
 						<div class="relative">
-							
+
 							<img
 								onclick="location.href='?main=movie/movieDetail.jsp?id=<%=rec.getId()%>&name=<%=rec.getTitle()%>'"
 								src="<%=rec.getPoster_url().startsWith("https") ? "" : posterUrl%><%=rec.getPoster_url()%>"
@@ -1037,7 +1097,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
   
 
-  renderStars(<%=dto.getScore()%>);
+  renderStars(<%=String.format("%.1f", averageRating)%>);
 });
 </script>
 

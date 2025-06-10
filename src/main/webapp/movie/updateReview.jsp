@@ -1,5 +1,5 @@
-<%@ page import="data.dao.ReviewDAO, data.dto.ReviewDTO" %>
-
+<%@ page import="data.dao.ReviewDAO, data.dao.MovieDAO, data.dto.ReviewDTO" %>
+<%@ page import="java.net.URLEncoder" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
 request.setCharacterEncoding("UTF-8");
@@ -16,19 +16,33 @@ dto.setMovieId(movieId);
 dto.setContent(content);
 dto.setRating(rating);
 
-int result = ReviewDAO.getInstance().updateReview(dto);
-if (result > 0) {%>
-	
-	  <script>
-	 alert("리뷰 수정에 성공했습니다.");
-     location.href = "<%=request.getContextPath()%>/index.jsp?main=movie/movieDetail.jsp&id=<%=movieId%>&name=<%=movieName%>";
-     	</script>
+ReviewDAO reviewDao = ReviewDAO.getInstance();
+MovieDAO movieDao = MovieDAO.getInstance();
+
+int result = reviewDao.updateReview(dto);
+
+
+String encodedMovieName = "";
+try {
+    encodedMovieName = URLEncoder.encode(movieName, "UTF-8");
+} catch (Exception e) {
+    encodedMovieName = movieName; // fallback
+}
+
+if (result > 0) {
+    movieDao.updateLocalScore(movieId); // 평균 평점 갱신
+%>
+<script>
+  alert("리뷰 수정에 성공했습니다.");
+  location.href = "<%=request.getContextPath()%>/index.jsp?main=movie/movieDetail.jsp&id=<%=movieId%>&name=<%=encodedMovieName%>";
+</script>
+<%
 } else {
 %>
-  <script>
-    alert("리뷰 수정 실패!");
-    history.back();
-  </script>
+<script>
+  alert("리뷰 수정 실패!");
+  history.back();
+</script>
 <%
 }
 %>
