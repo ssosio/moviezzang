@@ -6,14 +6,16 @@
 <%
 	String root = request.getContextPath();
 	String keyword = request.getParameter("keyword");
-	MovieDAO dao = MovieDAO.getInstance();
 	
+	int cAmount = Integer.parseInt(request.getParameter("contentAmount"));
+	int aAmount = Integer.parseInt(request.getParameter("appendAmount"));
+	
+	MovieDAO dao = MovieDAO.getInstance();
 	List<MovieDTO> list = dao.getDatasByTitle(keyword);
-%>
-	<input type="hidden" id="searchCount" value="<%=list.size()%>">
-<%
-	for (MovieDTO dto : list)
-	{
+	int limit = Math.min(cAmount + aAmount, list.size());
+	
+	for (int i = cAmount; i < limit; i++) {
+		MovieDTO dto = list.get(i);
 %>
 	<div class="mCard poster relative flex-shrink-0 w-64">
 		<div class="relative">

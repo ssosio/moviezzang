@@ -53,7 +53,8 @@ public class YouTube {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+        	System.out.println("만료");
+            //e.printStackTrace();
         }
 
         return null; // 에러 시 null
