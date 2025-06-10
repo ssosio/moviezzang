@@ -25,19 +25,67 @@
 				$("#email2").val($(this).val());
 		});
 		
-		
+		  // 이름 유효성 검사 (한글/영어)
+	    $("#name").on("input", function () {
+	        var val = $(this).val();
+	        var regex = /^[가-힣a-zA-Z\s]+$/;
+	        if (!regex.test(val)) {
+	            $("#nameMsg").text("이름은 한글 또는 영어만 입력 가능합니다.");
+	        } else {
+	            $("#nameMsg").text("");
+	        }
+	    });
+
+
+	    // 이메일 유효성 검사 (email1 + email2 조합)
+	    $("#email1, #email2").on("input", function () {
+	        var email = $("#email1").val() + "@" + $("#email2").val();
+	        var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+	        if (!regex.test(email)) {
+	            $("#emailMsg").text("이메일 형식이 올바르지 않습니다.");
+	        } else {
+	            $("#emailMsg").text("");
+	        }
+	    });
 		
 	});
   	
+  	//유효성 체크
   	function check(f) {
 			
+  			//아이디 한글,영문
+  			 var nameRegex = /^[가-힣a-zA-Z\s]+$/;
+    			if (!nameRegex.test(f.name.value)) {
+       			 alert("이름은 한글과 영어만 입력 가능합니다.");
+       			 f.name.focus();
+        			return false;
+    		};
+  			//비밀번호
 			if(f.password.value!=f.password2.value){
 				alert("비밀번호가 서로 다릅니다");
 				f.password.value="";
 				f.password2.value="";
+				f.password.focus();
 				return false;
-			}
-  	}
+			};
+			//전화번호
+			 var hp2 = f.hp2.value;
+   			 var hp3 = f.hp3.value;
+    		if (!/^\d+$/.test(hp2) || !/^\d+$/.test(hp3)) {
+      		  alert("전화번호는 숫자만 입력 가능합니다.");
+        	return false;
+   			 };
+   			 // 이메일 정규식 검사
+   		    var email = f.email1.value + "@" + f.email2.value;
+   		    var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+   		    if (!emailRegex.test(email)) {
+   		        alert("올바른 이메일 형식이 아닙니다.");
+   		        f.email1.focus();
+   		        return false;
+   		    };
+   		    
+   		    return true;
+  	};
 </script>
   <style type="text/css"> 
     body {
@@ -172,6 +220,7 @@ p{
         	<td>
         		<input type="text" class="form-control" style="width: 150px;" name="name" id="name" value="<%=dto.getName() %>"
         		required="required" placeholder="변경 할 이름">
+        		<span id="nameMsg" style="color:red; font-size:12px;"></span>
         	</td>
         	</tr>
         	<tr>
@@ -198,15 +247,17 @@ p{
 					</select>
 					<a><i class="bi bi-dash-lg dash"></i></a>
         		<input type="text" class="form-control"  name="hp2" style="width: 30px;" onkeyup="goFocus(this)"
-        		value="<%=h2%>">
+        		value="<%=h2%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}">
+        		<span id="hpMsg" style="color:red; font-size:12px;"></span>
         			<i class="bi bi-dash-lg dash" style="color: black;"></i>
         		<input type="text" class="form-control"  name="hp3" style="width: 30px;"
-        		value="<%=h3%>">
+        		value="<%=h3%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}">
         	</td>
         	</tr>
         	<tr>
         	<th style="background-color: whitesmoke;">이메일<label style="color: red;">*</label></th>
         	<td class="input-group">
+        	<div style="display: flex; gap: 5px;">
         		<input type="text" name="email1" id="email1" class="form-control" required="required" placeholder="이메일을 입력해주세요"
         		style="width: 100px;" value="<%=email1%>">
 				<span>@</span>
@@ -218,6 +269,8 @@ p{
 					<option value="gmail.com">gmail.com</option>	
 					<option value="hanmail.net">hanmail.net</option>					
 				</select>
+				</div>
+				<div><span id="emailMsg" style="color:red; font-size:12px; margin-top: 5px;"></span></div>
         	</td>
         	</tr>
         	<tr>
@@ -266,7 +319,7 @@ p{
     function deleteMember() {
         var password=prompt("비밀번호를 입력하세요:");
         if (password != null && password != "") {
-            location.href = "deleteAction.jsp?id=<%=dto.getId()%>&password=" + encodeURIComponent(password);
+            location.href = "member/mypage/deleteAction.jsp?id=<%=dto.getId()%>&password=" + encodeURIComponent(password);
         }
     };
 </script>

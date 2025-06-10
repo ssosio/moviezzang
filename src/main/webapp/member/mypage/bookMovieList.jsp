@@ -81,7 +81,7 @@ $(function () {
 		    
 		    if (showTime <= now) {
 		      $(this).find("i.bi-x-circle").hide();
-		      /* $(".starttd").text('취소불가').show(); */
+		      $(".goreview").show();
 		    }
 		    
 		    
@@ -100,7 +100,7 @@ $(function () {
 
     .booklist-wrapper {
       display: flex;
-      max-width: 1160px;
+      max-width: 1380px;
       margin: 100px auto 50px auto;
       padding: 20px;
       gap: 30px;
@@ -130,7 +130,7 @@ $(function () {
       /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); */
       width: 200px;
       background-color: whitesmoke;
-      margin-left: 700px;
+      margin-left: 920px;
     }
 
     .booklist-section h4 {
@@ -141,12 +141,10 @@ $(function () {
   	.booklist-list {
   	  border-bottom: 1px solid lightgray;
       text-align: center;         
-      height: 80px;
       display: flex;              
       justify-content: center;    
       align-items: center;         
-      height: 100px;
-      margin-top: 150px;
+      
 }
   
   </style>
@@ -195,9 +193,10 @@ $(function () {
       			<th style="background-color: whitesmoke">인원수</th>
       			<th style="background-color: whitesmoke">결제금액</th>
       			<th style="background-color: whitesmoke">예매취소</th>
+      			<th style="background-color: whitesmoke">리뷰</th>
       		</tr>
       			<tr>
-      			<td id="reservedinfo" colspan="7"></td>
+      			<td id="reservedinfo" colspan="8"></td>
       			</tr>
  				
  				
@@ -237,6 +236,7 @@ $(function () {
       				<td><%=nf.format(price*seat)%></td>
       				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
+      				<td><a class="goreview">리뷰쓰기</a></td>
       			</tr>
       			
       			<%}%>
