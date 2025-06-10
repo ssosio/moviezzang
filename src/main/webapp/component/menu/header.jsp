@@ -41,7 +41,7 @@ String currentMain = request.getParameter("main");
 						class="hover:!text-primary !transition-colors !no-underline <%="movie/movieList.jsp".equals(currentMain) ? "!text-primary" : "!text-white"%>">
 						영화 </a>
 						<%
-						if(loginok !=null){%> --%>
+						if(loginok !=null){%>
 							<a
 							href="<%=request.getContextPath()%>/index.jsp?main=book/booking/bookMain.jsp"
 							class="hover:!text-primary !transition-colors !no-underline <%="book/booking/bookMain.jsp".equals(currentMain) ? "!text-primary" : "!text-white"%>">
