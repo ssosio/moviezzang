@@ -1,3 +1,6 @@
+<%@page import="data.dao.MovieDAO"%>
+<%@page import="data.dto.MovieDTO"%>
+<%@page import="java.sql.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.List"%>
@@ -91,12 +94,13 @@
 </head>
 <%
 String userid=(String)session.getAttribute("userid");
-String id=request.getParameter("id");
+
 
 UserDAO dao=UserDAO.getInstance();
-UserDTO dto=dao.getData(id);
+
 
 List<HashMap<String, String>> list=dao.getStoryList(userid);
+SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 
 
 %>
@@ -116,7 +120,14 @@ List<HashMap<String, String>> list=dao.getStoryList(userid);
     </div>
 
     <div class="mystory-section">
-      
+      	<%
+      		if(list.size()==0)
+      		{%>
+      			<div style="text-align: center; margin-top: 50px;"><b>등록된 영화가 없습니다.<br>
+      					리뷰를 남겨보세요!
+      			</b></div>
+      		<%}else{
+      	%>
       
        
 
@@ -124,6 +135,7 @@ List<HashMap<String, String>> list=dao.getStoryList(userid);
         	for(int i=0;i<list.size();i++)
         	{
         		HashMap<String,String> map=list.get(i);
+        		String movietitle=map.get("title");
         		
   				String tmdbPath = "https://image.tmdb.org/t/p/w500";
 				String originalPath = map.get("poster_url");
@@ -131,13 +143,17 @@ List<HashMap<String, String>> list=dao.getStoryList(userid);
 				  int rating = Integer.parseInt(map.get("rating"));
 				   int stars = rating / 2;
 				   
+				   
+				   MovieDAO mdao=MovieDAO.getInstance();
+				   MovieDTO mdto=mdao.getMovieBytitle(movietitle);
+				   
 					StringBuilder starHtml = new StringBuilder();
 					for (int j = 0; j < stars; j++) {
 					    starHtml.append("⭐");
 					}
         	%>
         	<div class="mystory-box">
-        		<p class="postertd"><img src="<%=originalPath.startsWith("https://") ? originalPath : tmdbPath + originalPath%>" alt="" class="object-cover rounded mphoto" /></p>
+        		<p class="postertd"><a href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>"><img src="<%=originalPath.startsWith("https://") ? originalPath : tmdbPath + originalPath%>" alt="" class="object-cover rounded mphoto" /></a></p>
         		
         	  <div class="mystory-info">
         	  <div style="margin-left: 70px;">
@@ -158,14 +174,18 @@ List<HashMap<String, String>> list=dao.getStoryList(userid);
         		</div>
         		<div style="margin-left: 70px;">
         		상영날짜:
-        		<b style="color: black;"></b>
-        		
+        		<b style="color: black;"><%=map.get("start_time") %></b>    		
+        		</div>
+        		<div style="font-size: 10pt; margin-left: 290px;">   		
+        			<%=map.get("created_at")%>  작성
         		</div>
         	   </div>
         	</div>
         	<%}
         	%>
-        	
+        	<%
+      		}
+        	%>
        
         
     </div>

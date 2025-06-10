@@ -83,6 +83,9 @@ List<HashMap<String, String>> slist=dao.getStoryList(userid);
 
 int storysize=slist.size();
 
+
+
+
 %>
 <body>
 
@@ -101,23 +104,22 @@ int storysize=slist.size();
       <div class="mileage">보유 마일리지 (<%=dto.getMileage() %>P)</div>
     </div>
     <%
-    for(int i=0;i<list.size();i++)
-		{
-			HashMap<String,String> map=list.get(i);
-			
-			
-			int seat=map.get("seat_id").length();
-			int price=Integer.parseInt(map.get("price"));
-			int savemileage=(int)((seat*price)*0.1);
+    int totalMileage = 0;
+    for(int i=0;i<list.size();i++) {
+        HashMap<String,String> map=list.get(i);
+        String seatInfo = map.get("seat_id");
+        int seat = (seatInfo == null || seatInfo.isEmpty()) ? 0 : seatInfo.split(",").length;
+        int price = Integer.parseInt(map.get("price"));
+        totalMileage += (int)((seat * price) * 0.1);
+    }
     %>
 
     <div class="mypage-section">
       <h4 class="text-2xl font-bold" style="color: #000080">마일리지 이용내역</h4>
       <div class="mypage-box">
-        <p>적립예정: <%=savemileage %>P<br />당월소멸예정: 0P</p>
+        <p>적립예정: <%=totalMileage %>P</p>
       </div>
     </div>
-	<%}%>
     <div class="mypage-section">
       <h4 class="text-2xl font-bold" style="color: #000080">영화 예매 내역</h4>
       <div class="mypage-box">
@@ -128,7 +130,7 @@ int storysize=slist.size();
     <div class="mypage-section">
       <h4 class="text-2xl font-bold" style="color: #000080">나의 무비스토리</h4>
       <div class="mypage-box">
-        <p>본 영화: <%=storysize %></p>
+        <p>등록된 영화: <%=storysize %>편</p>
       </div>
     </div>
   </div>
