@@ -6,6 +6,7 @@
 <%@page import="data.dao.MovieDAO"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="data.dto.ReviewDTO, data.dao.ReviewDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -45,7 +46,6 @@ String userid = (String) session.getAttribute("userid");
 UserDAO userDao = UserDAO.getInstance();
 String numId = userDao.getId(userid);
 
-
 if (id == null || id.trim().isEmpty()) {
 %>
 <p>❌ 영화 ID가 지정되지 않았습니다.</p>
@@ -63,11 +63,53 @@ if (dto == null) {
 return;
 }
 %>
+
 <%
 String posterUrl = "https://image.tmdb.org/t/p/w500";
+
+ReviewDAO reviewDao = ReviewDAO.getInstance();
+List<ReviewDTO> reviews = reviewDao.getReviewsByMovieId(id);
+List<ReviewDTO> totalReview = reviewDao.getReviewsMovieId(id);
+
+String movie = dto.getId();
+boolean watched = reviewDao.hasWatchedMovie(numId, movie);
+boolean alreadyReviewed = reviewDao.hasAlreadyReviewed(numId, movie);
+ReviewDTO myReview = reviewDao.getReviewByUser(numId, movie);
+
+//평균 평점 계산 (movie가 null이 아닐 때만)
+double averageRating = 0.0;
+double averageStars = 0.0;
+int reviewCount = 0;
+
+if (movie != null && !movie.trim().isEmpty()) {
+	averageRating = dao.getAverageRating(movie); // 10점 만점
+	averageStars = dao.getAverageStars(movie); // 5점 만점
+	reviewCount = dao.getReviewCount(movie); // 리뷰 개수
+}
 /* MovieDAO dao = MovieDAO.getInstance(); */
 /* String id = request.getParameter("id");
 MovieDTO dto = dao.getMovieById(id); */
+
+/* int totalRating = 0;
+int reviewCount = reviews.size();
+
+for (ReviewDTO review : reviews) {
+	totalRating += review.getRating();
+}
+
+double averageRating = (double) totalRating / reviewCount;
+double averageStars = averageRating / 2.0; // 0~10점을 0~5점으로 변환
+
+// 평균 별점 표시용 계산
+int avgFullStars = (int) averageStars;
+double avgDecimal = averageStars - avgFullStars;
+int avgHalfStars = 0;
+if (avgDecimal >= 0.6) {
+	avgFullStars += 1;
+} else if (avgDecimal >= 0.1) {
+	avgHalfStars = 1;
+}
+int avgEmptyStars = 5 - avgFullStars - avgHalfStars; */
 %>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -251,7 +293,7 @@ input:checked+.switch-slider:before {
 									<i class="ri-share-line"></i>
 								</div>
 							</button>
-					
+
 						</div>
 					</div>
 
@@ -295,7 +337,7 @@ input:checked+.switch-slider:before {
 									</div>
 									<div class="flex">
 										<span class="text-gray-600 w-20">장르</span><%=dto.getGenre()%>
-										 <%=userid %>
+
 										<span></span>
 									</div>
 									<div class="flex"></div>
@@ -326,7 +368,9 @@ input:checked+.switch-slider:before {
 									</div>
 									<div class="flex">
 										<div class="flex">
-											<span class="text-gray-600 w-20">배급사</span> <span><%=dto.getDistributor()%>
+											<span
+												class="text-gray-600 w-20 <%=dto.getDistributor() == null ? "hidden" : ""%>">배급사</span>
+											<span> <%=dto.getDistributor() == null ? "" : dto.getDistributor()%>
 											</span>
 										</div>
 									</div>
@@ -372,30 +416,55 @@ input:checked+.switch-slider:before {
 		</div>
 
 		<!-- 평점 및 관람평 -->
+
 		<div class="border-t border-gray-200">
 			<div class="p-8">
 				<div class="flex justify-between items-center mb-6">
 					<h2 class="text-2xl font-bold">평점 및 관람평</h2>
+					<%
+					if (userid == null || userid.trim().equals("")) {
+					%>
+					<p class="text-sm text-red-500">로그인 후 리뷰 작성이 가능합니다.</p>
+					<%
+} else if (!watched) {
+%>
+					<p class="text-sm text-red-500">이 영화를 예매한 사용자만 리뷰를 작성할 수 있습니다.</p>
+					<%
+} else if (alreadyReviewed) {
+%>
+					<p class="text-sm text-green-600">
+						이미 작성한 관람평이 있습니다.
+						<button
+							class="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 transition-colors"
+							id="editReviewBtn">수정하기</button>
+					</p>
+
+					<%
+} else {
+%>
 					<button
-						class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap text-sm hover:bg-opacity-90 transition-colors"
+						class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap text-sm hover:bg-opacity-90 transition-colors 
+      <%=(userid == null || userid.trim().equals("")) ? "hidden" : ""%>"
 						id="writeReviewBtn">관람평 작성</button>
+					<%
+					}
+					%>
+
+
 				</div>
 				<div class="bg-gray-50 p-6 rounded-lg mb-8">
 					<div class="flex flex-col md:flex-row items-center justify-between">
 						<div class="flex items-center mb-4 md:mb-0">
 							<div
 								class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-3xl font-bold mr-4">
-								9.2</div>
+								<%=String.format("%.1f", averageRating)%></div>
 							<div>
-								<div class="flex text-yellow-400 mb-1">
-									<i class="ri-star-fill"></i> <i class="ri-star-fill"></i> <i
-										class="ri-star-fill"></i> <i class="ri-star-fill"></i> <i
-										class="ri-star-half-fill"></i>
-								</div>
-								<p class="text-sm text-gray-600">5,432명 참여</p>
+								<div id="star-container" class="flex text-yellow-400 mb-1"></div>
+								<p class="text-sm text-gray-600"><%=reviews.size()%>명 참여
+								</p>
 							</div>
 						</div>
-						<div class="w-full md:w-1/2">
+						<!-- <div class="w-full md:w-1/2">
 							<div class="flex items-center mb-2">
 								<span class="text-sm w-12">5점</span>
 								<div class="flex-1 bg-gray-200 h-2 rounded-full mx-2">
@@ -431,7 +500,7 @@ input:checked+.switch-slider:before {
 								</div>
 								<span class="text-sm w-12 text-right">1%</span>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 				<!-- 관람평 탭 -->
@@ -442,9 +511,78 @@ input:checked+.switch-slider:before {
 							data-tab="all">전체</button>
 					</div>
 				</div>
+
 				<!-- 관람평 목록 -->
+
 				<div id="all" class="review-tab-content active">
 					<div class="space-y-6">
+						<%
+						if (reviews == null || reviews.size() == 0) {
+						%>
+						<p class="text-gray-500 text-sm">등록된 리뷰가 없습니다.</p>
+						<%
+						} else {
+						// 평균 평점 계산
+						%>
+
+						<!-- 평균 평점 표시 -->
+						<%-- <div class="bg-gray-50 p-4 rounded-lg mb-6">
+							<div class="flex items-center justify-between">
+								<div>
+									<h3 class="text-lg font-semibold mb-2">전체 평점</h3>
+									<div class="flex items-center">
+										<div class="flex text-yellow-400 mr-2">
+											<%
+											for (int i = 0; i < avgFullStars; i++) {
+											%>
+											<i class="ri-star-fill"></i>
+											<%
+											}
+											%>
+											<%
+											if (avgHalfStars == 1) {
+											%>
+											<i class="ri-star-half-fill"></i>
+											<%
+											}
+											%>
+											<%
+											for (int i = 0; i < avgEmptyStars; i++) {
+											%>
+											<i class="ri-star-line"></i>
+											<%
+											}
+											%>
+										</div>
+										<span class="text-lg font-medium"><%=String.format("%.1f", averageStars)%></span>
+										<span class="text-gray-500 ml-2">(<%=reviewCount%>개 리뷰)
+										</span>
+									</div>
+								</div>
+								<div class="text-right">
+									<div class="text-2xl font-bold text-primary"><%=String.format("%.1f", averageRating)%></div>
+									<div class="text-sm text-gray-500">10점 만점</div>
+								</div>
+							</div>
+						</div> --%>
+
+
+
+
+
+						<%
+						for (ReviewDTO r : reviews) {
+						%>
+						<%
+String user_id = r.getUserId();
+UserDTO userDto = userDao.getData(user_id); // id는 문자열로 전달
+String userName = userDto.getName();
+String reviewUserId = r.getUserId().trim();
+String sessionUserId = String.valueOf(numId).trim(); // 또는 userid.trim() 사용
+
+boolean isAuthor = sessionUserId.equals(reviewUserId);
+%>
+
 						<!-- 관람평 1 -->
 						<div class="border-b border-gray-200 pb-6">
 							<div class="flex justify-between items-start mb-2">
@@ -457,42 +595,82 @@ input:checked+.switch-slider:before {
 										</div>
 									</div>
 									<div>
-										<p class="font-medium">김현우</p>
+										<p class="font-medium"><%=userName%></p>
 										<div class="flex items-center text-sm text-gray-500">
+											<%
+											int rating = r.getRating(); // 0~10점
+											double stars = rating / 2.0;
+
+											int fullStars = (int) stars;
+											double decimal = stars - fullStars;
+
+											int halfStars = 0;
+											if (decimal >= 0.6) {
+												fullStars += 1; // 0.6 이상이면 별 하나로
+											} else if (decimal >= 0.1) {
+												halfStars = 1; // 0.1 ~ 0.5 는 반개
+											}
+
+											int emptyStars = 5 - fullStars - halfStars;
+											%>
+
 											<div class="flex text-yellow-400 mr-2">
-												<i class="ri-star-fill"></i> <i class="ri-star-fill"></i> <i
-													class="ri-star-fill"></i> <i class="ri-star-fill"></i> <i
-													class="ri-star-fill"></i>
+												<%
+												for (int i = 0; i < fullStars; i++) {
+												%>
+												<i class="ri-star-fill"></i>
+												<%
+												}
+												%>
+												<%
+												if (halfStars == 1) {
+												%>
+												<i class="ri-star-half-fill"></i>
+												<%
+												}
+												%>
+												<%
+												for (int i = 0; i < emptyStars; i++) {
+												%>
+												<i class="ri-star-line"></i>
+												<%
+												}
+												%>
 											</div>
-											<span>2025.05.29</span>
+											<%
+											java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+											%>
+											<span><%=sdf.format(r.getCreatedAt())%></span>
 										</div>
 									</div>
 								</div>
-								<div class="flex space-x-2">
-									<button
-										class="flex items-center text-gray-500 hover:text-primary">
-										<div class="w-5 h-5 flex items-center justify-center mr-1">
-											<i class="ri-thumb-up-line"></i>
-										</div>
-										<span>128</span>
-									</button>
-									<button
-										class="flex items-center text-gray-500 hover:text-primary">
-										<div class="w-5 h-5 flex items-center justify-center mr-1">
-											<i class="ri-thumb-down-line"></i>
-										</div>
-										<span>12</span>
-									</button>
-								</div>
+
+
+								<%
+								if (isAuthor) {
+								%>
+								<form action="movie/deleteReview.jsp" method="post"
+									onsubmit="return confirm('정말 리뷰를 삭제하시겠습니까?');">
+									<input type="hidden" name="user_id" value="<%=numId%>">
+									<input type="hidden" name="movie_id"
+										value="<%=r.getMovieId()%>">
+									<button type="submit"
+										class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
+										삭제하기</button>
+								</form>
+								<%
+								}
+								%>
+
 							</div>
-							<p class="text-gray-700">마동석의 액션은 언제 봐도 시원하다! 범죄도시 시리즈 중에서도
-								이번 편이 가장 스케일이 크고 액션 장면도 더 업그레이드된 느낌. 특히 베트남 현지 촬영 장면들이 영화의 분위기를
-								한층 더 살려줬다. 마석도와 장이수 콤비의 케미도 여전히 최고!</p>
+							<p class="text-gray-700"><%=r.getContent()%></p>
 						</div>
-
-
+						<%
+}
+}
+%>
 						<!-- 페이지네이션 -->
-						<div class="flex justify-center mt-8">
+						<!-- <div class="flex justify-center mt-8">
 							<div class="inline-flex items-center">
 								<a href="#"
 									class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-l-md hover:bg-gray-50">
@@ -512,78 +690,79 @@ input:checked+.switch-slider:before {
 									</div>
 								</a>
 							</div>
-						</div>
-					</div>
-					
-						
-						</div>
-					</div>
-				</div>
-			
-
-
-			<!-- 여기서부터 영화 추천기능입니다 ~~~~~~ 장르에따라서 같은장르 평점높은순으로 평점 5점이상 영화들만 추천합니다.-->
-			<%
-			List<MovieDTO> recommends = dao.getRecommends(request.getParameter("id"));
-			if (recommends != null && !recommends.isEmpty()) {
-			%>
-			<div class="border-t border-gray-200">
-
-				<div class="p-8">
-
-
-					<h2 class="text-2xl font-bold mb-6">이런 영화를 좋아하실것 같아요 !</h2>
-
-
-					<div
-						class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-						<!-- 추천 영화  -->
-						<%
-						for (MovieDTO rec : recommends) {
-							String encodedTitle = URLEncoder.encode(rec.getTitle(), "UTF-8");
-						%>
-						<div>
-							<div class="relative">
-								<%=rec.getId()%>
-								<img
-									onclick="location.href='?main=movie/movieDetail.jsp?id=<%=rec.getId()%>&name=<%=rec.getTitle()%>'"
-									src="<%=rec.getPoster_url().startsWith("https") ? "" : posterUrl%><%=rec.getPoster_url()%>"
-									alt="<%=rec.getTitle()%>"
-									class="w-full h-60 object-cover object-top rounded" />
-							</div>
-							<div class="mt-2">
-								<p class="font-medium"><%=rec.getTitle()%></p>
-								<div class="flex items-center text-sm text-gray-600">
-									<div class="flex items-center">
-										<span><%=rec.getGenre()%></span>
-										<div
-											class="w-4 h-4 flex items-center justify-center text-yellow-500 mr-1">
-											<i class="ri-star-fill"></i>
-										</div>
-										<span><%=rec.getScore()%></span>
-
-									</div>
-
-								</div>
-							</div>
-						</div>
-						<%
-						}
-						%>
+						</div> -->
 					</div>
 
 
 				</div>
 
 			</div>
-			<%
-			} else {
-			%>
-			<p>같은 장르의 추천 영화가 없습니다 😢</p>
-			<%
-			}
-			%>
-			<!-- 	영화추천 끝~~~~ -->
+		</div>
+
+
+
+		<!-- 여기서부터 영화 추천기능입니다 ~~~~~~ 장르에따라서 같은장르 평점높은순으로 평점 5점이상 영화들만 추천합니다.-->
+		<%
+		List<MovieDTO> recommends = dao.getRecommends(request.getParameter("id"));
+		if (recommends != null && !recommends.isEmpty()) {
+		%>
+		<div class="border-t border-gray-200">
+
+			<div class="p-8">
+
+
+				<h2 class="text-2xl font-bold mb-6">이런 영화를 좋아하실것 같아요 !</h2>
+
+
+				<div
+					class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+					<!-- 추천 영화  -->
+					<%
+					for (MovieDTO rec : recommends) {
+						String encodedTitle = URLEncoder.encode(rec.getTitle(), "UTF-8");
+					%>
+					<div>
+						<div class="relative">
+
+							<img
+								onclick="location.href='?main=movie/movieDetail.jsp?id=<%=rec.getId()%>&name=<%=rec.getTitle()%>'"
+								src="<%=rec.getPoster_url().startsWith("https") ? "" : posterUrl%><%=rec.getPoster_url()%>"
+								alt="<%=rec.getTitle()%>"
+								class="w-full h-full object-cover object-top rounded" />
+						</div>
+						<div class="mt-2">
+							<p class="font-medium"><%=rec.getTitle()%></p>
+							<div class="flex items-center text-sm text-gray-600">
+								<div class="flex items-center">
+									<span><%=rec.getGenre()%></span>
+									<div
+										class="w-4 h-4 flex items-center justify-center text-yellow-500 mr-1">
+										<i class="ri-star-fill"></i>
+									</div>
+									<span><%=rec.getScore()%></span>
+
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<%
+					}
+					%>
+				</div>
+
+
+			</div>
+
+		</div>
+		<%
+		} else {
+		%>
+		<p>같은 장르의 추천 영화가 없습니다 😢</p>
+		<%
+		}
+		%>
+		<!-- 	영화추천 끝~~~~ -->
 		</div>
 		</div>
 	</section>
@@ -603,239 +782,330 @@ input:checked+.switch-slider:before {
 			</div>
 		</div>
 	</div>
+	<%
+	if (myReview != null) {
+	%>
+	<input type="hidden" id="existingContent"
+		value="<%=myReview.getContent().replace("\"", "&quot;")%>">
+	<input type="hidden" id="existingRating"
+		value="<%=myReview.getRating()%>">
+	<%
+	}
+	%>
 	<!-- 관람평 작성 모달 -->
 	<div
-	class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
-	id="reviewModal">
-	<div class="bg-white rounded-lg w-full max-w-lg p-6">
-		<form action="insertReview.jsp" method="post" id="reviewForm">
-			<div class="flex justify-between items-center mb-4">
-				<!-- <h3 class="text-xl font-bold">관람평 작성</h3> -->
-				<button id="closeReviewModal"
-					class="text-gray-500 hover:text-gray-700" type="button">
-					<div class="w-6 h-6 flex items-center justify-center">
-						<i class="ri-close-line"></i>
-					</div>
-				</button>
-			</div>
-
-			<div class="mb-4">
-				<p class="font-medium mb-2">영화 평점</p>
-				<div class="flex review-stars text-2xl text-gray-300 mb-2">
-					<i class="ri-star-fill" data-value="1"></i>
-					<i class="ri-star-fill" data-value="2"></i>
-					<i class="ri-star-fill" data-value="3"></i>
-					<i class="ri-star-fill" data-value="4"></i>
-					<i class="ri-star-fill" data-value="5"></i>
-				
-					
+		class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+		id="reviewModal">
+		<div class="bg-white rounded-lg w-full max-w-lg p-6">
+			<form action="movie/insertReview.jsp" method="post" id="reviewForm">
+				<div class="flex justify-between items-center mb-4">
+					<!-- <h3 class="text-xl font-bold">관람평 작성</h3> -->
+					<button id="closeReviewModal"
+						class="text-gray-500 hover:text-gray-700" type="button">
+						<div class="w-6 h-6 flex items-center justify-center">
+							<i class="ri-close-line"></i>
+						</div>
+					</button>
 				</div>
 
-				<%= userid %> <%= numId %>
+				<div class="mb-4">
+					<p class="font-medium mb-2"><%=dto.getTitle()%>
+						영화 평점
+					</p>
+					<div class="flex review-stars text-2xl text-gray-300 mb-2">
+						<i class="ri-star-fill" data-value="1"></i> <i
+							class="ri-star-fill" data-value="2"></i> <i class="ri-star-fill"
+							data-value="3"></i> <i class="ri-star-fill" data-value="4"></i> <i
+							class="ri-star-fill" data-value="5"></i>
 
-				<p class="text-sm text-gray-500" id="ratingText">평점을 선택해주세요</p>
 
-				<!-- 추가: 별점 값 -->
-			<input type="hidden" id="rating" name="rating" />
-		  <p id="selectedRatingText" class="text-sm text-blue-600 font-semibold mt-2"></p>
-			</div>
+					</div>
 
-			<div class="mb-4">
-				<p class="font-medium mb-2">관람평</p>
-				<textarea name="content" required minlength="10"
-					class="w-full border border-gray-300 rounded p-3 h-32 focus:outline-none focus:ring-2 focus:ring-primary"
-					placeholder="영화에 대한 감상을 자유롭게 작성해주세요. (최소 10자 이상)"></textarea>
-			</div>
+					<p class="text-sm text-gray-500" id="ratingText">평점을 선택해주세요</p>
 
-			<!-- 추가: 유저 ID, 영화 ID 전달 -->
-			<input type="hidden" name="user_id" value="<%= numId %>">
-			<input type="hidden" name="movie_id" value="<%= request.getParameter("id") %>">
+					<!-- 추가: 별점 값 -->
+					<input type="hidden" id="rating" name="rating" />
+					<p id="selectedRatingText"
+						class="text-sm text-blue-600 font-semibold mt-2"></p>
+				</div>
 
-			<div class="flex space-x-3">
-			<p id="selectedRatingText" class="text-sm text-blue-600 font-semibold mt-2"></p>
-				<button
-					class="border border-gray-300 px-4 py-2 !rounded-button whitespace-nowrap flex-1 hover:bg-gray-50 transition-colors"
-					id="cancelReview" type="button">취소</button>
-				<button
-					class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap flex-1 hover:bg-opacity-90 transition-colors"
-					type="submit">등록</button>
-			</div>
-		</form>
+				<div class="mb-4">
+					<p class="font-medium mb-2">관람평</p>
+					<textarea name="content" required minlength="10"
+						class="w-full border border-gray-300 rounded p-3 h-32 focus:outline-none focus:ring-2 focus:ring-primary"
+						placeholder="영화에 대한 감상을 자유롭게 작성해주세요. (최소 10자 이상)"></textarea>
+				</div>
+
+				<!-- 추가: 유저 ID, 영화 ID 전달 영화제목전달 << 리다이렉션시 필요 -->
+				
+				<input type="hidden" name="movieName" value="<%=dto.getTitle()%>">
+				<input type="hidden" name="user_id" value="<%=numId%>"> <input
+					type="hidden" name="movie_id"
+					value="<%=request.getParameter("id")%>">
+
+				<div class="flex space-x-3">
+					<p id="selectedRatingText"
+						class="text-sm text-blue-600 font-semibold mt-2"></p>
+					<button
+						class="border border-gray-300 px-4 py-2 !rounded-button whitespace-nowrap flex-1 hover:bg-gray-50 transition-colors"
+						id="cancelReview" type="button">취소</button>
+					<button
+						class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap flex-1 hover:bg-opacity-90 transition-colors"
+						type="submit">등록</button>
+				</div>
+			</form>
+		</div>
 	</div>
-</div>
+
 
 
 	<script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const header = document.querySelector("header");
-        let lastScrollY = window.scrollY;
-        window.addEventListener("scroll", () => {
-          if (window.scrollY > lastScrollY) {
-            header.style.transform = "translateY(-100%)";
-            header.style.transition = "transform 0.3s ease-in-out";
-          } else {
-            header.style.transform = "translateY(0)";
-            header.style.transition = "transform 0.3s ease-in-out";
-          }
-          lastScrollY = window.scrollY;
-        });
-        // 관람평 탭 전환 기능
-        const reviewTabBtns = document.querySelectorAll(".review-tab-btn");
-        const reviewTabContents = document.querySelectorAll(
-          ".review-tab-content"
-        );
-        reviewTabBtns.forEach((btn) => {
-          btn.addEventListener("click", function () {
-            // 모든 탭 버튼에서 active 클래스 제거
-            reviewTabBtns.forEach((b) => {
-              b.classList.remove(
-                "active",
-                "text-primary",
-                "border-b-2",
-                "border-primary"
-              );
-              b.classList.add("text-gray-500");
-            });
-            // 클릭한 탭 버튼에 active 클래스 추가
-            this.classList.add(
-              "active",
-              "text-primary",
-              "border-b-2",
-              "border-primary"
-            );
-            this.classList.remove("text-gray-500");
-            // 모든 탭 콘텐츠 숨기기
-            reviewTabContents.forEach((content) => {
-              content.classList.remove("active");
-              content.classList.add("hidden");
-            });
-            // 해당 탭 콘텐츠 표시
-            const tabId = this.getAttribute("data-tab");
-            const activeContent = document.getElementById(tabId);
-            activeContent.classList.add("active");
-            activeContent.classList.remove("hidden");
-          });
-        });
-        // 트레일러 모달 기능
-        const trailerTriggers = document.querySelectorAll(".trailer-trigger");
-        const trailerOverlay = document.getElementById("trailerOverlay");
-        const trailerClose = document.getElementById("trailerClose");
-        const trailerIframe = trailerOverlay.querySelector("iframe");
-        trailerTriggers.forEach((trigger) => {
-          trigger.addEventListener("click", function () {
-            // 실제 구현에서는 영화별 트레일러 URL을 설정해야 함
-            trailerIframe.src =
-              "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
-            trailerOverlay.classList.add("active");
-            document.body.style.overflow = "hidden";
-          });
-        });
-        trailerClose.addEventListener("click", function () {
-          trailerOverlay.classList.remove("active");
-          trailerIframe.src = "about:blank";
-          document.body.style.overflow = "";
-        });
-        // 관람평 작성 모달
-        const writeReviewBtn = document.getElementById("writeReviewBtn");
-        const reviewModal = document.getElementById("reviewModal");
-        const closeReviewModal = document.getElementById("closeReviewModal");
-        const cancelReview = document.getElementById("cancelReview");
-        writeReviewBtn.addEventListener("click", function () {
-          reviewModal.classList.remove("hidden");
-          document.body.style.overflow = "hidden";
-        });
-        function closeModal() {
-          reviewModal.classList.add("hidden");
-          document.body.style.overflow = "";
-        }
-        closeReviewModal.addEventListener("click", closeModal);
-        cancelReview.addEventListener("click", closeModal);
-        // 별점 기능
-        const stars = document.querySelectorAll(".review-stars i");
-        const ratingText = document.getElementById("ratingText");
-        const ratingTexts = [
-          "평점을 선택해주세요",
-          "별로예요",
-          "기대보다 낮아요",
-          "보통이에요",
-          "기대보다 높아요",
-          "최고예요!",
-        ];
-        stars.forEach((star) => {
-          star.addEventListener("mouseover", function () {
-            const value = this.getAttribute("data-value");
-            highlightStars(value);
-          });
-          star.addEventListener("mouseout", function () {
-            const activeStars = document.querySelectorAll(
-              ".review-stars i.active"
-            );
-            if (activeStars.length === 0) {
-              stars.forEach((s) => s.classList.remove("text-yellow-400"));
-              stars.forEach((s) => s.classList.add("text-gray-300"));
-              ratingText.textContent = ratingTexts[0];
-            } else {
-              const value =
-                activeStars[activeStars.length - 1].getAttribute("data-value");
-              highlightStars(value);
-            }
-          });
-          stars.forEach((star) => {
-        	  star.addEventListener("click", function () {
-        	    const value = parseInt(this.getAttribute("data-value")); // 문자열 → 숫자
-        	    const ratingValue = value * 2;
+document.addEventListener("DOMContentLoaded", function () {
+  // header hide/show
+  const header = document.querySelector("header");
+  let lastScrollY = window.scrollY;
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > lastScrollY) {
+      header.style.transform = "translateY(-100%)";
+    } else {
+      header.style.transform = "translateY(0)";
+    }
+    header.style.transition = "transform 0.3s ease-in-out";
+    lastScrollY = window.scrollY;
+  });
 
-        	    // 별 채우기
-        	    stars.forEach((s, i) => {
-        	      s.classList.toggle("active", i < value);
-        	    });
-        	    highlightStars(value);
+  // 탭 전환
+  const reviewTabBtns = document.querySelectorAll(".review-tab-btn");
+  const reviewTabContents = document.querySelectorAll(".review-tab-content");
+  reviewTabBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      reviewTabBtns.forEach((b) => {
+        b.classList.remove("active", "text-primary", "border-b-2", "border-primary");
+        b.classList.add("text-gray-500");
+      });
+      this.classList.add("active", "text-primary", "border-b-2", "border-primary");
+      this.classList.remove("text-gray-500");
 
-        	    // 실제 hidden input에 값 설정
-        	    const ratingInput = document.getElementById("rating");
-        	    if (ratingInput) {
-        	      ratingInput.value = ratingValue;
-        	      console.log("rating 설정됨:", ratingInput.value);
-     /*    	      console.log("ratingDisplay 확인:", ratingDisplay);// 디버그 */
-        	    } else {
-        	      console.warn("rating input 못 찾음");
-        	    }
+      reviewTabContents.forEach((content) => {
+        content.classList.remove("active");
+        content.classList.add("hidden");
+      });
+      const tabId = this.getAttribute("data-tab");
+      document.getElementById(tabId).classList.add("active");
+      document.getElementById(tabId).classList.remove("hidden");
+    });
+  });
 
-        	    // 사용자에게 평점 표시
-        	    const ratingDisplay = document.getElementById("selectedRatingText");
-        	    if (ratingDisplay) {
-        	    	ratingDisplay.textContent = `선택한 평점: ${ratingValue} 점`;
-        	    }
-        	  });
-        	});
-        });
-        function highlightStars(count) {
-          stars.forEach((s) => s.classList.remove("text-yellow-400"));
-          stars.forEach((s) => s.classList.add("text-gray-300"));
-          for (let i = 0; i < count; i++) {
-            stars[i].classList.remove("text-gray-300");
-            stars[i].classList.add("text-yellow-400");
-          }
-          ratingText.textContent = ratingTexts[count];
-        }
-        
-      /*   공유 링크복사기 */
+  // 트레일러 모달
+  const trailerTriggers = document.querySelectorAll(".trailer-trigger");
+  const trailerOverlay = document.getElementById("trailerOverlay");
+  const trailerClose = document.getElementById("trailerClose");
+  const trailerIframe = trailerOverlay?.querySelector("iframe");
+  trailerTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", function () {
+      trailerIframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
+      trailerOverlay.classList.add("active");
+      document.body.style.overflow = "hidden";
+    });
+  });
+  trailerClose?.addEventListener("click", function () {
+    trailerOverlay.classList.remove("active");
+    trailerIframe.src = "about:blank";
+    document.body.style.overflow = "";
+  });
 
-       
-        });
-	
-		function copyCurrentUrl() {
-		    const url = window.location.href;
-		    navigator.clipboard.writeText(url)
-		        .then(() => {
-		            alert("<%=dto.getTitle()%> 링크가 복사되었습니다!");
-		        })
-		        .catch((err) => {
-		            console.error("복사 실패: ", err);
-		            alert("링크 복사에 실패했습니다.");
-		        });
-		}
-	
-    </script>
+  // 관람평 모달
+  const reviewModal = document.getElementById("reviewModal");
+  const closeReviewModal = document.getElementById("closeReviewModal");
+  const cancelReview = document.getElementById("cancelReview");
+  const reviewForm = document.getElementById("reviewForm");
+  const contentTextarea = reviewForm.querySelector("textarea[name='content']");
+  const ratingInput = document.getElementById("rating");
+  const ratingText = document.getElementById("ratingText");
+  const ratingDisplay = document.getElementById("selectedRatingText");
+
+  const writeReviewBtn = document.getElementById("writeReviewBtn");
+  const editReviewBtn = document.getElementById("editReviewBtn");
+
+  const existingContent = document.getElementById("existingContent")?.value || "";
+  const existingRating = parseInt(document.getElementById("existingRating")?.value || 0);
+
+  writeReviewBtn?.addEventListener("click", () => openModal("insert"));
+  editReviewBtn?.addEventListener("click", () => openModal("update"));
+
+  function openModal(mode) {
+    reviewModal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+    resetStars();
+
+    if (mode === "update") {
+      reviewForm.action = "movie/updateReview.jsp";
+      contentTextarea.value = existingContent;
+      ratingInput.value = existingRating;
+      ratingText.textContent = `선택한 평점: ${existingRating}점`;
+      ratingDisplay.textContent = `선택한 평점: ${existingRating}점`;
+      setStars(existingRating / 2);
+    } else {
+      reviewForm.action = "movie/insertReview.jsp";
+      contentTextarea.value = "";
+      ratingInput.value = "";
+      ratingText.textContent = "평점을 선택해주세요";
+      ratingDisplay.textContent = "";
+    }
+  }
+
+  function closeModal() {
+    reviewModal.classList.add("hidden");
+    document.body.style.overflow = "";
+  }
+  closeReviewModal?.addEventListener("click", closeModal);
+  cancelReview?.addEventListener("click", closeModal);
+
+  // 별점 기능
+  const stars = document.querySelectorAll(".review-stars i");
+  const ratingTexts = [
+    "평점을 선택해주세요",
+    "별로예요",
+    "기대보다 낮아요",
+    "보통이에요",
+    "기대보다 높아요",
+    "최고예요!",
+  ];
+
+  function resetStars() {
+    stars.forEach((s) => {
+      s.classList.remove("text-yellow-400", "active");
+      s.classList.add("text-gray-300");
+    });
+  }
+
+  function setStars(count) {
+    for (let i = 0; i < count; i++) {
+      stars[i].classList.add("text-yellow-400", "active");
+      stars[i].classList.remove("text-gray-300");
+    }
+  }
+
+  function highlightStars(count) {
+    stars.forEach((s) => s.classList.remove("text-yellow-400"));
+    stars.forEach((s) => s.classList.add("text-gray-300"));
+    for (let i = 0; i < count; i++) {
+      stars[i].classList.remove("text-gray-300");
+      stars[i].classList.add("text-yellow-400");
+    }
+    ratingText.textContent = ratingTexts[count];
+  }
+
+  stars.forEach((star) => {
+    star.addEventListener("mouseover", function () {
+      const value = this.getAttribute("data-value");
+      highlightStars(value);
+    });
+
+    star.addEventListener("mouseout", function () {
+      const activeStars = document.querySelectorAll(".review-stars i.active");
+      if (activeStars.length === 0) {
+        resetStars();
+        ratingText.textContent = ratingTexts[0];
+      } else {
+        highlightStars(activeStars.length);
+      }
+    });
+
+    star.addEventListener("click", function () {
+      const value = parseInt(this.getAttribute("data-value"));
+      const ratingValue = value * 2;
+
+      stars.forEach((s, i) => {
+        s.classList.toggle("active", i < value);
+      });
+
+      ratingInput.value = ratingValue;
+      ratingDisplay.textContent = `선택한 평점: ${ratingValue}점`;
+    });
+  });
+
+  // 공유 링크 복사
+  window.copyCurrentUrl = function () {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        alert("<%=dto.getTitle()%> 링크가 복사되었습니다!");
+      })
+      .catch((err) => {
+        console.error("복사 실패: ", err);
+        alert("링크 복사에 실패했습니다.");
+      });
+  };
+
+  // 별점 평균 렌더링
+  function renderStars(score) {
+    const container = document.getElementById("star-container");
+    container.innerHTML = "";
+    const starCount = score / 2;
+    const fullStars = Math.floor(starCount);
+    const decimal = starCount - fullStars;
+    let totalFullStars = fullStars;
+    let totalHalfStars = decimal >= 0.6 ? 0 : (decimal >= 0.1 ? 1 : 0);
+    if (decimal >= 0.6) totalFullStars++;
+
+    const totalEmptyStars = 5 - totalFullStars - totalHalfStars;
+
+    for (let i = 0; i < totalFullStars; i++) {
+      const star = document.createElement("i");
+      star.className = "ri-star-fill";
+      container.appendChild(star);
+    }
+    if (totalHalfStars === 1) {
+      const star = document.createElement("i");
+      star.className = "ri-star-half-fill";
+      container.appendChild(star);
+    }
+    for (let i = 0; i < totalEmptyStars; i++) {
+      const star = document.createElement("i");
+      star.className = "ri-star-line";
+      container.appendChild(star);
+    }
+  }
+  function renderStarsTo(containerId, score) {
+	  const container = document.getElementById(containerId);
+	  if (!container) return;
+
+	  container.innerHTML = "";
+	  const starCount = score / 2;
+	  const fullStars = Math.floor(starCount);
+	  const decimal = starCount - fullStars;
+
+	  let totalFullStars = fullStars;
+	  let totalHalfStars = 0;
+	  if (decimal >= 0.6) {
+	    totalFullStars++;
+	  } else if (decimal >= 0.1) {
+	    totalHalfStars = 1;
+	  }
+	  const totalEmptyStars = 5 - totalFullStars - totalHalfStars;
+
+	  for (let i = 0; i < totalFullStars; i++) {
+	    const star = document.createElement("i");
+	    star.className = "ri-star-fill";
+	    container.appendChild(star);
+	  }
+	  if (totalHalfStars === 1) {
+	    const star = document.createElement("i");
+	    star.className = "ri-star-half-fill";
+	    container.appendChild(star);
+	  }
+	  for (let i = 0; i < totalEmptyStars; i++) {
+	    const star = document.createElement("i");
+	    star.className = "ri-star-line";
+	    container.appendChild(star);
+	  }
+	}
+  
+
+  renderStars(<%=String.format("%.1f", averageRating)%>);
+});
+</script>
+
 </body>
 </html>

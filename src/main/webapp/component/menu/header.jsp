@@ -10,17 +10,17 @@
 <%@ include file="../../member/login/loginForm.jsp"%>
 
 <%
-	String loginok=(String)session.getAttribute("loginok");
+String loginok = (String) session.getAttribute("loginok");
 
-UserDAO dao=UserDAO.getInstance();
+UserDAO dao = UserDAO.getInstance();
 
-String sessionuserid=(String)session.getAttribute("userid");
-String usertype=(String)session.getAttribute("usertype");
+String sessionuserid = (String) session.getAttribute("userid");
+String usertype = (String) session.getAttribute("usertype");
 
-String id=dao.getId(sessionuserid);
+String id = dao.getId(sessionuserid);
 
-String root=request.getContextPath();
-
+String root = request.getContextPath();
+String currentMain = request.getParameter("main");
 %>
 
 <meta charset="UTF-8">
@@ -38,21 +38,27 @@ String root=request.getContextPath();
 					class="hidden md:flex items-center space-x-12 justify-center mx-auto"
 					style="padding-left: 13rem">
 					<a href="?main=movie/movieList.jsp"
-						class="!text-primary  !transition-colors !no-underline">영화</a>
-					<%
-					if(loginok !=null){%>
-						<a href="<%=request.getContextPath() %>/index.jsp?main=book/booking/bookMain.jsp"
-						class="hover:!text-primary !text-white !transition-colors !no-underline">예매</a>
-					<%}else{%>
-						<a href="#"	id="openLoginModal"
-						class="!text-white hover:!text-primary !transition-colors !no-underline">
-						예매</a>
-					<%}
-					%>
-					<a onclick="location.href='<%=request.getContextPath()%>/'"
-						class="flex items-center space-x-2"> <img
-						src="https://static.readdy.ai/image/12bfdaa4bfcf1b50ecec721ef7feb22b/430a084c59d6bf1f60f916f809d7bf0e.png"
-						alt="영화짱닷컴" class="h-12 max-w-none" />
+						class="hover:!text-primary !transition-colors !no-underline <%="movie/movieList.jsp".equals(currentMain) ? "!text-primary" : "!text-white"%>">
+						영화 </a>
+						<%
+						if(loginok !=null){%> --%>
+							<a
+							href="<%=request.getContextPath()%>/index.jsp?main=book/booking/bookMain.jsp"
+							class="hover:!text-primary !transition-colors !no-underline <%="book/booking/bookMain.jsp".equals(currentMain) ? "!text-primary" : "!text-white"%>">
+							예매 </a>
+						<%}else{%>
+							<a href="#"	id="openLoginModal"
+							class="!text-white hover:!text-primary !transition-colors !no-underline">
+							예매</a>
+						<%}
+ 						%>
+						<a
+						href="<%=request.getContextPath()%>/index.jsp?main=theater/theaterMain.jsp"
+						class="hover:!text-primary !transition-colors !no-underline <%="theater/theaterMain.jsp".equals(currentMain) ? "!text-primary" : "!text-white"%>">
+						극장 </a> <a onclick="location.href='<%=request.getContextPath()%>/'"
+						class="flex items-center space-x-2 transform transition-transform duration-300 hover:[transform:rotateY(180deg)]">
+						<img src="<%=request.getContextPath()%>/resources/moviezzang.png"
+						alt="영화짱닷컴" class="cursor-pointer h-12 max-w-none " />
 					</a> <a href=""
 						class="hover:!text-primary !text-white !transition-colors !no-underline">스토어</a>
 					<a href=""
@@ -66,45 +72,38 @@ String root=request.getContextPath();
 						<!--     <i class="ri-search-line ri-lg"></i> -->
 					</div>
 
-						<%
-						if(loginok!=null && "ADMIN".equalsIgnoreCase(usertype))
-						{
-						%>
+					<%
+					if (loginok != null && "ADMIN".equalsIgnoreCase(usertype)) {
+					%>
 
-							<a id="logout"
-						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
-						로그아웃</a>
-						<a id="logout"
-						class="!text-white hover:!text-primary !transition-colors !no-underline" href="?main=indexAdmin.jsp?id=<%=id %>">
-						관리자페이지</a>
-						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
+					<a id="logout"
+						class="!text-white hover:!text-primary !transition-colors !no-underline"
+						href="member/login/logoutAction.jsp"> 로그아웃</a> <a id="logout"
+						class="!text-white hover:!text-primary !transition-colors !no-underline"
+						href="?main=indexAdmin.jsp?id=<%=id%>"> 관리자페이지</a> <a
+						href="?main=member/mypage/mypageMain.jsp?id=<%=id%>"
 						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a>
-						<%
-						}
+					<%
+					}
 
-						else if(loginok!=null)
-						{
-						%>
-							<a id="logout"
-						class="!text-white hover:!text-primary !transition-colors !no-underline" href="member/login/logoutAction.jsp">
-						로그아웃</a>
-						<a href="?main=member/mypage/mypageMain.jsp?id=<%=id %>"
+					else if (loginok != null) {
+					%>
+					<a id="logout"
+						class="!text-white hover:!text-primary !transition-colors !no-underline"
+						href="member/login/logoutAction.jsp"> 로그아웃</a> <a
+						href="?main=member/mypage/mypageMain.jsp?id=<%=id%>"
 						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a>
-						<%
-						}
-
-						else{
-						%>
-					<a id="openLoginModal"
-						class="!text-white hover:!text-primary !transition-colors !no-underline"href="#">
-						로그인</a>
-						<a href="?main=member/signup/signupForm.jsp"
+					<%
+					}
+					else {
+					%>
+					<a id="openLoginModal2"
+						class="!text-white hover:!text-primary !transition-colors !no-underline"
+						href="#"> 로그인</a> <a href="?main=member/signup/signupForm.jsp"
 						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">회원가입</a>
-
-						<%
-						}
-
-						%>
+					<%
+					}
+					%>
 					<a href=""
 						class="!bg-primary !text-white px-6 py-2 !rounded-button whitespace-nowrap !text-sm hover:!bg-opacity-90 !transition-colors !no-underline">빠른예매</a>
 				</div>
@@ -114,17 +113,21 @@ String root=request.getContextPath();
 	</header>
 </body>
 <script>
-  document.getElementById('openLoginModal').onclick = function(e) {
-    e.preventDefault();
-    if (window.openShadowLoginModal) {
-      window.openShadowLoginModal();
-    } else {
-      alert('로그인 모달이 준비되지 않았습니다.');
-    }
-  };
-
+	document.getElementById('openLoginModal').onclick = function(e) {
+		e.preventDefault();
+		if (window.openShadowLoginModal) {
+			window.openShadowLoginModal();
+		} else {
+			alert('로그인 모달이 준비되지 않았습니다.');
+		}
+	};
+	document.getElementById('openLoginModal2').onclick = function(e) {
+		e.preventDefault();
+		if (window.openShadowLoginModal) {
+			window.openShadowLoginModal();
+		} else {
+			alert('로그인 모달이 준비되지 않았습니다.');
+		}
+	};
 </script>
-<%-- <% for (int i = 0; i < 100; i++) { %>
-    <br>
-<% } %> --%>
 </html>

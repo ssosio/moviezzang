@@ -46,12 +46,30 @@ $(function () {
 	      const reservedDate = $(this).data("reserved");
 	      if (selectedMonth === "all" || reservedDate === selectedMonth) {
 	        $(this).show();
+	        $("#reservedinfo").text('예매한 영화가 없습니다.').hide();
 	      } else {
 	        $(this).hide();
-	      }
+	      	$("#reservedinfo").text('예매한 영화가 없습니다.').show();
+	      };
+
 	    });
 	  });
 	  
+	  
+	  $("#reserveTable tr[data-reserved]").each(function () {
+		    const startTimeText = $(this).find("td").eq(3).text().trim(); 
+		    const isoTimeText = startTimeText.replace(" ", "T");          
+		    const showTime = new Date(isoTimeText);
+		    const now = new Date();
+
+		    
+		    if (showTime <= now) {
+		      $(this).find("i.bi-x-circle").hide();
+		      $("#starttd").text('취소불가').show;
+		    }
+		    
+		    
+		  });
 	 
 	});
 
@@ -66,7 +84,7 @@ $(function () {
 
     .booklist-wrapper {
       display: flex;
-      max-width: 1100px;
+      max-width: 1160px;
       margin: 100px auto 50px auto;
       padding: 20px;
       gap: 30px;
@@ -92,8 +110,11 @@ $(function () {
       background-color: white;
       border-radius: 10px;
       padding: 20px;
-      margin-top: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      margin-top: -50px;
+      /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); */
+      width: 200px;
+      background-color: whitesmoke;
+      float: right;
     }
 
     .booklist-section h4 {
@@ -123,6 +144,7 @@ $(function () {
   	List<HashMap<String, String>> list=dao.getReserveList(userid);
   	List<HashMap<String, String>> clist=dao.getCancelList(userid);
   	NumberFormat nf=NumberFormat.getCurrencyInstance();
+  	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
   %>
 </head>
 <body>
@@ -140,10 +162,10 @@ $(function () {
 
     <div class="booklist-section">
       <div class="booklist-box">
-        <p>예매날짜</p>
-        <select id="monthSelect" class="w-40 p-2 border border-gray-300 rounded-md">
+        <div>날짜선택</div>
+        <span><select id="monthSelect" class="w-40 p-2 border border-white-300 rounded-md">
   			<option value="all">전체보기</option>
-		</select>
+		</select></span>
       </div>
       <br><br><br>
       	<div class="booklist-list">
@@ -157,7 +179,11 @@ $(function () {
       			<th style="background-color: whitesmoke">결제금액</th>
       			<th style="background-color: whitesmoke">예매취소</th>
       		</tr>
+      			<tr>
+      			<td id="reservedinfo" colspan="7"></td>
+      			</tr>
  				<div>
+ 				
       		<%
       			for(int i=0;i<list.size();i++)
       			{
@@ -167,21 +193,35 @@ $(function () {
       				int seat=map.get("seat_id").length();
       				int price=Integer.parseInt(map.get("price"));
       				
+      				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+      				String startTimeStr = map.get("start_time"); 
+      				String formattedTime = "";
+
+      				try {
+      				    java.util.Date date = inputFormat.parse(startTimeStr);  
+      				    formattedTime = outputFormat.format(date);              
+      				} catch (Exception e) {
+      				    formattedTime = startTimeStr;
+      				}
+      				
+      				
       			%>
       			
       			<tr data-id=<%=map.get("id") %> data-reserved="<%=map.get("reserved_at").substring(0,7)%>">
       				<td><%=map.get("reserved_at") %></td>
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
-      				<td><%=map.get("start_time") %></td>
+      				<td><%=formattedTime%></td>
       				<td><%=seat %></td>
       				<td><%=nf.format(price*seat)%></td>
-      				<td><a class="cancel-btn" onclick="cancelReserve(this)"
+      				<td id="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
       			</tr>
       			
       			<%}%>
-      		
+      			
       		</div>
       		</table>
       	</div>
@@ -211,13 +251,26 @@ $(function () {
       				int seat=map.get("seat_id").length();
       				int price=Integer.parseInt(map.get("price"));
       				
+      				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+      				String startTimeStr = map.get("start_time"); 
+      				String formattedTime = "";
+
+      				try {
+      				    java.util.Date date = inputFormat.parse(startTimeStr);  
+      				    formattedTime = outputFormat.format(date);              
+      				} catch (Exception e) {
+      				    formattedTime = startTimeStr; // 실패 시 원본 출력
+      				}
+      				
       			%>
       			
       			<tr >
       				<td><%=map.get("reserved_at") %></td>
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
-      				<td><%=map.get("start_time") %></td>
+      				<td><%=formattedTime %></td>
       				<td><%=seat %></td>
       				<td><%=nf.format(price*seat)%></td>
       				
@@ -252,6 +305,8 @@ function cancelReserve(element) {
         }
     });
 }
+
+
 </script>
 </body>
 
