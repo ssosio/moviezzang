@@ -192,7 +192,7 @@ $(function () {
       			<th style="background-color: whitesmoke">영화명</th>
       			<th style="background-color: whitesmoke">극장</th>
       			<th style="background-color: whitesmoke">상영일시</th>
-      			<th style="background-color: whitesmoke">티켓수</th>
+      			<th style="background-color: whitesmoke">인원수</th>
       			<th style="background-color: whitesmoke">결제금액</th>
       			<th style="background-color: whitesmoke">예매취소</th>
       		</tr>
@@ -234,7 +234,7 @@ $(function () {
       				<td><%=map.get("name") %></td>
       				<td><%=formattedTime%></td>
       				<td><%=seat %></td>
-      				<td><%=nf.format(price)%></td>
+      				<td><%=nf.format(price*seat)%></td>
       				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
       			</tr>
@@ -260,7 +260,7 @@ $(function () {
       			<th style="background-color: whitesmoke">영화명</th>
       			<th style="background-color: whitesmoke">극장</th>
       			<th style="background-color: whitesmoke">상영일시</th>
-      			<th style="background-color: whitesmoke">티켓수</th>
+      			<th style="background-color: whitesmoke">인원수</th>
       			<th style="background-color: whitesmoke">취소금액</th>
       	     </tr>
       	     <%

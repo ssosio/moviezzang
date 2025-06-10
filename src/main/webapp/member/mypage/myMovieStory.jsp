@@ -1,3 +1,4 @@
+<%@page import="java.sql.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.List"%>
@@ -116,7 +117,14 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
     </div>
 
     <div class="mystory-section">
-      
+      	<%
+      		if(list.size()==0)
+      		{%>
+      			<div style="text-align: center; margin-top: 50px;"><b>등록된 영화가 없습니다.<br>
+      					리뷰를 남겨보세요!
+      			</b></div>
+      		<%}else{
+      	%>
       
        
 
@@ -160,14 +168,16 @@ SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         		상영날짜:
         		<b style="color: black;"><%=map.get("start_time") %></b>    		
         		</div>
-        		<div style="font-size: 10pt; margin-left: 270px;">
-        			<%=map.get("created_at") %> 리뷰 작성
+        		<div style="font-size: 10pt; margin-left: 290px;">   		
+        			<%=map.get("created_at")%>  작성
         		</div>
         	   </div>
         	</div>
         	<%}
         	%>
-        	
+        	<%
+      		}
+        	%>
        
         
     </div>

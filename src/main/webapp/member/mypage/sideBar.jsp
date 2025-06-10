@@ -56,7 +56,7 @@
 
    <!-- mypageSidebar.jsp -->
 <div class="mypage-sidebar">
-  <h3 class="mmp" onclick="location.href='index.jsp?main=member/mypage/mypageMain.jsp?id=<%=id%>'">My MZ Page</h3>
+  <h3 class="mmp" onclick="location.href='index.jsp?main=member/mypage/mypageMain.jsp?id=<%=id%>'">My Page</h3>
   <a href="index.jsp?main=member/mypage/bookMovieList.jsp?id=<%=id%>">예매내역</a>
   <a href="index.jsp?main=member/mypage/myMovieStory.jsp?id=<%=id%>">나의 무비스토리</a>
   <a href="index.jsp?main=member/mypage/updatemyInfo.jsp?id=<%=id%>">회원정보 수정</a>
