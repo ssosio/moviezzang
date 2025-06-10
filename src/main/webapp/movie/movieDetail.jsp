@@ -837,6 +837,7 @@ boolean isAuthor = sessionUserId.equals(reviewUserId);
 				</div>
 
 				<!-- 추가: 유저 ID, 영화 ID 전달 영화제목전달 << 리다이렉션시 필요 -->
+				
 				<input type="hidden" name="movieName" value="<%=dto.getTitle()%>">
 				<input type="hidden" name="user_id" value="<%=numId%>"> <input
 					type="hidden" name="movie_id"

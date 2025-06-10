@@ -6,7 +6,7 @@ request.setCharacterEncoding("UTF-8");
 
 String userId = request.getParameter("user_id");
 String movieId = request.getParameter("movie_id");
-String movieName = request.getParameter("name");
+String movieName = request.getParameter("movieName");
 
 ReviewDAO reviewDao = ReviewDAO.getInstance();
 MovieDAO movieDao = MovieDAO.getInstance();

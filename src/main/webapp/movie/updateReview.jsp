@@ -6,7 +6,7 @@ request.setCharacterEncoding("UTF-8");
 
 String userId = request.getParameter("user_id");
 String movieId = request.getParameter("movie_id");
-String movieName = request.getParameter("name");
+String movieName = request.getParameter("movieName");
 String content = request.getParameter("content");
 int rating = Integer.parseInt(request.getParameter("rating"));
 
