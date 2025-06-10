@@ -26,7 +26,7 @@ public class ReviewDAO {
 	
 	
 	public int insertReview(ReviewDTO dto) {
-	    String sql = "INSERT INTO review (id, movie_id, user_id, content, rating, created_at) VALUES (null, ?, ?, ?, ?, DATE(NOW()))";
+	    String sql = "INSERT INTO review (id, movie_id, user_id, content, rating, created_at) VALUES (null, ?, ?, ?, ?, NOW())";
 
 	    try (
 	        Connection conn = db.getConnection();
