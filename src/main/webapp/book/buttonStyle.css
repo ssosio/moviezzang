@@ -76,6 +76,7 @@
 .reserved{
 	background: #481658 !important;
 	border: none !important;
+	cursor: not-allowed !important;
 }
 .temp-reserved{
 	background: #eee !important;

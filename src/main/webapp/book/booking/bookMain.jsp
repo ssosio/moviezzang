@@ -14,9 +14,14 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>Insert title here</title>
 <style type="text/css">
+div.bookcontainer{
+	align-items: center;
+	  display: flex;
+  flex-direction: column;
+}
+
 .bookcontainer > div.title {
   margin-top: 100px;
-  margin-left: 100px;
   width: 900px;
 }
 
@@ -24,7 +29,7 @@
   border: 1px #ccc solid;
   width: 900px;
   height: 600px;
-  margin: 1px 100px;
+  margin-top : 10px;
   display: flex;
   overflow-y : auto;
 }
@@ -176,7 +181,7 @@
 .bookcontainer .btn-content img {
   position: absolute;
   left: 0px;
-  width: 30px;
+  width: 24px;
 }
 
 .bookcontainer .btn-content span {
