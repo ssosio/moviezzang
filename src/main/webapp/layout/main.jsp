@@ -24,34 +24,7 @@ MovieDAO dao = MovieDAO.getInstance();
 	href="${pageContext.request.contextPath}/resources/domainIcon.png">
 <title>영화짱닷컴</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<script>
-	module.exports = {
-		content : [
-		
-		'./src/**/*.{js,ts,jsx,tsx,html}', ],
-		important : true, // 모든 Tailwind 유틸리티에 !important 적용
-		theme : {
-			extend : {
-			// 필요에 따라 커스텀 테마 확장
-			 colors: { primary: "#352461", secondary: "#503396" },
-            borderRadius: {
-              none: "0px",
-              sm: "4px",
-              DEFAULT: "8px",
-              md: "12px",
-              lg: "16px",
-              xl: "20px",
-              "2xl": "24px",
-              "3xl": "32px",
-              full: "9999px",
-              button: "8px",
-			},
-		},
-		plugins : [
-		// 필요 플러그인 추가
-		],
-	};
-</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link
@@ -507,102 +480,7 @@ body {
         slider.addEventListener("mouseleave", startTimer);
         startTimer();
       });
-      // 히어로 슬라이더
-   /*    document.addEventListener("DOMContentLoaded", function () {
-        const mainSlides = [
-          {
-            image:
-              "https://readdy.ai/api/search-image?query=A%20dramatic%20movie%20theater%20scene%20with%20a%20large%20screen%20showing%20an%20exciting%20action%20movie%2C%20audience%20silhouettes%20in%20foreground%2C%20cinematic%20lighting%2C%20high-quality%20rendering%2C%20professional%20photography%20style%2C%20dramatic%20atmosphere%2C%20movie%20premiere&width=1920&height=600&seq=1&orientation=landscape",
-            title: "범죄도시 4",
-            description: "마동석 액션의 끝판왕! 5월 29일 대개봉",
-          },
-          {
-            image:
-              "https://readdy.ai/api/search-image?query=A%20dramatic%20movie%20theater%20scene%20with%20a%20large%20screen%20showing%20an%20exciting%20action%20movie%2C%20audience%20silhouettes%20in%20foreground%2C%20cinematic%20lighting%2C%20high-quality%20rendering%2C%20professional%20photography%20style%2C%20dramatic%20atmosphere%2C%20movie%20premiere&width=1920&height=600&seq=1&orientation=landscape",
-            title: "스파이더맨: 어크로스 더 유니버스",
-            description: "차원을 넘나드는 스파이더맨의 대모험이 시작된다!",
-          },
-          {
-            image:
-              "https://readdy.ai/api/search-image?query=Horror%20movie%20scene%20dark%20atmospheric%20thriller%20cinematic%20style%20mysterious&width=1920&height=600&seq=3&orientation=landscape",
-            title: "더 넌 2",
-            description: "공포의 수녀가 다시 돌아왔다. 6월 개봉 예정",
-          },
-          {
-            image:
-              "https://readdy.ai/api/search-image?query=Romantic%20movie%20scene%20beautiful%20couple%20cinematic%20lighting%20love%20story&width=1920&height=600&seq=4&orientation=landscape",
-            title: "엘리멘탈",
-            description: "불과 물이 만나 피어나는 특별한 사랑 이야기",
-          },
-        ];
-        const mainSection = document.querySelector("section.relative");
-        const bgDiv = mainSection.querySelector(".bg-cover");
-        const titleEl = mainSection.querySelector("h1");
-        const descEl = mainSection.querySelector("p");
-        const prev = mainSection.querySelector(
-          ".ri-arrow-left-s-line"
-        ).parentElement;
-        const next = mainSection.querySelector(
-          ".ri-arrow-right-s-line"
-        ).parentElement;
-        const dots = mainSection.querySelectorAll(".dot");
-        let idx = 0;
-        let timer;
-        function updateSlide(index) {
-          const slide = mainSlides[index];
-          bgDiv.style.backgroundImage = `url('${slide.image}')`;
-          titleEl.textContent = slide.title;
-          descEl.textContent = slide.description;
-          dots.forEach((dot, i) => {
-            dot.classList.toggle("active", i === index);
-          });
-          mainSection.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-          idx = index;
-        }
-        function moveTo(index) {
-          if (index < 0) {
-            index = mainSlides.length - 1;
-          } else if (index >= mainSlides.length) {
-            index = 0;
-          }
-          updateSlide(index);
-        }
-        function startTimer() {
-          timer = setInterval(() => {
-            moveTo(idx + 1);
-          }, 20000);
-        }
-        function stopTimer() {
-          if (timer) {
-            clearInterval(timer);
-          }
-        }
-        function resetTimer() {
-          stopTimer();
-          startTimer();
-        }
-        prev.addEventListener("click", () => {
-          moveTo(idx - 1);
-          resetTimer();
-        });
-        next.addEventListener("click", () => {
-          moveTo(idx + 1);
-          resetTimer();
-        });
-        dots.forEach((dot, index) => {
-          dot.addEventListener("click", () => {
-            moveTo(index);
-            resetTimer();
-          });
-          dot.style.cursor = "pointer";
-        });
-        mainSection.addEventListener("mouseenter", stopTimer);
-        mainSection.addEventListener("mouseleave", startTimer);
-        startTimer();
-      }); */
+  
     </script>
 </body>
 </html>

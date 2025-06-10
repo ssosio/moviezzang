@@ -368,7 +368,9 @@ input:checked+.switch-slider:before {
 									</div>
 									<div class="flex">
 										<div class="flex">
-											<span class="text-gray-600 w-20">배급사</span> <span><%=dto.getDistributor()%>
+											<span
+												class="text-gray-600 w-20 <%=dto.getDistributor() == null ? "hidden" : ""%>">배급사</span>
+											<span> <%=dto.getDistributor() == null ? "" : dto.getDistributor()%>
 											</span>
 										</div>
 									</div>
@@ -635,7 +637,10 @@ boolean isAuthor = sessionUserId.equals(reviewUserId);
 												}
 												%>
 											</div>
-											<span><%=r.getCreatedAt()%></span>
+											<%
+											java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+											%>
+											<span><%=sdf.format(r.getCreatedAt())%></span>
 										</div>
 									</div>
 								</div>
