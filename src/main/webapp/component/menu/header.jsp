@@ -20,6 +20,7 @@ String usertype = (String) session.getAttribute("usertype");
 String id = dao.getId(sessionuserid);
 
 String root = request.getContextPath();
+String currentMain = request.getParameter("main");
 %>
 
 <meta charset="UTF-8">
@@ -37,12 +38,14 @@ String root = request.getContextPath();
 					class="hidden md:flex items-center space-x-12 justify-center mx-auto"
 					style="padding-left: 13rem">
 					<a href="?main=movie/movieList.jsp"
-						class="!text-primary  !transition-colors !no-underline">영화</a> <a
+						class="hover:!text-primary !transition-colors !no-underline <%="movie/movieList.jsp".equals(currentMain) ? "!text-primary" : "!text-white"%>">
+						영화 </a> <a
 						href="<%=request.getContextPath()%>/index.jsp?main=book/booking/bookMain.jsp"
-						class="hover:!text-primary !text-white !transition-colors !no-underline">예매</a>
-					<a href="<%=request.getContextPath()%>/theater/theaterMain.jsp"
-						class="hover:!text-primary !text-white !transition-colors !no-underline">극장</a>
-					<a onclick="location.href='<%=request.getContextPath()%>/'"
+						class="hover:!text-primary !transition-colors !no-underline <%="book/booking/bookMain.jsp".equals(currentMain) ? "!text-primary" : "!text-white"%>">
+						예매 </a> <a
+						href="<%=request.getContextPath()%>/index.jsp?main=theater/theaterMain.jsp"
+						class="hover:!text-primary !transition-colors !no-underline <%="theater/theaterMain.jsp".equals(currentMain) ? "!text-primary" : "!text-white"%>">
+						극장 </a> <a onclick="location.href='<%=request.getContextPath()%>/'"
 						class="flex items-center space-x-2 transform transition-transform duration-300 hover:[transform:rotateY(180deg)]">
 						<img src="<%=request.getContextPath()%>/resources/moviezzang.png"
 						alt="영화짱닷컴" class="cursor-pointer h-12 max-w-none " />
