@@ -27,6 +27,7 @@ public class UserDAO {
 		return dao;
 	}
 	
+	//회원가입
 	public void insertMember(UserDTO dto) {
 		
 		Connection conn=db.getConnection();
@@ -61,6 +62,7 @@ public class UserDAO {
 		
 	}
 	
+	//아이디체크
 	public int idCheck(String userid) {
 		
 		int f=0;
@@ -455,6 +457,7 @@ public class UserDAO {
 		return list;
 	}
 	
+	//userid로 id값 가져오기
 	public String getId(String userid)
 	{
 		String id="";
@@ -606,6 +609,7 @@ public class UserDAO {
 		return list;
 	}
 	
+	//userid로 usertype가져오기
 	public String getUserType(String userid)
 	{
 		String usertype="";
