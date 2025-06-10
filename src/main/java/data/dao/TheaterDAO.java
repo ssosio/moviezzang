@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import data.dto.TheaterDTO;
 import mysql.db.DBConnect;
@@ -65,6 +67,68 @@ public class TheaterDAO {
 		}
 		
 		return list;
+	}
+	
+	// 지역 정보 출력
+	public List<String> getRegions()
+	{
+		Connection conn = db.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<String> list = new ArrayList<String>();
+		
+		String sql = "select distinct region FROM theater ORDER BY FIELD(region, '서울', '경기', '인천', '대전/충청/세종', '부산/대구/경상', '광주/전라', '강원', '제주')";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				list.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return list;
+	}
+	
+	// 전체 극장 정보를 지역별로 매핑해서 출력
+	public Map<String, List<TheaterDTO>> getTheaterMapByRegion() 
+	{
+	    Map<String, List<TheaterDTO>> map = new LinkedHashMap<>(); // 순서유지
+	    												// 처음에 DB에 넣을 때 서울 제주 이렇게 넣어서 순서 조정을 위한 코드
+	    String sql = "SELECT * FROM theater ORDER BY FIELD(region, '서울', '경기', '인천', '대전/충청/세종', '부산/대구/경상', '광주/전라', '강원', '제주'), name";
+	    Connection conn = db.getConnection();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    
+	    try {
+	        pstmt = conn.prepareStatement(sql);
+	        rs = pstmt.executeQuery();
+	        while (rs.next()) 
+	        {
+	            String region = rs.getString("region");
+	            
+	            TheaterDTO dto = new TheaterDTO(); // rs로부터 값 세팅
+	            dto.setId(rs.getString("id"));
+	            dto.setRegion(region);
+	            dto.setName(rs.getString("name"));
+	            dto.setAddress(rs.getString("address"));
+	            
+	            // 만약 map의 key중 특정 region이 비어있다면 위에서 구한 region을 넣어주고 이미 있다면 그 key를 사용
+	            map.computeIfAbsent(region, k -> new ArrayList<>()).add(dto);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        db.dbClose(rs, pstmt, conn);
+	    }
+	    
+	    return map;
 	}
 	
 	//영화에따른 지역에서 상영하는 극장 전체조회
