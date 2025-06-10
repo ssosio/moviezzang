@@ -66,7 +66,19 @@
 				return false;
 			}
 			
-		}	
+		var email = f.email1.value + '@' + f.email2.value;
+	    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+
+	    if (!regex.test(email)) {
+	        alert("유효한 이메일 주소를 입력해주세요.");
+	        f.email1.focus();
+	        return false;
+	    }
+
+	    return true;
+	}
+		
+			
 	
 
 	
@@ -196,7 +208,7 @@ i.dash {
 	
 	<div class="boxs">
 	<label for="name">이름</label>
-		<input type="text" name="name" id="name" class="form-control" required="required" placeholder="이름을 입력해주세요">
+		<input type="text" name="name" id="name" class="form-control" required="required" placeholder="이름을 입력해주세요" pattern="^[A-Za-z가-힣]+$" />
 	</div>
 	
 	<div class="boxs">
@@ -228,16 +240,16 @@ i.dash {
 		<option>010</option>
 	</select>
 		<i class="bi bi-dash-lg dash"></i>
-		<input type="text" name="hp2" id="hp2" required="required" class="form-control" onkeyup="goFocus(this)">
+		<input type="text" name="hp2" id="hp2" required="required" class="form-control" onkeyup="goFocus(this)" pattern="\d{3,4}">
 		<i class="bi bi-dash-lg dash"></i>
-		<input type="text" name="hp3" id="hp3" required="required" class="form-control">
+		<input type="text" name="hp3" id="hp3" required="required" class="form-control"  pattern="\d{4}">
 	</div>
 	
 	<div class="boxs email">
 	<label for="email1">이메일</label>
 		<input type="text" name="email1" id="email1" class="form-control" required="required" placeholder="이메일을 입력해주세요">
 		<span>@</span>
-		<input type="text" name="email2" id="email2" class="form-control email2" required="required">
+		<input type="text" name="email2" id="email2" class="form-control email2" required="required" pattern="[a-z]+\.[a-z]{2,}$">
 		<select id="selecEmail" class="form-control">
 			<option value="-">직접입력</option>
 			<option value="naver.com">naver.com</option>	

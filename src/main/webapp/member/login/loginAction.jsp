@@ -13,7 +13,6 @@
 <%
 
 String userid=request.getParameter("userid");
-String save=request.getParameter("chkid");
 String password=request.getParameter("password");
 String currentPage=request.getParameter("currentPage");
 
@@ -28,7 +27,6 @@ if(chk)
 	
 	session.setAttribute("loginok", "yes");
 	session.setAttribute("userid", userid);
-	session.setAttribute("chkidok", save);
 	session.setAttribute("usertype", usertype);
 
 	session.setMaxInactiveInterval(60*60*8);
