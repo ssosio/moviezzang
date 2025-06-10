@@ -944,14 +944,14 @@ document.addEventListener("DOMContentLoaded", function () {
       reviewForm.action = "movie/updateReview.jsp";
       contentTextarea.value = existingContent;
       ratingInput.value = existingRating;
-      ratingText.textContent = `선택한 평점: ${existingRating}점`;
-      ratingDisplay.textContent = `선택한 평점: ${existingRating}점`;
+   /*    ratingText.textContent = `선택한 평점: ${existingRating}점`;
+      ratingDisplay.textContent = `선택한 평점: ${existingRating}점`; */
       setStars(existingRating / 2);
     } else {
       reviewForm.action = "movie/insertReview.jsp";
       contentTextarea.value = "";
       ratingInput.value = "";
-      ratingText.textContent = "평점을 선택해주세요";
+      ratingText.textContent = "평점을 선택해주세요"; 
       ratingDisplay.textContent = "";
     }
   }
@@ -1023,7 +1023,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       ratingInput.value = ratingValue;
-      ratingDisplay.textContent = `선택한 평점: ${ratingValue}점`;
+/*       ratingDisplay.textContent = `선택한 평점: ${ratingValue}점`; */
     });
   });
 
