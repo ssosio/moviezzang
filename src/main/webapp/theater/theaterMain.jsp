@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="data.dto.TheaterDTO"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
@@ -11,7 +12,7 @@
 <title>theaterMain</title>
 <link href="https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300..800&family=Black+Han+Sans&family=Dongle&family=Jua&family=Nanum+Myeongjo&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <style>
 	.theater-tab-box {
@@ -63,97 +64,97 @@
 	TheaterDAO dao = TheaterDAO.getInstance();
 	List<String> regionList = dao.getRegions();
 	Map<String, List<TheaterDTO>> theaterMap = dao.getTheaterMapByRegion();
+	
+	int tabIdx = 0;
+	int panelIdx = 0;
 %>
 <body>
 	<div class="container" style="max-width:900px;">
 	    <h2 class="mt-5 mb-3">전체극장</h2>
 	    <div class="theater-tab-box">
 	        <!-- 지역별 탭 -->
-	        <ul class="nav nav-tabs" id="theaterTab" role="tablist">
+	        <ul class="nav nav-tabs w-100" id="theaterTab" role="tablist">
 	        <%
-	        	for(String regions : regionList)
+	        	for(String regions : theaterMap.keySet())
 	        	{
 	        %>
 	       	 	<li class="nav-item" role="presentation">
-	                <button class="nav-link " id="tab-panel" data-bs-toggle="tab" type="button" role="tab"><%=regions%></button>
-	            </li>
+			        <button class="nav-link<%= (tabIdx == 0) ? " active" : "" %>" 
+			                id="tab-<%= tabIdx %>" 
+			                data-bs-toggle="tab" 
+			                data-bs-target="#panel-<%= tabIdx %>" 
+			                type="button" 
+			                role="tab">
+			            <%= regions %>
+			        </button>
+			    </li>
 	        <%
+	        		tabIdx++;
 	        	}
 	        %>
 	           
 	        </ul>
 	        <!-- 극장 리스트 패널 -->
 	        <div class="tab-content" id="theaterTabContent">
-	            <div class="tab-pane fade show active" id="panel-seoul" role="tabpanel">
-	                <ul class="theater-list">
-	                    <li>강남</li>
-	                    <li>더 부티크 목동현대백화점</li>
-	                    <li>상봉</li>
-	                    <li>송파파크하비오</li>
-	                    <li>코엑스</li>
-	                    <li>강동</li>
-	                    <li>동대문</li>
-	                    <li>상암월드컵경기장</li>
-	                    <li>신촌</li>
-	                    <li>홍대</li>
-	                    <li>구의 이스트폴 <span style="color:#1976d2;">N</span></li>
-	                    <li>마곡</li>
-	                    <li>성수</li>
-	                    <li>이수</li>
-	                    <li>화곡</li>
-	                    <li>군자</li>
-	                    <li>목동</li>
-	                    <li>센트럴</li>
-	                    <li>창동</li>
-	                    <li>ARTNINE</li>
-	                </ul>
-	            </div>
-	            <div class="tab-pane fade" id="panel-gg" role="tabpanel">
-	                <ul class="theater-list">
-	                    <li>수원</li>
-	                    <li>고양스타필드</li>
-	                    <li>부천</li>
-	                    <li>안양</li>
-	                    <li>의정부</li>
-	                </ul>
-	            </div>
-	            <div class="tab-pane fade" id="panel-incheon" role="tabpanel">
-	                <ul class="theater-list">
-	                    <li>인천연수</li>
-	                    <li>부평</li>
-	                </ul>
-	            </div>
-	            <div class="tab-pane fade" id="panel-daejeon" role="tabpanel">
-	                <ul class="theater-list">
-	                    <li>대전둔산</li>
-	                    <li>천안아산</li>
-	                </ul>
-	            </div>
-	            <div class="tab-pane fade" id="panel-busan" role="tabpanel">
-	                <ul class="theater-list">
-	                    <li>서면</li>
-	                    <li>해운대</li>
-	                    <li>대구동성로</li>
-	                </ul>
-	            </div>
-	            <div class="tab-pane fade" id="panel-gwangju" role="tabpanel">
-	                <ul class="theater-list">
-	                    <li>광주상무</li>
-	                    <li>전주</li>
-	                </ul>
-	            </div>
-	            <div class="tab-pane fade" id="panel-gangwon" role="tabpanel">
-	                <ul class="theater-list">
-	                    <li>원주</li>
-	                </ul>
-	            </div>
-	            <div class="tab-pane fade" id="panel-jeju" role="tabpanel">
-	                <ul class="theater-list">
-	                    <li>제주</li>
-	                </ul>
-	            </div>
+	            <%
+					for (Map.Entry<String, List<TheaterDTO>> entry : theaterMap.entrySet()) 
+					{
+					    String region = entry.getKey();
+					    List<TheaterDTO> theaterList = entry.getValue();
+				%>
+					<div class="tab-pane fade<%= (panelIdx == 0) ? " show active" : "" %>" 
+				         id="panel-<%= panelIdx %>" 
+				         role="tabpanel">
+				        <ul class="theater-list">
+				        <%
+				            for (TheaterDTO theater : theaterList) 
+				            {
+				        %>
+				            <li class="theater-item" data-region="<%=region%>" data-name="<%=theater.getName()%>" data-address="<%=theater.getAddress()%>"><%= theater.getName() %></li>
+				        <%
+				            }
+				        %>
+				        </ul>
+				    </div>
+				<%
+						panelIdx++;
+					}
+				%>
 	        </div>
 	    </div>
+	    <!-- 하단에 표시할 극장 정보 -->
+	    <div id="theater-detail" class="mt-5" style="display:none;">
+		    <h3 id="theater-title" style="font-size:2rem; font-weight:700"></h3>
+		    <!-- 지도를 표시할 영역 -->
+		    <div id="theater-map" style="height:360px; margin-top:24px;"></div>
+		</div>
 	</div>
 </body>
+<script>
+	$(function(){
+	    // 극장명 클릭 시 극장명(지역 이름점)과 지도 표시
+	    $(".theater-item").on('click', function(){
+	        let region = $(this).data('region');
+	        let name = $(this).data('name');
+	        let address = $(this).data('address');
+	
+	        // 제목 표시
+	        $('#theater-title').text(region + ' ' + name);
+	
+	        // 지도 표시
+	        // 구글맵 "embed"로 간단히 주소 지도 띄우기
+	        let mapHtml = '<iframe width="100%" height="100%" style="border:0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"'
+	            + ' src="https://www.google.com/maps?q=' + encodeURIComponent(address) + '&output=embed">'
+	            + '</iframe>';
+	        $('#theater-map').html(mapHtml);
+	
+	        // 상세 영역 표시
+	        $('#theater-detail').show();
+
+	    });
+	    
+	    // 상단 탭 클릭 시 탭 css 및 표시할 목록 변경
+	    
+	});
+</script>
 </html>
