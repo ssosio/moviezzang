@@ -52,6 +52,10 @@
 	    color: #1976d2;
 	    text-decoration: underline;
 	}
+	#theater-detail {
+		margin-bottom: 5rem;
+	}
+	
 	@media (max-width: 800px) {
 	    .theater-list { columns: 2; }
 	}
