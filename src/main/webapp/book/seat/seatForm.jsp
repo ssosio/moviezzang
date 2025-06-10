@@ -1,3 +1,4 @@
+<%@page import="data.dao.UserDAO"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.sql.Timestamp"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -261,11 +262,37 @@
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+	//로그인 ID가져오기
+	String userid = (String)session.getAttribute("userid");
+
+	UserDAO udao = UserDAO.getInstance();
+	String userNum = udao.getId(userid);
+
+
 
 %>
 </head>
 <script type="text/javascript">
 $(function () {
+
+	//----------------------------
+	//	결제
+	//----------------------------
+	$(".btn-pay").on("click",function(){
+		var screeningId = <%=screening_id%>
+		var userNum = <%=userNum%>
+
+		const seatIds = $(".selseat.select").map(function(){
+			return $(".selseat").attr("seat-id");
+		}).get();
+		alert(seatIds);
+
+
+
+	  })
+
+
+
 	  // ---------------------------
 	  // Hover (좌석에 마우스 올릴 때)
 	  // ---------------------------
@@ -320,58 +347,55 @@ $(function () {
 
 	    const col = parseInt($this.attr("col"));
 	    const row = $this.attr("row");
-	    const total =
-	      parseInt($(".adult-inwoncount").text()) +
-	      parseInt($(".teenager-inwoncount").text());
+	    const total = parseInt($(".adult-inwoncount").text()) +
+				      parseInt($(".teenager-inwoncount").text());
 	    const selectedCount = $(".selseat.select").length;
 	    const startCol = col % 2 === 0 ? col - 1 : col;
 
-	    // ------ 짝수좌석 처리 ------
-	    if (startCol >= 1) {
-	      const $seat1 = $(`.selseat[row='${row}'][col='${startCol}']`);
-	      const $seat2 = $(`.selseat[row='${row}'][col='${startCol + 1}']`);
-
-	      // 1. 짝수 해제
-	      if ($seat1.hasClass("select") && $seat2.hasClass("select")) {
-	        $seat1.removeClass("select");
-	        $seat2.removeClass("select");
-	        updateShowSelSeat();
-	        updatePrice();
-	        return;
-	      }
-	      // 2. 짝수 선택
-	      if (
-	        total - selectedCount >= 2 &&
-	        !$seat1.hasClass("select") &&
-	        !$seat2.hasClass("select")
-	      ) {
-	        if (selectedCount + 2 > total) {
-	          alert("선택한 인원 수를 초과했습니다.");
-	          return;
-	        }
-	        $seat1.addClass("select");
-	        $seat2.addClass("select");
-	        updateShowSelSeat();
-	        updatePrice();
-	        return;
-	      }
-	      // 한 쪽만 선택된 경우 무반응
+	    // 이미 선택된 좌석이면 무조건해제
+	    if($this.hasClass("select")){
+				//----짝수좌석 해제
+	    	    if(	$(`.selseat[row='${row}'][col='${startCol}']`).hasClass("select") &&
+	    			$(`.selseat[row='${row}'][col='${startCol+1}']`).hasClass("select")
+	    		){
+	    		  $(`.selseat[row='${row}'][col='${startCol}']`).removeClass("select");
+	    	      $(`.selseat[row='${row}'][col='${startCol + 1}']`).removeClass("select");
+	    	}else{
+				//----단일좌석 해제
+				$this.removeClass("select");
+	    	}
+				updateShowSelSeat();
+				updatePrice();
+				return;
 	    }
 
-	    // ------ 단일좌석 처리 ------
-	    if (total - selectedCount === 1) {
-	      if ($this.hasClass("select")) {
-	        $this.removeClass("select");
-	      } else {
-	        if (selectedCount + 1 > total) {
-	          alert("선택한 인원 수를 초과했습니다.");
+	 	// **선택되지 않은 좌석을 클릭한 경우**
+	    // -- 2명 이상 선택 가능한 경우 (짝수 처리)
+	    if (total - selectedCount >= 2) {
+	        if (
+	          !$(`.selseat[row='${row}'][col='${startCol}']`).hasClass("select") &&
+	          !$(`.selseat[row='${row}'][col='${startCol + 1}']`).hasClass("select")
+	        ) {
+	          $(`.selseat[row='${row}'][col='${startCol}']`).addClass("select");
+	          $(`.selseat[row='${row}'][col='${startCol + 1}']`).addClass("select");
+	          updateShowSelSeat();
+	          updatePrice();
+	          reservationSeatRule();
 	          return;
 	        }
-	        $this.addClass("select");
 	      }
-	      updateShowSelSeat();
-	      updatePrice();
-	    }
+
+		 // ------ 단일좌석 처리 ------
+		 if (total - selectedCount === 1) {
+		   if ($this.hasClass("select")) {
+		     $this.removeClass("select");
+		   } else {
+		        $this.addClass("select");
+		   			}
+		      updateShowSelSeat();
+		      updatePrice();
+		      reservationSeatRule();
+		    }
 	  });
 
 	  // ---------------------------
@@ -473,6 +497,7 @@ $(function () {
 	    }
 	  }
 
+
 	  // ---------------------------
 	  // 결제금액 업데이트
 	  // ---------------------------
@@ -502,30 +527,97 @@ $(function () {
 	    }
 	  }
 
-	  // ---------------------------
-	  // 가장자리 제한
-	  // ---------------------------
+	// ---- 1명 좌석선택일 시 좌석 잠금 -------- //
+	//										//
 	  function reservationSeatRule() {
-	    const totalSeat =
-	      parseInt($(".adult-inwoncount").text()) +
-	      parseInt($(".teenager-inwoncount").text());
-	    $(".selseat").each(function () {
-	      const $btn = $(this);
-	      const col = parseInt($btn.attr("col"));
-	      if ($btn.hasClass("reserved")) return;
-	      const isEdgeSide = col === 4 || col === 11;
-	      if (totalSeat === 1 && isEdgeSide) {
-	        $btn
-	          .prop("disabled", true)
-	          .addClass("temp-reserved")
-	          .html("<i class='ri-lock-fill' style='color:gray;'></i>");
-	      } else if (totalSeat > 1 && isEdgeSide) {
-	        if ($btn.hasClass("temp-reserved") && !$btn.hasClass("select")) {
-	          $btn.prop("disabled", false).removeClass("temp-reserved").text(col);
-	        }
-	      }
-	    });
+		  const totalSeat =
+			    parseInt($(".adult-inwoncount").text()) +
+			    parseInt($(".teenager-inwoncount").text());
+		  const selectCount = $(".selseat.select").length;
+	      const remaining = totalSeat - selectCount;
+		  if (totalSeat === 0 || isNaN(totalSeat)) return;
+
+		// 1. 모든 temp-reserved 잠금 해제 (선택된 거 아니면)
+		  $(".selseat.temp-reserved").each(function () {
+		    const $btn = $(this);
+		    if (!$btn.hasClass("reserved") && !$btn.hasClass("select")) {
+		      $btn.prop("disabled", false)
+		        .removeClass("temp-reserved")
+		        .text($btn.attr("col"));
+		    }
+		  });
+
+		  // 2. 남은 좌석이 1개(마지막 한 명)일 때만 아래 룰 적용
+		  if (remaining === 1) {
+		    $(".selseat").each(function () {
+		      const $btn = $(this);
+		      if ($btn.hasClass("reserved") || $btn.hasClass("select")) return;
+		      const col = parseInt($btn.attr("col"));
+		      const row = $btn.attr("row");
+
+		      let shouldLock = false;
+
+		      // 4번: 5,6 선택시만 열림
+		      if (col === 4) {
+		        const $5 = $(`.selseat[row='${row}'][col='5']`);
+		        const $6 = $(`.selseat[row='${row}'][col='6']`);
+		        if (!($5.hasClass("select") && $6.hasClass("select"))) shouldLock = true;
+		      }
+		      // 6번: 7,8 선택시만 열림
+		      if (col === 6) {
+		        const $7 = $(`.selseat[row='${row}'][col='7']`);
+		        const $8 = $(`.selseat[row='${row}'][col='8']`);
+		        if (!($7.hasClass("select") && $8.hasClass("select"))) shouldLock = true;
+		      }
+		      // 8번: 7,8 선택시만 열림
+		      if (col === 8) {
+		        const $7 = $(`.selseat[row='${row}'][col='7']`);
+		        const $8 = $(`.selseat[row='${row}'][col='8']`);
+		        if (!($7.hasClass("select") && $8.hasClass("select"))) shouldLock = true;
+		      }
+		      // 10번: (9,10 선택시 11만 열림, 11,12 선택시 10만 열림)
+		      if (col === 10) {
+		        const $9 = $(`.selseat[row='${row}'][col='9']`);
+		        const $10 = $(`.selseat[row='${row}'][col='10']`);
+		        const $11 = $(`.selseat[row='${row}'][col='11']`);
+		        const $12 = $(`.selseat[row='${row}'][col='12']`);
+		        // 9,10 선택된 경우에만 11 오픈, 11,12 선택된 경우에만 10 오픈
+		        if (
+		          !(
+		            ($9.hasClass("select") && $10.hasClass("select") && col === 11) ||
+		            ($11.hasClass("select") && $12.hasClass("select") && col === 10)
+		          )
+		        ) {
+		          shouldLock = true;
+		        }
+		      }
+		      // 11번: (9,10 선택시 11만 열림, 11,12 선택시 10만 열림)
+		      if (col === 11) {
+		        const $9 = $(`.selseat[row='${row}'][col='9']`);
+		        const $10 = $(`.selseat[row='${row}'][col='10']`);
+		        const $11 = $(`.selseat[row='${row}'][col='11']`);
+		        const $12 = $(`.selseat[row='${row}'][col='12']`);
+		        // 9,10 선택된 경우에만 11 오픈, 11,12 선택된 경우에만 10 오픈
+		        if (
+		          !(
+		            ($9.hasClass("select") && $10.hasClass("select") && col === 11) ||
+		            ($11.hasClass("select") && $12.hasClass("select") && col === 10)
+		          )
+		        ) {
+		          shouldLock = true;
+		        }
+		      }
+
+		      // 잠금 처리
+		      if (shouldLock) {
+		        $btn.prop("disabled", true)
+		          .addClass("temp-reserved")
+		          .html("<i class='ri-lock-fill' style='color:gray;'></i>");
+		      }
+		    });
+		  }
 	  }
+
 
 	  // ---------------------------
 	  // 최초 화면 세팅
@@ -534,7 +626,6 @@ $(function () {
 	  updatePrice();
 	  reservationSeatRule();
 	});
-
 </script>
 <body>
 	<div class="container">
@@ -579,25 +670,27 @@ $(function () {
 						//버튼에 seat의 열 값 넣어주기위한 col 생성
 						String col = String.valueOf(j);
 						String reserved = "";
+						String seat_id = "";
 						//버튼 3번이랑 13번부터 왼쪽 띄워주기 위한 마진
 						String margin = (j==3 || j==13)?"20px":"";
 
-						//DAO에서 조회한값으로 seat의 row와 col을 얻는다
-						for(HashMap<String,String> m:list){
-							String seat_row = m.get("seat_row");
-							String seat_col = m.get("seat_col");
+							//DAO에서 조회한값으로 seat의 row와 col을 얻는다
+							for(HashMap<String,String> m:list){
+								String seat_row = m.get("seat_row");
+								String seat_col = m.get("seat_col");
 
-							//해당 screening의 seat테이블의 row와 col이 button 버튼의 row와 col 이 일치하고
-							//is_reserved의 값이1이면(예약이 되어있으면) reserved -> 버튼을 disabled로 바꿈(버튼 선택불가)
-							if(seat_row.equals(row) && seat_col.equals(col)){
-								if("1".equals(m.get("is_reserved"))){
-									reserved = "disabled reserved'";
+								//해당 screening의 seat테이블의 row와 col이 button 버튼의 row와 col 이 일치하고
+								//is_reserved의 값이1이면(예약이 되어있으면) reserved -> 버튼을 disabled로 바꿈(버튼 선택불가)
+								if(seat_row.equals(row) && seat_col.equals(col)){
+									seat_id = m.get("seat_id");
+									if("1".equals(m.get("is_reserved"))){
+										reserved = "disabled reserved'";
+									}
 								}
 							}
-						}
 						%>
 							<button class="btn-seat selseat <%=reserved.contains("reserved")?" reserved":"" %>" type="button" style="margin-left: <%=margin%>"
-								row="<%=row%>" col="<%=col%>" seat-no="<%=seatrows[i-1]%><%=j%>"
+								row="<%=row%>" col="<%=col%>" seat-no="<%=seatrows[i-1]%><%=j%>" seat-id="<%=seat_id %>"
 								<%=reserved.contains("disabled")?"disabled":"" %>
 								>
 								<%if(reserved.contains("reserved")){%>
@@ -605,7 +698,7 @@ $(function () {
 								<% }else{%>
 								<%=j %>
 								<%} %>
-								</button>
+							</button>
 						<%}%>
 						</div>
 					<%}

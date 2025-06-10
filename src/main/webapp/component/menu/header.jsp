@@ -39,8 +39,16 @@ String root=request.getContextPath();
 					style="padding-left: 13rem">
 					<a href="?main=movie/movieList.jsp"
 						class="!text-primary  !transition-colors !no-underline">영화</a>
-					<a href="<%=request.getContextPath() %>/index.jsp?main=book/booking/bookMain.jsp"
+					<%
+					if(loginok !=null){%>
+						<a href="<%=request.getContextPath() %>/index.jsp?main=book/booking/bookMain.jsp"
 						class="hover:!text-primary !text-white !transition-colors !no-underline">예매</a>
+					<%}else{%>
+						<a href="#"	id="openLoginModal"
+						class="!text-white hover:!text-primary !transition-colors !no-underline">
+						예매</a>
+					<%}
+					%>
 					<a onclick="location.href='<%=request.getContextPath()%>/'"
 						class="flex items-center space-x-2"> <img
 						src="https://static.readdy.ai/image/12bfdaa4bfcf1b50ecec721ef7feb22b/430a084c59d6bf1f60f916f809d7bf0e.png"

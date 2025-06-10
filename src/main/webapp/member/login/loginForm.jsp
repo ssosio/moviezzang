@@ -14,16 +14,16 @@
 <%
 	String userid=(String)session.getAttribute("userid");
 	String saveid=(String)session.getAttribute("chkidok");
-	
+
 	boolean save=true;
-	
+
 	if(saveid==null){
-		
+
 		userid="";
 		save=false;
 	  }
-	
-	
+
+
 %>
 <style type="text/css">
 </style>
@@ -41,7 +41,7 @@
   shadow.innerHTML = `
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    
+
     <style>
     .form-control {
         display: block;
@@ -110,7 +110,7 @@
       .close { color: white; position: absolute; right:15px; }
       .close:hover {color: lightgrey;}
     </style>
-    
+
     <div class="modal" id="myModal" tabindex="-1" aria-modal="true" role="dialog">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -119,11 +119,11 @@
             <button type="button" class="btn close" id="closeBtn"><i class="bi bi-x-lg"></i></button>
           </div>
           <div class="modal-body">
-          
+
           <input type="text" name="userid" id="userid" class="form-control id" placeholder="아이디" value="">
-          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required" value="${password}">          
+          <input type="password" id="password" name="password" class="form-control pass" placeholder="비밀번호" required="required" value="${password}">
           <input type="checkbox" name="chkid" id="chkid"><label for="chkid" style="margin-left:10px;">아이디 저장</label>
-          
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn loginbtn" id="loginBtn" onclick="">로그인</button>
@@ -139,18 +139,18 @@
     shadow.getElementById('myModal').classList.add('show');
     document.body.style.overflow = "hidden";
   };
-  
+
 
   // 4. 모달 닫기
   shadow.getElementById('closeBtn').onclick = () => {
     shadow.getElementById('myModal').classList.remove('show');
   };
-  
+
   // 로그인버튼 클릭
   shadow.getElementById('loginBtn').onclick = () => {
 	  location.href='member/login/loginAction.jsp?userid=' + shadow.getElementById('userid').value + '&password=' + shadow.getElementById('password').value;
   }
-  
+
 
   const useridInput = shadow.getElementById('userid');
   const chkid = shadow.getElementById('chkid');
