@@ -114,7 +114,7 @@
   <p class="message">Sorry, there was a problem loading the page !</p>
   <a onclick="location.href='<%=request.getContextPath()%>/'" class="btn">재시작</a>
   <div> 
-    <a href="https://namu.wiki/w/404%20Not%20Found" class="link">404 오류가 무었인지 궁금하신분들께</a>
+    <a href="https://namu.wiki/w/404%20Not%20Found" class="link">404 오류가 무엇인지 궁금하신분들께</a>
   </div>
 </div>
 </body>

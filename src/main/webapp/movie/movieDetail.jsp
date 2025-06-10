@@ -653,7 +653,9 @@ boolean isAuthor = sessionUserId.equals(reviewUserId);
 									onsubmit="return confirm('정말 리뷰를 삭제하시겠습니까?');">
 									<input type="hidden" name="user_id" value="<%=numId%>">
 									<input type="hidden" name="movie_id"
-										value="<%=r.getMovieId()%>">
+										value="<%=id%>">
+										<input type="hidden" name="movieName"
+										value="<%=dto.getTitle() %>">
 									<button type="submit"
 										class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
 										삭제하기</button>
