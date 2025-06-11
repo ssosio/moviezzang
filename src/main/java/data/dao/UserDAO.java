@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import data.dto.ReservationDTO;
 import data.dto.UserDTO;
 import mysql.db.DBConnect;
 
@@ -685,6 +686,27 @@ public class UserDAO {
 		return usertype;
 	}
 	
-	
+	//예매좌석 삭제
+	public void deleteSeatReserve(String reservation_id)
+	{
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		
+		String sql="delete from seat_reserved where reservation_id=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, reservation_id);
+			
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}
+		
+	}
 	
 }

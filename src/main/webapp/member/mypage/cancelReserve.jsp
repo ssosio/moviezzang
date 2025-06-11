@@ -14,6 +14,7 @@
 	
 	 try {
 	        dao.updateBookN(id);
+	        dao.deleteSeatReserve(id);
 	        ob.put("result", "success");
 	    } catch (Exception e) {
 	        e.printStackTrace();
