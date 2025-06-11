@@ -67,6 +67,7 @@ div.bookcontainer{
 
 .bookcontainer div.local {
   width: 50%;
+  border-right: 1px solid #ccc;
 }
 
 .bookcontainer div.local ul > li {
@@ -129,6 +130,7 @@ div.bookcontainer{
   width: 100%;
   padding: 5px 10px;
   box-sizing: border-box;
+  border-top: 1px solid #ddd;
 }
 
 .bookcontainer .timebox span {
@@ -182,6 +184,7 @@ div.bookcontainer{
   position: absolute;
   left: 0px;
   width: 24px;
+  top: 1px;
 }
 
 .bookcontainer .btn-content span {
@@ -194,6 +197,20 @@ div.bookcontainer{
 
 .bookcontainer div.movielist-section {
   margin-top: 50px;
+}
+div.seat-info{
+	margin-top: 4px;
+   border: 1px solid #ccc;
+   border-radius: 6px;
+   padding: 2px 6px;
+   display: inline-block;
+   font-size: 13px;
+   text-align: center;
+   box-sizing: border-box;
+}
+.remaining-seat{
+  color: #007BFF;
+  font-weight: bold;
 }
 
 
@@ -296,18 +313,37 @@ $(function() {
 								  end.getMinutes().toString().padStart(2,"0");
 
 
-				show+= "<li>"+
-							"<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>"+
-							"<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
-							"<button class='btntime btn-basiclist' type='submit'>"+
-						    "<div class='timebox'>"+
-						    "<span class='starttime'><b style='font-size: 1.2em'>"+startStr+"</b>~<br>&nbsp;&nbsp;&nbsp;"+endStr +"</span>"+
-						    "<span class='movietitle'>"+item.title+"</span>"+
-						    "<span class='screeninfo'>"+item.theater_name+"<br>"+item.auditorium_name+"<br>"+item.remaining_seat+"/"+item.total_seat+"</span>"+
-						    "</div>"+
-						    "</button>"+
-						    "</form>"+
-						    "</li>";
+// 				show+= "<li>"+
+<%-- 							"<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>"+ --%>
+// 							"<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
+// 							"<button class='btntime btn-basiclist' type='submit'>"+
+// 						    "<div class='timebox'>"+
+// 						    "<span class='starttime'><b style='font-size: 1.2em'>"+startStr+"</b>~<br>&nbsp;&nbsp;&nbsp;"+endStr +"</span>"+
+// 						    "<span class='movietitle'>"+item.title+"</span>"+
+// 						    "<span class='screeninfo'>"+item.theater_name+"<br>"+item.auditorium_name+"<br>"+item.remaining_seat+"/"+item.total_seat+"</div></span>"+
+// 						    "</div>"+
+// 						    "</button>"+
+// 						    "</form>"+
+// 						    "</li>";
+
+				show += "<li>" +
+				"<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>" +
+				"<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
+				"<button class='btntime btn-basiclist' type='submit'>" +
+				    "<div class='timebox'>" +
+				        "<span class='starttime'><b style='font-size: 1.2em'>" + startStr + "</b>~<br>&nbsp;&nbsp;&nbsp;" + endStr + "</span>" +
+				        "<span class='movietitle'>" + item.title + "</span>" +
+				        "<span class='screeninfo'>" +
+				            item.theater_name + "<br>" +
+				            item.auditorium_name + "<br>" +
+				            "<div class='seat-info'>" +
+				              "<span class='remaining-seat'>" + item.remaining_seat + "</span>/" + item.total_seat +
+				            "</div>" +
+				        "</span>" +
+				    "</div>" +
+				"</button>" +
+				"</form>" +
+				"</li>";
 
 				});
 				$(".showtimes").html(show);
@@ -326,7 +362,12 @@ $(function() {
 	});
 	$(document).on("click",".btnlocal",function(){
 		$(".btnlocal").removeClass("btn-active");
-		$(this).addClass("btn-active");
+
+		if(!$(".movielist").hasClass("btn-active")){
+			return;
+		}else{
+			$(this).addClass("btn-active");
+		}
 	});
 	$(document).on("click",".btntheater",function(){
 		$(".btntheater").removeClass("btn-active");
@@ -387,7 +428,7 @@ String root = getServletContext().getRealPath("/");
 						<li><button class="btnlocal btn-basiclist">제주</button></li>
 					</ul>
 				</div>
-				<div class="vertical-line"></div>
+<!-- 				<div class="vertical-line"></div> -->
 					<div class="theater">
 						<ul id="theater">
 						</ul>

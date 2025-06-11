@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="data.dao.UserDAO"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.sql.Timestamp"%>
@@ -259,14 +260,18 @@
 
 	NumberFormat nf2 = NumberFormat.getInstance();
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+	//날짜 파싱
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd(E) HH:mm");
+	SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	Date date = originalFormat.parse(start_time);
+	String formatDate = sdf.format(date);
 
 	//로그인 ID가져오기
 	String userid = (String)session.getAttribute("userid");
 
 	UserDAO udao = UserDAO.getInstance();
 	String userNum = udao.getId(userid);
-
 
 
 %>
@@ -776,7 +781,7 @@ $(function () {
 				<div class="pay-infosrting">
 				<p class="theater"><%=theater_name %></p>
 				<p class="auditorium"><%=auditorium_name %></p>
-				<p class="date"><%=start_time %></p>
+				<p class="date"><%=formatDate%></p>
 				</div>
 				<%
 				String posterUrl = "https://image.tmdb.org/t/p/w500";
@@ -791,7 +796,7 @@ $(function () {
 					    <div style="
 					      width: 24px;
 					      height: 24px;
-					      background: #481658;
+
 					      border: 1px solid #481658;
 					      display: flex;
 					      align-items: center;
