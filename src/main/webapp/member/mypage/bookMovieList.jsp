@@ -1,3 +1,5 @@
+<%@page import="data.dto.MovieDTO"%>
+<%@page import="data.dao.MovieDAO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.util.HashMap"%>
@@ -9,6 +11,29 @@
    <%@ include file="../../component/menu/headerResources.jsp" %>
 <!DOCTYPE html>
 <html>
+<%
+	String root=request.getContextPath();
+
+	String id=request.getParameter("id");
+	String userid=(String)session.getAttribute("userid");
+    // 로그인 체크
+   // 로그인한 사용자의 시퀀스 번호
+    UserDAO dao=UserDAO.getInstance();
+    String uid=dao.getId(userid);
+     // 주소창에서 전달된 id
+
+    if (userid == null || id == null || !id.equals(uid)) {
+    	    
+        // 로그인 안 된 사용자        
+        %>
+        <script type="text/javascript">
+        
+			//history.back();
+			location.href="<%=root%>/component/error/notFound.jsp"
+        </script>
+        <%
+    }
+%>
 <head>
 <meta charset="UTF-8">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -81,7 +106,9 @@ $(function () {
 		    
 		    if (showTime <= now) {
 		      $(this).find("i.bi-x-circle").hide();
-		      $(".goreview").show();
+		      $(this).find(".goreview").show();
+		    }else{
+		    	$(this).find(".goreview").hide();
 		    }
 		    
 		    
@@ -149,8 +176,7 @@ $(function () {
   
   </style>
   <%
-	String userid=(String)session.getAttribute("userid");
-	UserDAO dao=UserDAO.getInstance();
+	
 	
 	/* System.out.println("userid="+userid); */
   	
@@ -204,6 +230,10 @@ $(function () {
       			for(int i=0;i<list.size();i++)
       			{
       				HashMap<String,String> map=list.get(i);
+      				String movietitle=map.get("title");
+      				
+      				MovieDAO mdao=MovieDAO.getInstance();
+ 				   MovieDTO mdto=mdao.getMovieBytitle(movietitle);
       				
       				String seatInfo = map.get("seat_id");
       	
@@ -236,7 +266,8 @@ $(function () {
       				<td><%=nf.format(price*seat)%></td>
       				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
-      				<td><a class="goreview">리뷰쓰기</a></td>
+      				<td><a class="goreview" href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>"><img src="resources/review.jpg" style="width: 28px; height: 28px;
+      				margin-left: 12px;"></a></td>
       			</tr>
       			
       			<%}%>

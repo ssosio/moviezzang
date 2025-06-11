@@ -21,8 +21,10 @@
 			
 			if($(this).val()=='-')
 				$("#email2").val('');
-			else
+			else{
 				$("#email2").val($(this).val());
+			}
+			 $("#emailMsg").text("");
 		});
 		
 		  // 이름 유효성 검사 (한글/영어)
