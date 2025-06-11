@@ -4,6 +4,7 @@
 <%@page import="java.util.List"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
+<%@ page isELIgnored="true" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -32,6 +33,7 @@ div.bookcontainer{
   margin-top : 10px;
   display: flex;
   overflow-y : auto;
+  border-radius: 12px;
 }
 
 .bookcontainer div.theater-local {
@@ -62,7 +64,7 @@ div.bookcontainer{
   width: 100%;
   align-items: center;
   justify-content: center;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
 }
 
 .bookcontainer div.local {
@@ -212,6 +214,9 @@ div.seat-info{
   color: #007BFF;
   font-weight: bold;
 }
+.btn-date{
+margin-right: 5px;
+}
 
 
 </style>
@@ -286,78 +291,20 @@ $(function() {
 	//상영관 클릭시 정보
 	$(document).on("click",".btntheater",function(){
 
-		const theaterName = $(this).text();
-		//alert(theater);
-		//alert(currentMovie_id);
-		$.ajax({
+		 $(".btntheater").removeClass("btn-active");
+		 $(this).addClass("btn-active");
 
-			type:"post",
-			data:{theaterName : theaterName,
-					movie_id : currentMovie_id
-			},
-			dataType:"json",
-			url:"<%=request.getContextPath()%>/book/booking/showTimes.jsp",
-			success:function(res){
-				console.log(res);
-				let show = "";
-				$.each(res,function(i,item){
+		 const theaterName = $(this).text();
 
-				let start = new Date(item.start_time); // 시작시간  Date객체변환
-				let runtime = parseInt(item.runtime); //런타임 형변환
-				let end = new Date(start.getTime() + runtime * 60000); //끝나는 시간 계산 1분= 60000ms
-
-				//format과정
-				let startStr = start.getHours().toString().padStart(2,"0") + ":" +
-									start.getMinutes().toString().padStart(2,"0");
-				let endStr = end.getHours().toString().padStart(2,"0") + ":" +
-								  end.getMinutes().toString().padStart(2,"0");
-
-
-// 				show+= "<li>"+
-<%-- 							"<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>"+ --%>
-// 							"<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
-// 							"<button class='btntime btn-basiclist' type='submit'>"+
-// 						    "<div class='timebox'>"+
-// 						    "<span class='starttime'><b style='font-size: 1.2em'>"+startStr+"</b>~<br>&nbsp;&nbsp;&nbsp;"+endStr +"</span>"+
-// 						    "<span class='movietitle'>"+item.title+"</span>"+
-// 						    "<span class='screeninfo'>"+item.theater_name+"<br>"+item.auditorium_name+"<br>"+item.remaining_seat+"/"+item.total_seat+"</div></span>"+
-// 						    "</div>"+
-// 						    "</button>"+
-// 						    "</form>"+
-// 						    "</li>";
-
-				show += "<li>" +
-				"<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>" +
-				"<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
-				"<button class='btntime btn-basiclist' type='submit'>" +
-				    "<div class='timebox'>" +
-				        "<span class='starttime'><b style='font-size: 1.2em'>" + startStr + "</b>~<br>&nbsp;&nbsp;&nbsp;" + endStr + "</span>" +
-				        "<span class='movietitle'>" + item.title + "</span>" +
-				        "<span class='screeninfo'>" +
-				            item.theater_name + "<br>" +
-				            item.auditorium_name + "<br>" +
-				            "<div class='seat-info'>" +
-				              "<span class='remaining-seat'>" + item.remaining_seat + "</span>/" + item.total_seat +
-				            "</div>" +
-				        "</span>" +
-				    "</div>" +
-				"</button>" +
-				"</form>" +
-				"</li>";
-
-				});
-				$(".showtimes").html(show);
-			}
-		});
-
+		 tryAutoLoadShowTimes();
 	});
-
 
 	//btn 토글클래스
 	$(document).on("click",".movielist",function(){
 		$(".movielist").removeClass("btn-active");
 		$(".btnlocal").removeClass("btn-active");
 		$(".btntheater").removeClass("btn-active");
+		$(".btntheater").hide();
 		$(this).addClass("btn-active");
 	});
 	$(document).on("click",".btnlocal",function(){
@@ -373,6 +320,112 @@ $(function() {
 		$(".btntheater").removeClass("btn-active");
 		$(this).addClass("btn-active");
 	});
+
+///////////////////////////////////////////////////////
+	let selectedDate = null; //선택 날짜 지정
+
+	//날짜버튼 자동생성
+	function generateDateButtons() {
+	  const today = new Date();
+	  const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
+	  let html = "";
+
+	  for (let i = 0; i < 7; i++) {
+	    const date = new Date(today);
+	    date.setDate(today.getDate() + i);
+
+	    const yyyy = date.getFullYear();
+	    const mm = (date.getMonth() + 1).toString().padStart(2, "0");
+	    const dd = date.getDate().toString().padStart(2, "0");
+	    const day = dayLabels[date.getDay()];
+
+	    const formattedDate = `${yyyy}-${mm}-${dd}`;
+	    const label = `${mm}/${dd} (${day})`;
+
+	    const isToday = (i === 0) ? " btn-active" : "";
+
+	    html += `<button class="btn-date btn-day ${isToday}" data-date="${formattedDate}">${label}</button>`;
+	  }
+
+	  $(".date-selector").html(html);
+
+	  selectedDate = today.toISOString().slice(0, 10);// yyyy-MM-dd 형식
+	}
+
+	// 날짜 버튼 클릭 시 날짜 저장
+	$(document).on("click", ".btn-date", function () {
+	  selectedDate = $(this).data("date");
+	  $(".btn-date").removeClass("btn-active");
+	  $(this).addClass("btn-active");
+
+	  const theaterName = $(".btntheater.btn-active").text();
+	  if (theaterName && currentMovie_id && selectedDate) {
+	    loadShowTimes(theaterName);
+	  }
+	});
+
+	// 기존 btntheater 클릭 코드 → 함수로 분리
+	function loadShowTimes(theaterName) {
+  $.ajax({
+    type: "post",
+    url: "<%=request.getContextPath()%>/book/booking/showTimes.jsp",
+    dataType: "json",
+    data: {
+      theaterName: theaterName,
+      movie_id: currentMovie_id,
+      screening_date: selectedDate // 이 값은 날짜 버튼에서 선택됨
+    },
+    success: function (res) {
+      console.log(res);
+      let show = "";
+
+      $.each(res, function (i, item) {
+        let start = new Date(item.start_time);
+        let runtime = parseInt(item.runtime);
+        let end = new Date(start.getTime() + runtime * 60000);
+
+        let startStr = start.getHours().toString().padStart(2, "0") + ":" +
+                       start.getMinutes().toString().padStart(2, "0");
+        let endStr = end.getHours().toString().padStart(2, "0") + ":" +
+                     end.getMinutes().toString().padStart(2, "0");
+
+        show += "<li>" +
+        "<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>" +
+        "<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
+        "<button class='btntime btn-basiclist' type='submit'>" +
+            "<div class='timebox'>" +
+                "<span class='starttime'><b style='font-size: 1.2em'>" + startStr + "</b>~<br>&nbsp;&nbsp;&nbsp;" + endStr + "</span>" +
+                "<span class='movietitle'>" + item.title + "</span>" +
+                "<span class='screeninfo'>" +
+                    item.theater_name + "<br>" +
+                    item.auditorium_name + "<br>" +
+                    "<div class='seat-info'>" +
+                      "<span class='remaining-seat'>" + item.remaining_seat + "</span>/" + item.total_seat +
+                    "</div>" +
+                "</span>" +
+            "</div>" +
+        "</button>" +
+        "</form>" +
+        "</li>";
+      });
+
+      $(".showtimes").html(show);
+    },
+    error: function (xhr, status, error) {
+      console.log("상영 정보 AJAX 실패:", error);
+    }
+  });
+}
+
+	function tryAutoLoadShowTimes() {
+		  const theaterName = $(".btntheater.btn-active").text();
+		  if (theaterName && currentMovie_id && selectedDate) {
+		    loadShowTimes(theaterName);
+		  }
+		}
+
+	// 초기 실행
+	generateDateButtons();
 })
 </script>
 </head>
@@ -389,7 +442,7 @@ String root = getServletContext().getRealPath("/");
 			<h3 >빠른예매</h3>
 			<hr>
 		</div>
-		<div></div>
+		<div class="date-selector" style="margin: 0 0 10px 20px;"></div>
 		<div class="listbox">
 			<div class="movie">
 				<h4>&nbsp;&nbsp;&nbsp;영화</h4>

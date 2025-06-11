@@ -19,8 +19,9 @@
 	background: #ccc;
 }
 .btn-active{
-	background: #9f468f;
-	color: white;
+	background: #352461 !important;
+	color: white !important;
+	border: 1px solid #352461 !important;
 }
 .btn-mov {
 	border: 1px purple solid;
@@ -84,5 +85,17 @@
 }
 .selseat.hover {
 	background: #481658 !important;
+	color: white;
+}
+.btn-day{
+	border:1px solid #352461;
+	color: #352461;
+	border-radius:6px ;
+	width: 100px;
+	height:40px;
+	background: white;
+}
+.btn-day:hover {
+	background: #352461;
 	color: white;
 }
