@@ -36,16 +36,53 @@
 				}	
 			});
 			
+						
 		});
 		
-		//이메일선택이벤트
+		// 이름 유효성 검사 (한글/영어)
+	    $("#name").on("input", function () {
+	        var val = $(this).val();
+	        var regex = /^[가-힣a-zA-Z\s]+$/;
+	        if (!regex.test(val)) {
+	            $("#nameMsg").text("이름은 한글 또는 영어만 입력 가능합니다.");
+	        } else {
+	            $("#nameMsg").text("");
+	        }
+	    });
+		
+		// 이메일선택이벤트
 		$("#selecEmail").change(function () {
 			
-			if($(this).val()=='-')
+			if($(this).val()=='-') {
 				$("#email2").val('');
-			else
+			}			
+			else{
 				$("#email2").val($(this).val());
+			}
+			$("#emailMsg").text(""); // 이메일 메시지 제거 추가
 		});
+		
+		// 이메일 유효성 검사 (email1 + email2 조합)
+	    $("#email1, #email2").on("input", function () {
+	        var email = $("#email1").val() + "@" + $("#email2").val();
+	        var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+	        if (!regex.test(email)) {
+	            $("#emailMsg").text("이메일 형식이 올바르지 않습니다.");
+	        } else {
+	            $("#emailMsg").text("");
+	        }
+	    });
+		
+	 // 전화번호 유효성 검사 (hp2 + hp3 조합)
+	    $("#hp2, #hp3").on("input", function () {
+	        var hp = $("#hp2").val() + "-" + $("#hp3").val();
+	        var regex = /^\d{3,4}-\d{4}$/;
+	        if (!regex.test(hp)) {
+	            $("#hpMsg").text("연락처 형식이 올바르지 않습니다.");
+	        } else {
+	            $("#hpMsg").text("");
+	        }
+	    });
 		
 	});
 		
@@ -59,23 +96,48 @@
 	
 	function check(f) {
 			
+		// 비밀번호 체크
 		if(f.password.value!=f.password2.value){
 			alert("비밀번호가 서로 다릅니다");
 				f.password.value="";
 				f.password2.value="";
 				return false;
 			}
+		
+		// 아이디 한글,영문 정규식 검사
+			 var nameRegex = /^[가-힣a-zA-Z\s]+$/;
+			if (!nameRegex.test(f.name.value)) {
+  			 alert("이름은 한글과 영어만 입력 가능합니다.");
+  			 f.name.focus();
+   			return false;
+		};
+		
+		// 전화번호 정규식 검사
+		 var hp2 = f.hp2.value;
+			 var hp3 = f.hp3.value;
+		if (!/^\d+$/.test(hp2) || !/^\d+$/.test(hp3)) {
+ 		  alert("전화번호는 숫자만 입력 가능합니다.");
+   		return false;
+			 };
 			
-		}	
-	
+		// 이메일 정규식 검사
+		var email = f.email1.value + '@' + f.email2.value;
+	    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
 
+	    if (!regex.test(email)) {
+	        alert("유효한 이메일 주소를 입력해주세요.");
+	        f.email1.focus();
+	        return false;
+	    }
+
+	    return true;
+	}
 	
 </script>
 
 <style type="text/css">
 .wrap {
-	
-	width: 800px;
+	width: 820px;
 	margin: 0 auto;
 	margin-top: 60px;
 }
@@ -95,21 +157,32 @@
 
 .wrap>form .email {
 	height: 40px;
+	position: relative;
 }
+
 .wrap>form .email>input.email2 {
 	width: 140px;
 	margin-right: 10px;
 }
 
-.wrap>form .email>span {
+.wrap>form .email>span.at {
 	line-height: 40px; 
 	font-weight: bold; 
 	margin: 0 5px;
 }
+
 .wrap>form .email>input {
 	width: 200px;
-	
 }
+
+.wrap>form .email>span.emailMsg {
+	color:red; 
+	font-size:12px;
+	position: absolute;
+	left: 140px;
+	top: 45px; 
+}
+
 .wrap>form label {
 	margin-right: 20px; 
 	display:inline-block;
@@ -142,30 +215,54 @@
 
 .wrap>form .addr input {
 	margin-bottom: 10px;
-
 }
 
 .wrap>form .phone input {
 	width: 130px;
+}
 
+.wrap>form .phone {
+	position: relative;	
+}
+
+.wrap>form .phone>span.hpMsg {
+	color:red; 
+	font-size:12px;
+	position: absolute;
+	left: 140px;
+	top: 45px; 
 }
 
 .wrap>form button{
 	border: 1px solid #503396;
 }
+
 .wrap>form button:hover {
 	background-color: #351f67;
 	color: white;
 }
+
 i.dash {
 	color: rgba(0, 0, 0, 1);
 	line-height: 40px;
 	margin: 0 10px;
 }
+
 .wrap>form button.check {
 	margin-left: 5px;
 }
 
+.wrap>form .namebox {
+	position: relative;
+}
+
+.wrap>form .nameMsg {
+	color:red; 
+	font-size:12px;
+	position: absolute;
+	left: 140px;
+	top: 45px; 
+}
 </style>
 <%
 	String root=request.getContextPath();
@@ -194,15 +291,16 @@ i.dash {
 		<input type="password" name="password2" id="password2" class="form-control" required="required" placeholder="비밀번호를 한번더 입력해주세요">
 	</div>
 	
-	<div class="boxs">
+	<div class="boxs namebox">
 	<label for="name">이름</label>
 		<input type="text" name="name" id="name" class="form-control" required="required" placeholder="이름을 입력해주세요">
+		<span id="nameMsg" class="nameMsg"></span>
 	</div>
 	
 	<div class="boxs">
 	<label for="birth">생년월일</label>
-	<input type="date" name="birth" id="birth" class="form-control" value="1990-01-01" required="required">
-	<input type="hidden" name="age" id="age">
+		<input type="date" name="birth" id="birth" class="form-control" value="1990-01-01" required="required">
+		<input type="hidden" name="age" id="age">
 	</div>
 	
 	<div class="boxs gender">
@@ -231,12 +329,13 @@ i.dash {
 		<input type="text" name="hp2" id="hp2" required="required" class="form-control" onkeyup="goFocus(this)">
 		<i class="bi bi-dash-lg dash"></i>
 		<input type="text" name="hp3" id="hp3" required="required" class="form-control">
+		<span id="hpMsg" class="hpMsg"></span>
 	</div>
 	
 	<div class="boxs email">
 	<label for="email1">이메일</label>
 		<input type="text" name="email1" id="email1" class="form-control" required="required" placeholder="이메일을 입력해주세요">
-		<span>@</span>
+		<span class="at">@</span>
 		<input type="text" name="email2" id="email2" class="form-control email2" required="required">
 		<select id="selecEmail" class="form-control">
 			<option value="-">직접입력</option>
@@ -244,6 +343,7 @@ i.dash {
 			<option value="gmail.com">gmail.com</option>	
 			<option value="hanmail.net">hanmail.net</option>					
 		</select>
+		<span id="emailMsg" class="emailMsg"></span>
 	</div>
 	
 		<button type="submit" class="btn regis" id="register">가입하기</button>
@@ -270,8 +370,6 @@ i.dash {
         }
     }
 </script>
-
-
 
 </body>
 
