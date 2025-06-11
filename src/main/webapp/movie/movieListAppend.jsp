@@ -44,7 +44,7 @@
 		<div class="mt-3">
 			<p class="font-bold"><%=dto.getTitle()%></p>
 			<div class="flex items-center text-sm text-gray-600 mt-1">
-				<span>예매율</span> <span class="mx-2">|</span> <span><%=dto.getRelease_date()%></span>
+				<span>평점<i class="ri-star-fill"></i> <%=dto.getScore()%></span> <span class="mx-2">|</span> <span><%=dto.getRelease_date()%></span>
 			</div>
 		</div>
 	</div>

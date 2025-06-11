@@ -25,8 +25,8 @@
 			<!-- 1행: 영화/극장/상영관 -->
 			<div class="row align-items-start gy-3">
 				<div class="col-md-4">
-					<label class="form-label fw-bold">영화 선택</label> <select
-						id="movieSelect" class="form-select">
+					<label class="form-label fw-bold">영화 선택</label> 
+					<select id="movieSelect" class="form-select">
 						<option value="">영화를 선택하세요</option>
 						<%
 							for(MovieDTO dto : list)

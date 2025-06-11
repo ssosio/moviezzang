@@ -347,6 +347,47 @@ public class UserDAO {
 		
 	}
 	
+	// 유저 목록을 받아서 삭제 처리
+	public void deleteMembersByIds(List<String> ids) 
+	{
+	    if(ids == null || ids.isEmpty())
+	    {
+	    	return;	
+	    }
+	    
+	    StringBuilder sql = new StringBuilder("delete from user where id in (");
+	    
+	    for(int i = 0; i < ids.size(); i++) 
+	    {
+	        sql.append("?");
+	        
+	        if(i < ids.size()-1) 
+	        {
+	        	sql.append(",");
+	        }
+	    }
+	    sql.append(")");
+	    
+	    Connection conn = db.getConnection();
+	    PreparedStatement pstmt = null;
+	    
+	    try {
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			for(int i = 0; i < ids.size(); i++) 
+			{
+				pstmt.setString(i+1, ids.get(i));
+	        }
+			
+			pstmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(pstmt, conn);
+		}
+  
+	}
+	
 	//비밀번호체크
 	public boolean EqualPass(String id,String password)
 	{
