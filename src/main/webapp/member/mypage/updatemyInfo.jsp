@@ -6,6 +6,29 @@
     <%@ include file="../../component/menu/headerResources.jsp" %>
 <!DOCTYPE html>
 <html>
+<%
+	String root=request.getContextPath();
+
+	String id=request.getParameter("id");
+	String userid=(String)session.getAttribute("userid");
+    // 로그인 체크
+   // 로그인한 사용자의 시퀀스 번호
+    UserDAO dao=UserDAO.getInstance();
+    String uid=dao.getId(userid);
+     // 주소창에서 전달된 id
+
+    if (userid == null || id == null || !id.equals(uid)) {
+    	    
+        // 로그인 안 된 사용자        
+        %>
+        <script type="text/javascript">
+        
+			//history.back();
+			location.href="<%=root%>/component/error/notFound.jsp"
+        </script>
+        <%
+    }
+%>
 <head>
   <meta charset="UTF-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -158,9 +181,7 @@ p{
   </style>
 </head>
 <%
-	String id=request.getParameter("id");
 
-	UserDAO dao=UserDAO.getInstance();
 	UserDTO dto=dao.getData(id);
 	
 	//이메일
@@ -169,13 +190,24 @@ p{
 	String email2=st.nextToken();
 	
 	//주소
-	String fullAddr = dto.getAddress();
-	String zipCode = "";
-	
+	  String fullAddr = dto.getAddress();
+   	  String zipCode = "";
+      String streetAdr = "";
+      String detailAdr = "";
 
-	if (fullAddr != null && fullAddr.length() > 5) {
-    zipCode = fullAddr.substring(0, 5);   
-	}
+    if (fullAddr != null && fullAddr.contains("/")) {
+        String[] addrArr = fullAddr.split("/", -1); //공백도 배열포함
+
+        if (addrArr.length >= 2) {
+            zipCode = addrArr[0];
+            streetAdr = addrArr[1];
+            
+            // detailAdr가 비어있을 수 있으므로 길이 체크
+            detailAdr = (addrArr.length >= 3) ? addrArr[2] : "";
+        }
+    }
+	
+	
 	
 	//핸드폰
 	String h1 = "";
@@ -281,8 +313,8 @@ p{
         		<div class="col-sm-6 mb-3 mb-sm-0">
     		<input type="text" class="form-control form-control-user" id="zipCode" name="zipCode" placeholder="우편번호" readonly onclick="sample4_execDaumPostcode()"
     		value="<%=zipCode %>" style="width: 90px;">
-    		<input type="text" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly>
-    		<input type="text" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()">
+    		<input type="text" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly value="<%=streetAdr%>">
+    		<input type="text" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()" value="<%=detailAdr%>">
     			</div>
         	</td>
         	</tr>

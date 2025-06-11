@@ -171,7 +171,7 @@ $(function () {
       display: flex;              
       justify-content: center;    
       align-items: center;         
-      
+      margin-top: 15px;
 }
   
   </style>
@@ -218,8 +218,8 @@ $(function () {
       			<th style="background-color: whitesmoke">상영일시</th>
       			<th style="background-color: whitesmoke">인원수</th>
       			<th style="background-color: whitesmoke">결제금액</th>
+      			<th style="background-color: whitesmoke">리뷰작성</th>
       			<th style="background-color: whitesmoke">예매취소</th>
-      			<th style="background-color: whitesmoke">리뷰</th>
       		</tr>
       			<tr>
       			<td id="reservedinfo" colspan="8"></td>
@@ -264,10 +264,10 @@ $(function () {
       				<td><%=formattedTime%></td>
       				<td><%=seat %></td>
       				<td><%=nf.format(price*seat)%></td>
+      				<td><a class="goreview" href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>"><img src="resources/review.jpg" style="width: 28px; height: 28px;
+      				margin-left: 27px;"></a></td>
       				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
-      				<td><a class="goreview" href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>"><img src="resources/review.jpg" style="width: 28px; height: 28px;
-      				margin-left: 12px;"></a></td>
       			</tr>
       			
       			<%}%>
