@@ -9,6 +9,22 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+    <%
+	  //절대경로
+	    String root = request.getContextPath();
+
+
+	    String loginok = (String)session.getAttribute("loginok");
+
+	    if(loginok == null)
+	    {
+    %>
+    	<script type="text/javascript">
+    		history.back();
+    	</script>
+    <%
+    	}
+    %>
 <head>
 <meta charset="UTF-8">
 <link href="<%=request.getContextPath()%>/book/buttonStyle.css" rel="stylesheet">
@@ -217,224 +233,224 @@ div.seat-info{
 .btn-date{
 margin-right: 5px;
 }
-
-
-</style>
-<script type="text/javascript">
-$(function() {
-	let currentMovie_id = null;
-
-	//영화 클릭하면.
-	$("button.movielist").click(function() {
-		const movie_id = $(this).attr("movie_id");
-		currentMovie_id = movie_id;
-		//alert(movieid);
-
-		$.ajax({
-			type:"get",
-			url:"<%=request.getContextPath()%>/book/booking/bookList.jsp",
-			dataType:"json",
-			data:{movie_id:currentMovie_id},
-			success:function(res){
-				//alert("성공");
-				console.log(res);
-
-			    $("button.btnlocal").each(function() {
-			          let originalText = $(this).text().split("(")[0].trim(); // "서울 (3)" -> "서울" 기존 텍스트 초기화
-			          $(this).text(originalText);
-			        });
-				$.each(res,function(i,item){
-
-					$("button.btnlocal").each(function(){
-
-						let regionName = $(this).text().trim();
-						if(regionName == item.region){
-							$(this).text(item.region + "(" +item.theater_count +")");
-						}
-					});
-
-				});
-			}
-		})
-	});
-
-		//지역선택하면 상영극장 출력
-	$(document).on("click","button.btnlocal",function(){
-		const region =  $(this).text().split("(")[0].trim();
-
-		if(!currentMovie_id){
-		alert("먼저 영화를 선택해주세요");
-		return;
-		}
-		$.ajax({
-
-			type:"get",
-			dataType:"json",
-			data:{movie_id : currentMovie_id,
-					region : region
-			},
-			url : "<%=request.getContextPath()%>/book/booking/theaterList.jsp",
-			success:function(res){
-				let h = "";
-				$.each(res,function(i,item){
-					h+= "<li><button class='btntheater btn-basiclist'>"+item.theater_name+"</button></li>";
-				});
-				console.log(h);
-				$("#theater").html(h);
-			},
-		    error: function(xhr, status, error) {
-		      console.log("지역별 극장 요청 실패:", error);
-		    }
-		});
-	});
-
-	//상영관 클릭시 정보
-	$(document).on("click",".btntheater",function(){
-
-		 $(".btntheater").removeClass("btn-active");
-		 $(this).addClass("btn-active");
-
-		 const theaterName = $(this).text();
-
-		 tryAutoLoadShowTimes();
-	});
-
-	//btn 토글클래스
-	$(document).on("click",".movielist",function(){
-		$(".movielist").removeClass("btn-active");
-		$(".btnlocal").removeClass("btn-active");
-		$(".btntheater").removeClass("btn-active");
-		$(".btntheater").hide();
-		$(this).addClass("btn-active");
-	});
-	$(document).on("click",".btnlocal",function(){
-		$(".btnlocal").removeClass("btn-active");
-
-		if(!$(".movielist").hasClass("btn-active")){
-			return;
-		}else{
-			$(this).addClass("btn-active");
-		}
-	});
-	$(document).on("click",".btntheater",function(){
-		$(".btntheater").removeClass("btn-active");
-		$(this).addClass("btn-active");
-	});
-
-///////////////////////////////////////////////////////
-	let selectedDate = null; //선택 날짜 지정
-
-	//날짜버튼 자동생성
-	function generateDateButtons() {
-	  const today = new Date();
-	  const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
-	  let html = "";
-
-	  for (let i = 0; i < 7; i++) {
-	    const date = new Date(today);
-	    date.setDate(today.getDate() + i);
-
-	    const yyyy = date.getFullYear();
-	    const mm = (date.getMonth() + 1).toString().padStart(2, "0");
-	    const dd = date.getDate().toString().padStart(2, "0");
-	    const day = dayLabels[date.getDay()];
-
-	    const formattedDate = `${yyyy}-${mm}-${dd}`;
-	    const label = `${mm}/${dd} (${day})`;
-
-	    const isToday = (i === 0) ? " btn-active" : "";
-
-	    html += `<button class="btn-date btn-day ${isToday}" data-date="${formattedDate}">${label}</button>`;
-	  }
-
-	  $(".date-selector").html(html);
-
-	  selectedDate = today.toISOString().slice(0, 10);// yyyy-MM-dd 형식
-	}
-
-	// 날짜 버튼 클릭 시 날짜 저장
-	$(document).on("click", ".btn-date", function () {
-	  selectedDate = $(this).data("date");
-	  $(".btn-date").removeClass("btn-active");
-	  $(this).addClass("btn-active");
-
-	  const theaterName = $(".btntheater.btn-active").text();
-	  if (theaterName && currentMovie_id && selectedDate) {
-	    loadShowTimes(theaterName);
-	  }
-	});
-
-	// 기존 btntheater 클릭 코드 → 함수로 분리
-	function loadShowTimes(theaterName) {
-  $.ajax({
-    type: "post",
-    url: "<%=request.getContextPath()%>/book/booking/showTimes.jsp",
-    dataType: "json",
-    data: {
-      theaterName: theaterName,
-      movie_id: currentMovie_id,
-      screening_date: selectedDate // 이 값은 날짜 버튼에서 선택됨
-    },
-    success: function (res) {
-      console.log(res);
-      let show = "";
-
-      $.each(res, function (i, item) {
-        let start = new Date(item.start_time);
-        let runtime = parseInt(item.runtime);
-        let end = new Date(start.getTime() + runtime * 60000);
-
-        let startStr = start.getHours().toString().padStart(2, "0") + ":" +
-                       start.getMinutes().toString().padStart(2, "0");
-        let endStr = end.getHours().toString().padStart(2, "0") + ":" +
-                     end.getMinutes().toString().padStart(2, "0");
-
-        show += "<li>" +
-        "<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>" +
-        "<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
-        "<button class='btntime btn-basiclist' type='submit'>" +
-            "<div class='timebox'>" +
-                "<span class='starttime'><b style='font-size: 1.2em'>" + startStr + "</b>~<br>&nbsp;&nbsp;&nbsp;" + endStr + "</span>" +
-                "<span class='movietitle'>" + item.title + "</span>" +
-                "<span class='screeninfo'>" +
-                    item.theater_name + "<br>" +
-                    item.auditorium_name + "<br>" +
-                    "<div class='seat-info'>" +
-                      "<span class='remaining-seat'>" + item.remaining_seat + "</span>/" + item.total_seat +
-                    "</div>" +
-                "</span>" +
-            "</div>" +
-        "</button>" +
-        "</form>" +
-        "</li>";
-      });
-
-      $(".showtimes").html(show);
-    },
-    error: function (xhr, status, error) {
-      console.log("상영 정보 AJAX 실패:", error);
-    }
-  });
+.auto-focus {
+  box-shadow: 0 0 0 3px rgba(82, 0, 255, 0.5);
+  transition: box-shadow 0.4s ease;
 }
 
-	function tryAutoLoadShowTimes() {
-		  const theaterName = $(".btntheater.btn-active").text();
-		  if (theaterName && currentMovie_id && selectedDate) {
-		    loadShowTimes(theaterName);
-		  }
-		}
+</style>
+<%
+String mov_id = request.getParameter("movie_id");
+%>
+<script type="text/javascript">
+$(function () {
+  let currentMovie_id = null;
+  let selectedDate = null;
 
-	// 초기 실행
-	generateDateButtons();
-})
+  // ✅ 영화 클릭 처리 함수
+  function handleMovieClick(movie_id) {
+    currentMovie_id = movie_id;
+
+    $.ajax({
+      type: "get",
+      url: "<%=request.getContextPath()%>/book/booking/bookList.jsp",
+      dataType: "json",
+      data: { movie_id: currentMovie_id },
+      success: function (res) {
+        $("button.btnlocal").each(function () {
+          let originalText = $(this).text().split("(")[0].trim();
+          $(this).text(originalText);
+        });
+
+        $.each(res, function (i, item) {
+          $("button.btnlocal").each(function () {
+            let regionName = $(this).text().trim();
+            if (regionName == item.region) {
+              $(this).text(item.region + "(" + item.theater_count + ")");
+            }
+          });
+        });
+      }
+    });
+  }
+
+  // ✅ 초기 진입 시 movie_id가 있을 경우 처리
+  <% if (mov_id != null) { %>
+    currentMovie_id = "<%=mov_id%>";
+    const $targetBtn = $(`button.movielist[movie_id='${currentMovie_id}']`);
+
+    if ($targetBtn.length > 0) {
+      $targetBtn.addClass("btn-active auto-focus");
+      handleMovieClick(currentMovie_id);
+
+      // 스크롤 이동
+      $(".movie").animate({
+        scrollTop: $targetBtn.offset().top - $(".movie").offset().top + $(".movie").scrollTop() - 100
+      }, 300);
+
+      // 포커스 효과 제거
+      setTimeout(() => {
+        $targetBtn.removeClass("auto-focus");
+      }, 1500);
+    }
+  <% } %>
+
+  // ✅ 영화 버튼 클릭 시
+  $(document).on("click", "button.movielist", function () {
+    $(".movielist").removeClass("btn-active");
+    $(".btnlocal").removeClass("btn-active");
+    $(".btntheater").removeClass("btn-active");
+    $(".btntheater").hide();
+    $(this).addClass("btn-active");
+
+
+
+        for(int i=0; i<8;i++){
+			const $i = $(`.${i}`);
+			const $targetBtn = !$(this).text().includes("(");
+			if(i == $targetBtn){
+
+			}
+        }
+
+
+    const movie_id = $(this).attr("movie_id");
+    handleMovieClick(movie_id);
+  });
+
+  // ✅ 지역 버튼 클릭 시
+  $(document).on("click", "button.btnlocal", function () {
+    if (!$(".movielist").hasClass("btn-active")) return;
+
+    $(".btnlocal").removeClass("btn-active");
+    $(this).addClass("btn-active");
+
+    const region = $(this).text().split("(")[0].trim();
+
+    $.ajax({
+      type: "get",
+      dataType: "json",
+      data: { movie_id: currentMovie_id, region: region },
+      url: "<%=request.getContextPath()%>/book/booking/theaterList.jsp",
+      success: function (res) {
+        let h = "";
+        $.each(res, function (i, item) {
+          h += "<li><button class='btntheater btn-basiclist'>" + item.theater_name + "</button></li>";
+        });
+        $("#theater").html(h);
+      },
+      error: function (xhr, status, error) {
+        console.log("지역별 극장 요청 실패:", error);
+      }
+    });
+  });
+
+  // ✅ 상영관 클릭 시
+  $(document).on("click", ".btntheater", function () {
+    $(".btntheater").removeClass("btn-active");
+    $(this).addClass("btn-active");
+    tryAutoLoadShowTimes();
+  });
+
+  // ✅ 날짜 버튼 자동 생성
+  function generateDateButtons() {
+    const today = new Date();
+    const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
+    let html = "";
+
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+
+      const yyyy = date.getFullYear();
+      const mm = (date.getMonth() + 1).toString().padStart(2, "0");
+      const dd = date.getDate().toString().padStart(2, "0");
+      const day = dayLabels[date.getDay()];
+      const formattedDate = `${yyyy}-${mm}-${dd}`;
+      const label = `${mm}/${dd} (${day})`;
+      const isToday = (i === 0) ? " btn-active" : "";
+
+      html += `<button class="btn-date btn-day ${isToday}" data-date="${formattedDate}">${label}</button>`;
+    }
+
+    $(".date-selector").html(html);
+    selectedDate = today.toISOString().slice(0, 10);
+  }
+
+  // ✅ 날짜 클릭 시
+  $(document).on("click", ".btn-date", function () {
+    selectedDate = $(this).data("date");
+    $(".btn-date").removeClass("btn-active");
+    $(this).addClass("btn-active");
+    tryAutoLoadShowTimes();
+  });
+
+  // ✅ 상영 정보 출력
+  function loadShowTimes(theaterName) {
+    $.ajax({
+      type: "post",
+      url: "<%=request.getContextPath()%>/book/booking/showTimes.jsp",
+      dataType: "json",
+      data: {
+        theaterName: theaterName,
+        movie_id: currentMovie_id,
+        screening_date: selectedDate
+      },
+      success: function (res) {
+        let show = "";
+        $.each(res, function (i, item) {
+          let start = new Date(item.start_time);
+          let runtime = parseInt(item.runtime);
+          let end = new Date(start.getTime() + runtime * 60000);
+          let startStr = start.getHours().toString().padStart(2, "0") + ":" + start.getMinutes().toString().padStart(2, "0");
+          let endStr = end.getHours().toString().padStart(2, "0") + ":" + end.getMinutes().toString().padStart(2, "0");
+
+          show += "<li>" +
+            "<form action='<%=request.getContextPath()%>/book/seat/seatForm.jsp' method='post'>" +
+            "<input type='hidden' name='screening_id' value='" + item.screening_id + "'>" +
+            "<button class='btntime btn-basiclist' type='submit'>" +
+            "<div class='timebox'>" +
+            "<span class='starttime'><b style='font-size: 1.2em'>" + startStr + "</b>~<br>&nbsp;&nbsp;&nbsp;" + endStr + "</span>" +
+            "<span class='movietitle'>" + item.title + "</span>" +
+            "<span class='screeninfo'>" +
+            item.theater_name + "<br>" +
+            item.auditorium_name + "<br>" +
+            "<div class='seat-info'>" +
+            "<span class='remaining-seat'>" + item.remaining_seat + "</span>/" + item.total_seat +
+            "</div>" +
+            "</span>" +
+            "</div>" +
+            "</button>" +
+            "</form>" +
+            "</li>";
+        });
+
+        $(".showtimes").html(show);
+      },
+      error: function (xhr, status, error) {
+        console.log("상영 정보 AJAX 실패:", error);
+      }
+    });
+  }
+
+  // ✅ 조건 충족 시 자동 상영 정보 불러오기
+  function tryAutoLoadShowTimes() {
+    const theaterName = $(".btntheater.btn-active").text();
+    if (theaterName && currentMovie_id && selectedDate) {
+      loadShowTimes(theaterName);
+    }
+  }
+
+  // ✅ 초기 날짜 버튼 생성
+  generateDateButtons();
+});
 </script>
+
 </head>
 <%
 MovieDAO dao = MovieDAO.getInstance();
 //영화 리스트 구하기
 List<MovieDTO> list = dao.getAllDatas();
-//절대경로
-String root = getServletContext().getRealPath("/");
 %>
 <body>
 	<div class="bookcontainer">
@@ -471,14 +487,14 @@ String root = getServletContext().getRealPath("/");
 				<div class="local">
 					<h4>&nbsp;&nbsp;&nbsp;극장</h4>
 					<ul id="locals">
-					<li><button class="btnlocal btn-basiclist">서울</button></li>
-						<li><button class="btnlocal btn-basiclist">경기</button></li>
-						<li><button class="btnlocal btn-basiclist">인천</button></li>
-						<li><button class="btnlocal btn-basiclist">대전/충청/세종</button></li>
-						<li><button class="btnlocal btn-basiclist">부산/대구/경산</button></li>
-						<li><button class="btnlocal btn-basiclist">광주/전라</button></li>
-						<li><button class="btnlocal btn-basiclist">강원</button></li>
-						<li><button class="btnlocal btn-basiclist">제주</button></li>
+					<li><button class="btnlocal btn-basiclist" data-index="0">서울</button></li>
+						<li><button class="btnlocal btn-basiclist" data-index="1">경기</button></li>
+						<li><button class="btnlocal btn-basiclist" data-index="2">인천</button></li>
+						<li><button class="btnlocal btn-basiclist" data-index="3">대전/충청/세종</button></li>
+						<li><button class="btnlocal btn-basiclist" data-index="4">부산/대구/경산</button></li>
+						<li><button class="btnlocal btn-basiclist" data-index="5">광주/전라</button></li>
+						<li><button class="btnlocal btn-basiclist" data-index="6">강원</button></li>
+						<li><button class="btnlocal btn-basiclist" data-index="7">제주</button></li>
 					</ul>
 				</div>
 <!-- 				<div class="vertical-line"></div> -->

@@ -32,6 +32,10 @@
 		ob.put("reserved_seatcount", map.get("reserved_seatcount"));
 		ob.put("remaining_seat", map.get("remaining_seat"));
 
+		System.out.println("total: " + map.get("total_seat"));
+		System.out.println("reserved: " + map.get("reserved_seatcount"));
+		System.out.println("remaining: " + map.get("remaining_seat"));
+
 		arr.add(ob);
 	}
     %>

@@ -317,7 +317,8 @@ $(function () {
 				dataType:"json",
 				success:function(){
 
-					alert("성공");
+					alert("예매가 완료되었습니다!");
+					locatin.href='<%=request.getContextPath()%>/index.jsp?main=member/mypage/mypageMain.jsp'
 				}
 
 			})
@@ -796,8 +797,7 @@ $(function () {
 					    <div style="
 					      width: 24px;
 					      height: 24px;
-
-					      border: 1px solid #481658;
+					      border: 1px solid #352461;
 					      display: flex;
 					      align-items: center;
 					      justify-content: center;
@@ -813,8 +813,8 @@ $(function () {
 					    <div style="
 					      width: 24px;
 					      height: 24px;
-					      background: #481658;
-					      border: 1px solid #481658;
+					      background: #352461;
+					      border: 1px solid #352461;
 					      display: flex;
 					      align-items: center;
 					      justify-content: center;
@@ -830,8 +830,8 @@ $(function () {
 					    <div style="
 					      width: 24px;
 					      height: 24px;
-					      background: #481658;
-					      border: 1px solid #481658;
+					      background: #352461;
+					      border: 1px solid #352461;
 					      border-radius: 4px;
 					    "></div>
 					    <span>선택된 좌석</span>
