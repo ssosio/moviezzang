@@ -6,6 +6,7 @@
 <%@page import="data.dao.MovieDAO"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.Map, java.util.HashMap"%>
 <%@ page import="data.dto.ReviewDTO, data.dao.ReviewDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -426,12 +427,12 @@ input:checked+.switch-slider:before {
 					%>
 					<p class="text-sm text-red-500">로그인 후 리뷰 작성이 가능합니다.</p>
 					<%
-} else if (!watched) {
-%>
+						} else if (!watched) {
+					%>
 					<p class="text-sm text-red-500">이 영화를 예매한 사용자만 리뷰를 작성할 수 있습니다.</p>
 					<%
-} else if (alreadyReviewed) {
-%>
+						} else if (alreadyReviewed) {
+					%>
 					<p class="text-sm text-green-600">
 						이미 작성한 관람평이 있습니다.
 						<button
@@ -440,8 +441,8 @@ input:checked+.switch-slider:before {
 					</p>
 
 					<%
-} else {
-%>
+					} else {
+					%>
 					<button
 						class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap text-sm hover:bg-opacity-90 transition-colors 
       <%=(userid == null || userid.trim().equals("")) ? "hidden" : ""%>"
@@ -464,43 +465,36 @@ input:checked+.switch-slider:before {
 								</p>
 							</div>
 						</div>
-						<!-- <div class="w-full md:w-1/2">
+ 			<div class="w-full md:w-1/3">
+						
+					<%
+						Map<Integer, Integer> starCount = new HashMap<>();
+					int total = (reviews == null) ? 0 : reviews.size();
+
+						for (ReviewDTO review : reviews) {
+							int star = (int) Math.ceil(review.getRating() / 2.0);
+							starCount.put(star, starCount.getOrDefault(star, 0) + 1);
+						}
+
+						for (int i = 5; i >= 1; i--) {
+							int count = starCount.getOrDefault(i, 0);
+							double percentage = (count * 100.0) / total;
+							/* System.out.printf("별 %d개: %.2f%%%n", i, percentage); */
+						%>
+
 							<div class="flex items-center mb-2">
-								<span class="text-sm w-12">5점</span>
+								<span class="text-sm w-12"><%=i %>점</span>
 								<div class="flex-1 bg-gray-200 h-2 rounded-full mx-2">
-									<div class="bg-primary h-2 rounded-full" style="width: 75%"></div>
+									<div class="bg-primary h-2 rounded-full" style="width: <%= total == 0 ? total : (int)percentage %>%"></div>
 								</div>
-								<span class="text-sm w-12 text-right">75%</span>
+								<span class="text-sm w-12 text-right"><%= total == 0 ? total : (int)percentage %>%</span>
 							</div>
-							<div class="flex items-center mb-2">
-								<span class="text-sm w-12">4점</span>
-								<div class="flex-1 bg-gray-200 h-2 rounded-full mx-2">
-									<div class="bg-primary h-2 rounded-full" style="width: 18%"></div>
-								</div>
-								<span class="text-sm w-12 text-right">18%</span>
-							</div>
-							<div class="flex items-center mb-2">
-								<span class="text-sm w-12">3점</span>
-								<div class="flex-1 bg-gray-200 h-2 rounded-full mx-2">
-									<div class="bg-primary h-2 rounded-full" style="width: 5%"></div>
-								</div>
-								<span class="text-sm w-12 text-right">5%</span>
-							</div>
-							<div class="flex items-center mb-2">
-								<span class="text-sm w-12">2점</span>
-								<div class="flex-1 bg-gray-200 h-2 rounded-full mx-2">
-									<div class="bg-primary h-2 rounded-full" style="width: 1%"></div>
-								</div>
-								<span class="text-sm w-12 text-right">1%</span>
-							</div>
-							<div class="flex items-center">
-								<span class="text-sm w-12">1점</span>
-								<div class="flex-1 bg-gray-200 h-2 rounded-full mx-2">
-									<div class="bg-primary h-2 rounded-full" style="width: 1%"></div>
-								</div>
-								<span class="text-sm w-12 text-right">1%</span>
-							</div>
-						</div> -->
+						
+						<%
+						}
+						%>
+						</div> 
+						
 					</div>
 				</div>
 				<!-- 관람평 탭 -->
@@ -652,10 +646,8 @@ boolean isAuthor = sessionUserId.equals(reviewUserId);
 								<form action="movie/deleteReview.jsp" method="post"
 									onsubmit="return confirm('정말 리뷰를 삭제하시겠습니까?');">
 									<input type="hidden" name="user_id" value="<%=numId%>">
-									<input type="hidden" name="movie_id"
-										value="<%=id%>">
-										<input type="hidden" name="movieName"
-										value="<%=dto.getTitle() %>">
+									<input type="hidden" name="movie_id" value="<%=id%>"> <input
+										type="hidden" name="movieName" value="<%=dto.getTitle()%>">
 									<button type="submit"
 										class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
 										삭제하기</button>
@@ -730,7 +722,7 @@ boolean isAuthor = sessionUserId.equals(reviewUserId);
 								onclick="location.href='?main=movie/movieDetail.jsp?id=<%=rec.getId()%>&name=<%=rec.getTitle()%>'"
 								src="<%=rec.getPoster_url().startsWith("https") ? "" : posterUrl%><%=rec.getPoster_url()%>"
 								alt="<%=rec.getTitle()%>"
-								class="w-full h-full object-cover object-top rounded" />
+								class="w-full h-35 object-cover object-top rounded" />
 						</div>
 						<div class="mt-2">
 							<p class="font-medium"><%=rec.getTitle()%></p>
@@ -839,7 +831,7 @@ boolean isAuthor = sessionUserId.equals(reviewUserId);
 				</div>
 
 				<!-- 추가: 유저 ID, 영화 ID 전달 영화제목전달 << 리다이렉션시 필요 -->
-				
+
 				<input type="hidden" name="movieName" value="<%=dto.getTitle()%>">
 				<input type="hidden" name="user_id" value="<%=numId%>"> <input
 					type="hidden" name="movie_id"
