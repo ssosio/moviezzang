@@ -7,6 +7,12 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+
+<style>
+.mb-4 {
+    margin-bottom: 1rem !important;
+}
+</style>
 <body>
 	<!-- 푸터 -->
 	<footer class="bg-gray-900 text-white py-12">
@@ -24,7 +30,7 @@
 				<div class="grid grid-cols-2 md:grid-cols-3 gap-8">
 					<div>
 						<h3 class="!text-lg !font-bold !mb-4">이용안내</h3>
-						<ul class="!space-y-2">
+						<ul class="!space-y-2 !pl-0">
 							<li><a href="?main=movie/movieList.jsp"
 								class="!text-gray-400 hover:!text-white !no-underline !transition-colors">영화</a>
 							</li>
@@ -42,7 +48,7 @@
 
 					<div>
 						<h3 class="text-lg font-bold mb-4">고객센터</h3>
-						<ul class="space-y-2">
+						<ul class="space-y-2 !pl-0">
 							<li><a href="#"
 								class="!text-gray-400 hover:!text-white !no-underline !transition-colors">FAQ</a>
 							</li>
@@ -59,7 +65,7 @@
 					</div>
 					<div>
 						<h3 class="text-lg font-bold mb-4">회사정보</h3>
-						<ul class="space-y-2">
+						<ul class="space-y-2 !pl-0">
 							<li><a href="#"
 								class="!text-gray-400 hover:!text-white !no-underline !transition-colors">회사소개</a>
 							</li>

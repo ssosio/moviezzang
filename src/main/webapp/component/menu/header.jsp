@@ -38,37 +38,37 @@ String currentMain = request.getParameter("main");
 					class="hidden md:flex items-center space-x-12 justify-center mx-auto"
 					style="padding-left: 13rem">
 					<a href="?main=movie/movieList.jsp"
-						class="hover:!text-yellow-100 !transition-colors !no-underline <%="movie/movieList.jsp".equals(currentMain) ? "!text-yellow-100" : "!text-white"%>">
+						class="hover:!text-yellow-300 !transition-colors !no-underline <%="movie/movieList.jsp".equals(currentMain) ? "!text-yellow-300" : "!text-white"%>">
 						영화 </a>
 						<%
 						if(loginok !=null){%>
 							<a
 							href="<%=request.getContextPath()%>/index.jsp?main=book/booking/bookMain.jsp"
-							class="hover:!text-yellow-100 !transition-colors !no-underline <%="book/booking/bookMain.jsp".equals(currentMain) ? "!text-yellow-100" : "!text-white"%>">
+							class="hover:!text-yellow-300 !transition-colors !no-underline <%="book/booking/bookMain.jsp".equals(currentMain) ? "!text-yellow-300" : "!text-white"%>">
 							예매 </a>
 						<%}else{%>
 							<a href="#"	id="openLoginModal"
-							class="!text-white hover:!text-yellow-100 !transition-colors !no-underline">
+							class="!text-white hover:!text-yellow-300 !transition-colors !no-underline">
 							예매</a>
 						<%}
  						%>
 						<a
 						href="<%=request.getContextPath()%>/index.jsp?main=theater/theaterMain.jsp"
-						class="hover:!text-yellow-100 !transition-colors !no-underline <%="theater/theaterMain.jsp".equals(currentMain) ? "!text-yellow-100" : "!text-white"%>">
+						class="hover:!text-yellow-300 !transition-colors !no-underline <%="theater/theaterMain.jsp".equals(currentMain) ? "!text-yellow-300" : "!text-white"%>">
 						극장 </a> <a onclick="location.href='<%=request.getContextPath()%>/'"
 						class="flex items-center space-x-2 transform transition-transform duration-300 hover:[transform:rotateY(180deg)]">
 						<img src="<%=request.getContextPath()%>/resources/moviezzang.png"
 						alt="영화짱닷컴" class="cursor-pointer h-12 max-w-none " />
 					</a> <a href=""
-						class="hover:!text-yellow-100 !text-white !transition-colors !no-underline">스토어</a>
+						class="hover:!text-yellow-300 !text-white !transition-colors !no-underline">스토어</a>
 					<a href=""
-						class="hover:!text-yellow-100 !text-white !transition-colors !no-underline">이벤트</a>
+						class="hover:!text-yellow-300 !text-white !transition-colors !no-underline">이벤트</a>
 					<a href=""
-						class="hover:!text-yellow-100 !text-white !transition-colors !no-underline">혜택</a>
+						class="hover:!text-yellow-300 !text-white !transition-colors !no-underline">혜택</a>
 				</nav>
 				<div class="flex items-center space-x-6">
 					<div
-						class="w-8 h-8 flex items-center justify-center hover:!text-primary !transition-colors !no-underline !cursor-pointer">
+						class="w-8 h-8 flex items-center justify-center hover:!text-yellow-300 !transition-colors !no-underline !cursor-pointer">
 						<!--     <i class="ri-search-line ri-lg"></i> -->
 					</div>
 
@@ -77,30 +77,30 @@ String currentMain = request.getParameter("main");
 					%>
 
 					<a id="logout"
-						class="!text-white hover:!text-primary !transition-colors !no-underline"
+						class="!text-yellow-300 hover:!text-primary !transition-colors !no-underline"
 						href="member/login/logoutAction.jsp"> 로그아웃</a> <a id="logout"
-						class="!text-white hover:!text-primary !transition-colors !no-underline"
+						class="!text-white hover:!text-yellow-300 !transition-colors !no-underline"
 						href="?main=indexAdmin.jsp?id=<%=id%>"> 관리자페이지</a> <a
 						href="?main=member/mypage/mypageMain.jsp?id=<%=id%>"
-						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a>
+						class="!text-sm hover:!text-yellow-300 !transition-colors !text-white !no-underline">마이페이지</a>
 					<%
 					}
 
 					else if (loginok != null) {
 					%>
 					<a id="logout"
-						class="!text-white hover:!text-primary !transition-colors !no-underline"
+						class="!text-white hover:!text-yellow-300 !transition-colors !no-underline"
 						href="member/login/logoutAction.jsp"> 로그아웃</a> <a
 						href="?main=member/mypage/mypageMain.jsp?id=<%=id%>"
-						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">마이페이지</a>
+						class="!text-sm hover:!text-yellow-300 !transition-colors !text-white !no-underline">마이페이지</a>
 					<%
 					}
 					else {
 					%>
 					<a id="openLoginModal2"
-						class="!text-white hover:!text-primary !transition-colors !no-underline"
+						class="!text-white hover:!text-yellow-300 !transition-colors !no-underline"
 						href="#"> 로그인</a> <a href="?main=member/signup/signupForm.jsp"
-						class="!text-sm hover:!text-primary !transition-colors !text-white !no-underline">회원가입</a>
+						class="!text-sm hover:!text-yellow-300 !transition-colors !text-white !no-underline <%="member/signup/signupForm.jsp".equals(currentMain) ? "!text-yellow-300" : "!text-white"%>">회원가입</a>
 					<%
 					}
 					%>
