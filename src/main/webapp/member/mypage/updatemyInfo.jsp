@@ -73,6 +73,21 @@
 	        }
 	    });
 		
+	    $("#passeye").click(function () {
+	        let pw1 = $("#password");
+	        let pw2 = $("#password2");
+
+	        
+	        if (pw1.attr("type") === "password") {
+	            pw1.attr("type", "text");
+	            pw2.attr("type", "text");
+	            $(this).removeClass("bi-eye").addClass("bi-eye-slash");
+	        } else {
+	            pw1.attr("type", "password");
+	            pw2.attr("type", "password");
+	            $(this).removeClass("bi-eye-slash").addClass("bi-eye");
+	        }
+	    });
 	});
   	
   	//유효성 체크
@@ -260,15 +275,18 @@ p{
         	<tr>
         	<th style="background-color: whitesmoke;">비밀번호<label style="color: red;">*</label></th>
         	<td>
-        		<input type="text" class="form-control"  name="password" id="password" style="width: 150px;" value="<%=dto.getPassword() %>"
-        		required="required" placeholder="변경 할 비밀번호">
+        		<div class="d-flex align-items-center">
+  				<input type="password" class="form-control" name="password" id="password"
+         		value="<%=dto.getPassword() %>" required="required" placeholder="변경 할 비밀번호" style="width: 150px;">
+  				<i class="bi bi-eye ms-2" id="passeye" style="cursor: pointer;"></i>
+				</div>
         		<input type="password" name="password2" id="password2" class="form-control" style="width: 150px;" required="required" placeholder="비밀번호 확인">
         	</td>
         	</tr>
         	<tr>
         	<th style="background-color: whitesmoke;">생년월일<label style="color: red;">*</label></th>
         	<td>
-        		<input type="date" class="form-control" style="width: 150px;" name="birth" id="birth" value="<%=dto.getBirth()%>">
+        		<input type="date" class="form-control" style="width: 150px;" name="birth" id="birth" value="<%=dto.getBirth()%>" required="required">
         	</td>
         	</tr>
         	<tr>
@@ -281,11 +299,11 @@ p{
 					</select>
 					<a><i class="bi bi-dash-lg dash"></i></a>
         		<input type="text" class="form-control"  name="hp2" style="width: 30px;" onkeyup="goFocus(this)"
-        		value="<%=h2%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}">
+        		value="<%=h2%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}" required="required">
         		<span id="hpMsg" style="color:red; font-size:12px;"></span>
         			<i class="bi bi-dash-lg dash" style="color: black;"></i>
         		<input type="text" class="form-control"  name="hp3" style="width: 30px;"
-        		value="<%=h3%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}">
+        		value="<%=h3%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}" required="required">
         	</td>
         	</tr>
         	<tr>
@@ -313,8 +331,8 @@ p{
         		<div class="col-sm-6 mb-3 mb-sm-0">
     		<input type="text" class="form-control form-control-user" id="zipCode" name="zipCode" placeholder="우편번호" readonly onclick="sample4_execDaumPostcode()"
     		value="<%=zipCode %>" style="width: 90px;">
-    		<input type="text" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly value="<%=streetAdr%>">
-    		<input type="text" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()" value="<%=detailAdr%>">
+    		<input type="text" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly value="<%=streetAdr%>" style="width: 400px; margin-top: 10px;">
+    		<input type="text" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()" value="<%=detailAdr%>" style="margin-top: 10px;">
     			</div>
         	</td>
         	</tr>
