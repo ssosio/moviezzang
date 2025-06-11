@@ -29,12 +29,12 @@ public class ScreeningDAO {
 		Connection conn = db.getConnection();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		String sql ="select t.region, count(distinct t.id) as theater_count\r\n"
-				+ "from screening s\r\n"
-				+ "join auditorium a on  a.id = s.auditorium_id\r\n"
-				+ "join theater t on a.theater_id = t.id\r\n"
+		String sql ="select t.region, count(distinct t.id) as theater_count \r\n"
+				+ "from screening s \r\n"
+				+ "join auditorium a on  a.id = s.auditorium_id \r\n"
+				+ "join theater t on a.theater_id = t.id \r\n"
 				+ "join movie m on s.movie_id = m.id\r\n"
-				+ "where s.movie_id = ?\r\n"
+				+ "where s.movie_id = ? and s.start_time > now() \r\n"
 				+ "group by t.region";
 
 		try {
@@ -60,7 +60,7 @@ public class ScreeningDAO {
 	};
 
 	//극장을 선택하면 모든 정보 나타내기(시간시간, 좌석수 등등)
-	public List<HashMap<String, String>> getTheaterScreeningInfo(String movie_id,String theaterName){
+	public List<HashMap<String, String>> getTheaterScreeningInfo(String movie_id,String theaterName, String screening_date){
 		List<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
 		Connection conn = db.getConnection();
 		PreparedStatement pst = null;
@@ -83,13 +83,14 @@ public class ScreeningDAO {
 				+ "join seat on seat.auditorium_id = a.id\r\n"
 				+ "left join reservation r on r.screening_id = s.id\r\n"
 				+ "left join seat_reserved sr on sr.reservation_id = r.id\r\n"
-				+ "where s.movie_id =? and t.name = ?\r\n"
+				+ "where s.movie_id =? and t.name = ? and DATE(s.start_time) = ? \r\n"
 				+ "group by s.id  order by s.start_time";
 
 		try {
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, movie_id);
 			pst.setString(2, theaterName);
+			pst.setString(3, screening_date);
 			rs = pst.executeQuery();
 			while(rs.next()) {
 				HashMap<String, String> map = new HashMap<String, String>();
@@ -115,7 +116,7 @@ public class ScreeningDAO {
 		}
 		return list;
 	};
-	
+
 	// 상영스케줄 중복확인
 	public boolean checkScheduleOverlap(String auditoriumId, Timestamp endTime, Timestamp startTime)
 	{
@@ -123,21 +124,21 @@ public class ScreeningDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		boolean isOverlap = false;
-		
+
 		String sql = "select count(*) from screening s " +
 	             "join movie m ON s.movie_id = m.id " +
 	             "where s.auditorium_id = ? " +
 	             "and s.start_time < ? " +
 	             "and (s.start_time + interval (m.runtime + 20) minute) > ?";
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, auditoriumId);
 			pstmt.setTimestamp(2, endTime);
 			pstmt.setTimestamp(3, startTime);
-			
+
 			rs = pstmt.executeQuery();
-			
+
 			if(rs.next())
 			{
 				// 0보다 크면 조회되는 스케줄이 있다는 것
@@ -148,26 +149,26 @@ public class ScreeningDAO {
 		} finally {
 			db.dbClose(null, pstmt, conn);
 		}
-		
+
 		return isOverlap;
 	}
-	
+
 	// 상영스케줄 추가
 	public void insertScreening(ScreeningDTO dto)
 	{
 		Connection conn = db.getConnection();
 		PreparedStatement pstmt = null;
-		
+
 		String sql = "insert into screening values (null, ?, ?, ?, ?)";
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
-			
+
 			pstmt.setString(1, dto.getMovie_id());
 			pstmt.setString(2, dto.getAuditorium_id());
 			pstmt.setTimestamp(3, dto.getStart_time());
 			pstmt.setInt(4, dto.getPrice());
-			
+
 			pstmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();

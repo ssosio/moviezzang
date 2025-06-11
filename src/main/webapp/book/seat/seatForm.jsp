@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="data.dao.UserDAO"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.sql.Timestamp"%>
@@ -29,40 +30,39 @@
 <title>Insert title here</title>
 <style type="text/css">
 	body {
-		font-family: "Noto Sans KR";
+		font-family: "Noto Sans KR" !important;
 	}
 	.container {
-		position: absolute;
+
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
+		align-items: center;
 	}
 	.mainbox {
 		display: flex;
+		width: 1000px;
 	}
 	.title {
-		margin: 100px 0 0 100px;
-		width: 600px;
+		margin-top:100px;
+		width: 1000px;
 	}
 	.seatbox {
 		width: 600px;
 		height: 750px;
 		margin-top: 1px;
-		margin-left: 100px;
 		border: 1px solid #ccc;
 	}
 	.subject {
 		display: flex;
-		justify-content: space-between;
-		width: 600px;
+		justify-content: start;
+		width: 1000px;
 		align-items: center;
-		margin-left: 100px;
 	}
 	.seatcount {
 		background: #ddd;
 		display: flex;
 		align-items: center;
 		padding: 10px;
-		margin-top: 5px;
 	}
 	.seatcount > div {
 		display: flex;
@@ -260,14 +260,18 @@
 
 	NumberFormat nf2 = NumberFormat.getInstance();
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+	//날짜 파싱
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd(E) HH:mm");
+	SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	Date date = originalFormat.parse(start_time);
+	String formatDate = sdf.format(date);
 
 	//로그인 ID가져오기
 	String userid = (String)session.getAttribute("userid");
 
 	UserDAO udao = UserDAO.getInstance();
 	String userNum = udao.getId(userid);
-
 
 
 %>
@@ -279,20 +283,49 @@ $(function () {
 	//	결제
 	//----------------------------
 	$(".btn-pay").on("click",function(){
-		var screeningId = <%=screening_id%>
-		var userNum = <%=userNum%>
-
+		var screeningId = "<%=screening_id%>";
+		var userNum = "<%=userNum%>";
+		const totalInwon = parseInt($(".adult-inwoncount").text())
+						  +parseInt($(".teenager-inwoncount").text());
 		const seatIds = $(".selseat.select").map(function(){
-			return $(".selseat").attr("seat-id");
+			return $(this).attr("seat-id");
 		}).get();
-		alert(seatIds);
+
+		const pay = confirm("결제하시겠습니까?");
+
+
+		//좌석선택 안하고 결제할 시
+		if(seatIds.length == 0){
+		alert("좌석을 선택해주세요");
+		return;
+		}
+		//선택한 좌석이 총 인원수보다 적을 시
+		if(seatIds.length < totalInwon ){
+		alert("좌석을 모두 선택해주세요");
+		return;
+		}
+
+		if(pay){
+
+			$.ajax({
+				type:"post",
+				url:"<%=request.getContextPath()%>/book/payment/payReservationAction.jsp",
+				data: {screeningId : screeningId,
+						userNum : userNum,
+						seatIds : seatIds.join(",")
+						},
+				dataType:"json",
+				success:function(){
+
+					alert("성공");
+				}
+
+			})
+		}
 
 
 
 	  })
-
-
-
 	  // ---------------------------
 	  // Hover (좌석에 마우스 올릴 때)
 	  // ---------------------------
@@ -366,6 +399,7 @@ $(function () {
 	    	}
 				updateShowSelSeat();
 				updatePrice();
+				reservationSeatRule();
 				return;
 	    }
 
@@ -556,12 +590,23 @@ $(function () {
 		      const row = $btn.attr("row");
 
 		      let shouldLock = false;
-
+			  // 3번 : 5,6선택시 잠김
+			  if (col ===3){
+				  const $5 = $(`.selseat[row='${row}'][col='5']`);
+			      const $6 = $(`.selseat[row='${row}'][col='6']`);
+			      if($5.hasClass("select") && $6.hasClass("select")) shouldLock = true;
+			  }
 		      // 4번: 5,6 선택시만 열림
 		      if (col === 4) {
 		        const $5 = $(`.selseat[row='${row}'][col='5']`);
 		        const $6 = $(`.selseat[row='${row}'][col='6']`);
 		        if (!($5.hasClass("select") && $6.hasClass("select"))) shouldLock = true;
+		      }
+		      //5번 7,8번 선택시 잠김
+		      if (col ===5){
+				const $7 = $(`.selseat[row='${row}'][col='7']`);
+				const $8 = $(`.selseat[row='${row}'][col='8']`);
+				if($7.hasClass("select") && $8.hasClass("select")) shouldLock = true;
 		      }
 		      // 6번: 7,8 선택시만 열림
 		      if (col === 6) {
@@ -569,11 +614,23 @@ $(function () {
 		        const $8 = $(`.selseat[row='${row}'][col='8']`);
 		        if (!($7.hasClass("select") && $8.hasClass("select"))) shouldLock = true;
 		      }
+		      // 7번: 9번 10번 선택되면 잠김
+		      if (col === 7){
+				const $9 = $(`.selseat[row='${row}'][col='9']`);
+				const $10 = $(`.selseat[row='${row}'][col='10']`);
+				if( $9.hasClass("select") && $10.hasClass("select")) shouldLock= true;
+		      }
+
 		      // 8번: 7,8 선택시만 열림
 		      if (col === 8) {
 		        const $7 = $(`.selseat[row='${row}'][col='7']`);
 		        const $8 = $(`.selseat[row='${row}'][col='8']`);
-		        if (!($7.hasClass("select") && $8.hasClass("select"))) shouldLock = true;
+		        const $9 = $(`.selseat[row='${row}'][col='9']`);
+		        const $10 = $(`.selseat[row='${row}'][col='10']`);
+		        if (!(
+		        	($7.hasClass("select") && $8.hasClass("select")) ||
+		        	($9.hasClass("select") && $10.hasClass("select"))
+		        )) shouldLock = true;
 		      }
 		      // 10번: (9,10 선택시 11만 열림, 11,12 선택시 10만 열림)
 		      if (col === 10) {
@@ -607,6 +664,12 @@ $(function () {
 		          shouldLock = true;
 		        }
 		      }
+		      //12번 9번10번 선택되면 잠김
+		      if (col ===12){
+		    	  const $9 = $(`.selseat[row='${row}'][col='9']`);
+			      const $10 = $(`.selseat[row='${row}'][col='10']`);
+			      if($9.hasClass("select") && $10.hasClass("select")) shouldLock = true;
+		      }
 
 		      // 잠금 처리
 		      if (shouldLock) {
@@ -634,7 +697,7 @@ $(function () {
 			<hr>
 		</div>
 		<div class="subject">
-				 	<h5>좌석예매</h5>
+				 	<h5 style="margin-right: 29rem;">좌석예매</h5>
 				 	<button type="button" class="btn-mov btn-reset">초기화</button>
 				</div>
 		<div class="mainbox">
@@ -709,7 +772,6 @@ $(function () {
 					</div>
 				</div>
 		</div>
-		</div>
 		<div class="paybox">
 			<div class="pay-title">
 				<p><%=title %></p>
@@ -719,7 +781,7 @@ $(function () {
 				<div class="pay-infosrting">
 				<p class="theater"><%=theater_name %></p>
 				<p class="auditorium"><%=auditorium_name %></p>
-				<p class="date"><%=start_time %></p>
+				<p class="date"><%=formatDate%></p>
 				</div>
 				<%
 				String posterUrl = "https://image.tmdb.org/t/p/w500";
@@ -729,10 +791,52 @@ $(function () {
 			</div>
 			<hr>
 			<div class="seat-choice-info">
-				<div class="legend">
-					d
-				</div>
+				<div class="legend" style="padding-top: 80px; padding-left: 10px;">
+					 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+					    <div style="
+					      width: 24px;
+					      height: 24px;
 
+					      border: 1px solid #481658;
+					      display: flex;
+					      align-items: center;
+					      justify-content: center;
+					      border-radius: 4px;
+					    ">
+					      <i class='ri-lock-fill' style='color: gray; font-size: 16px;'></i>
+					    </div>
+					    <span>선택불가</span>
+					  </div>
+
+					  <!-- 예약된 자리 -->
+					  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+					    <div style="
+					      width: 24px;
+					      height: 24px;
+					      background: #481658;
+					      border: 1px solid #481658;
+					      display: flex;
+					      align-items: center;
+					      justify-content: center;
+					      border-radius: 4px;
+					    ">
+					      <i class="ri-close-circle-fill" style="color: crimson; font-size: 16px;"></i>
+					    </div>
+					    <span>예약된 자리</span>
+					  </div>
+
+					  <!-- 선택된 좌석 -->
+					  <div style="display: flex; align-items: center; gap: 8px;">
+					    <div style="
+					      width: 24px;
+					      height: 24px;
+					      background: #481658;
+					      border: 1px solid #481658;
+					      border-radius: 4px;
+					    "></div>
+					    <span>선택된 좌석</span>
+					  </div>
+					</div>
 				<div class="myseat">
 					<span>선택좌석</span>
 					<div class="myseat-show">
@@ -756,6 +860,7 @@ $(function () {
 			<div class="pay-btn" style="text-align: center; margin-top: 20px;">
 				<button class="btn-pay">결제하기</button>
 			</div>
+		</div>
 		</div>
 	</div>
 </body>

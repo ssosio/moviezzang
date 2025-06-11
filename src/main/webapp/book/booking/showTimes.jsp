@@ -9,13 +9,13 @@
     <%
     String movie_id = request.getParameter("movie_id");
     String theaterName = request.getParameter("theaterName");
+    String screening_date = request.getParameter("screening_date"); // yyyy-MM-dd
 	System.out.print("movie_id: "+movie_id);
 	System.out.print("theaterName: "+theaterName);
 
 	ScreeningDAO dao = ScreeningDAO.getInstance();
 
-	List<HashMap<String,String>> list = dao.getTheaterScreeningInfo(movie_id, theaterName);
-
+	List<HashMap<String,String>> list = dao.getTheaterScreeningInfo(movie_id, theaterName, screening_date);
 	JSONArray arr = new JSONArray();
 
 	for(HashMap<String,String>map: list){
