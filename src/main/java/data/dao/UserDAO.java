@@ -593,7 +593,7 @@ public class UserDAO {
 	//무비스토리 리스트
 	public List<HashMap<String, String>> getStoryList(String userid)
 	{
-		String sql="SELECT "
+		String sql="SELECT DISTINCT "
 				+ "    re.id, "
 				+ "    re.created_at, "
 				+ "    re.content, "
@@ -608,7 +608,8 @@ public class UserDAO {
 				+ "JOIN user u ON re.user_id = u.id "
 				+ "JOIN screening s ON s.movie_id = m.id "
 				+ "JOIN reservation r ON r.screening_id = s.id AND r.user_id = u.id "
-				+ "WHERE u.userid=? ";
+				+ "WHERE u.userid=? "
+				+ "ORDER BY re.created_at DESC ";
 		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();		
 		
 		Connection conn=db.getConnection();

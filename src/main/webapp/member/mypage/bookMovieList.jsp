@@ -1,3 +1,5 @@
+<%@page import="data.dto.MovieDTO"%>
+<%@page import="data.dao.MovieDAO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.util.HashMap"%>
@@ -9,6 +11,29 @@
    <%@ include file="../../component/menu/headerResources.jsp" %>
 <!DOCTYPE html>
 <html>
+<%
+	String root=request.getContextPath();
+
+	String id=request.getParameter("id");
+	String userid=(String)session.getAttribute("userid");
+    // 로그인 체크
+   // 로그인한 사용자의 시퀀스 번호
+    UserDAO dao=UserDAO.getInstance();
+    String uid=dao.getId(userid);
+     // 주소창에서 전달된 id
+
+    if (userid == null || id == null || !id.equals(uid)) {
+    	    
+        // 로그인 안 된 사용자        
+        %>
+        <script type="text/javascript">
+        
+			//history.back();
+			location.href="<%=root%>/component/error/notFound.jsp"
+        </script>
+        <%
+    }
+%>
 <head>
 <meta charset="UTF-8">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -81,7 +106,9 @@ $(function () {
 		    
 		    if (showTime <= now) {
 		      $(this).find("i.bi-x-circle").hide();
-		      /* $(".starttd").text('취소불가').show(); */
+		      $(this).find(".goreview").show();
+		    }else{
+		    	$(this).find(".goreview").hide();
 		    }
 		    
 		    
@@ -100,7 +127,7 @@ $(function () {
 
     .booklist-wrapper {
       display: flex;
-      max-width: 1160px;
+      max-width: 1380px;
       margin: 100px auto 50px auto;
       padding: 20px;
       gap: 30px;
@@ -130,7 +157,7 @@ $(function () {
       /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); */
       width: 200px;
       background-color: whitesmoke;
-      margin-left: 700px;
+      margin-left: 920px;
     }
 
     .booklist-section h4 {
@@ -141,18 +168,15 @@ $(function () {
   	.booklist-list {
   	  border-bottom: 1px solid lightgray;
       text-align: center;         
-      height: 80px;
       display: flex;              
       justify-content: center;    
       align-items: center;         
-      height: 100px;
-      margin-top: 150px;
+      
 }
   
   </style>
   <%
-	String userid=(String)session.getAttribute("userid");
-	UserDAO dao=UserDAO.getInstance();
+	
 	
 	/* System.out.println("userid="+userid); */
   	
@@ -195,9 +219,10 @@ $(function () {
       			<th style="background-color: whitesmoke">인원수</th>
       			<th style="background-color: whitesmoke">결제금액</th>
       			<th style="background-color: whitesmoke">예매취소</th>
+      			<th style="background-color: whitesmoke">리뷰</th>
       		</tr>
       			<tr>
-      			<td id="reservedinfo" colspan="7"></td>
+      			<td id="reservedinfo" colspan="8"></td>
       			</tr>
  				
  				
@@ -205,6 +230,10 @@ $(function () {
       			for(int i=0;i<list.size();i++)
       			{
       				HashMap<String,String> map=list.get(i);
+      				String movietitle=map.get("title");
+      				
+      				MovieDAO mdao=MovieDAO.getInstance();
+ 				   MovieDTO mdto=mdao.getMovieBytitle(movietitle);
       				
       				String seatInfo = map.get("seat_id");
       	
@@ -237,6 +266,8 @@ $(function () {
       				<td><%=nf.format(price*seat)%></td>
       				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
+      				<td><a class="goreview" href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>"><img src="resources/review.jpg" style="width: 28px; height: 28px;
+      				margin-left: 12px;"></a></td>
       			</tr>
       			
       			<%}%>

@@ -16,7 +16,7 @@ request.setCharacterEncoding("UTF-8");
 		
 		<script type="text/javascript">
 			alert("탈퇴되었습니다.");
-			location.href='../../index.jsp';
+			location.href='../login/logoutAction.jsp';
 		</script>	
 	<%}else{%>
 		<script type="text/javascript">

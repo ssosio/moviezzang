@@ -7,6 +7,30 @@
     <%@ include file="../../component/menu/headerResources.jsp" %>
 <!DOCTYPE html>
 <html>
+
+<%
+	String root=request.getContextPath();
+
+	String id=request.getParameter("id");
+	String userid=(String)session.getAttribute("userid");
+    // 로그인 체크
+   // 로그인한 사용자의 시퀀스 번호
+    UserDAO dao=UserDAO.getInstance();
+    String uid=dao.getId(userid);
+     // 주소창에서 전달된 id
+
+    if (userid == null || id == null || !id.equals(uid)) {
+    	    
+        // 로그인 안 된 사용자        
+        %>
+        <script type="text/javascript">
+        
+			//history.back();
+			location.href="<%=root%>/component/error/notFound.jsp"
+        </script>
+        <%
+    }
+%>
 <head>
   <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -69,10 +93,9 @@
   </style>
 </head>
 <%
-String id=request.getParameter("id");
-String userid=(String)session.getAttribute("userid");
 
-UserDAO dao=UserDAO.getInstance();
+
+
 UserDTO dto=dao.getData(id);
 
 List<HashMap<String, String>> list=dao.getReserveList(userid);
