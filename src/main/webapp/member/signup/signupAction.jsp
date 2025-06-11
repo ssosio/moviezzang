@@ -25,7 +25,7 @@
 	String name=request.getParameter("name");
 	String gender=request.getParameter("gender");
 	String phone=request.getParameter("hp1")+"-"+request.getParameter("hp2")+"-"+request.getParameter("hp3");
-	String address=request.getParameter("zipCode")+request.getParameter("streetAdr")+request.getParameter("detailAdr");
+	String address=request.getParameter("zipCode") + "/" + request.getParameter("streetAdr") + "/" +  request.getParameter("detailAdr");
 	String email=request.getParameter("email1")+"@"+request.getParameter("email2");
 	
 	 String birth = request.getParameter("birth");

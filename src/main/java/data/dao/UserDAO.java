@@ -460,7 +460,7 @@ public class UserDAO {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		
-		String sql="select * from user order by userid";
+		String sql="select * from user order by id";
 		
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -593,23 +593,26 @@ public class UserDAO {
 	//무비스토리 리스트
 	public List<HashMap<String, String>> getStoryList(String userid)
 	{
-		String sql="SELECT DISTINCT "
-				+ "    re.id, "
-				+ "    re.created_at, "
-				+ "    re.content, "
-				+ "    re.rating, "
-				+ "    m.title, "
-				+ "    m.poster_url, "
-				+ "    m.score, "
-				+ "    s.start_time "
-				+ "FROM "
-				+ "    review re "
-				+ "JOIN movie m ON re.movie_id = m.id "
-				+ "JOIN user u ON re.user_id = u.id "
-				+ "JOIN screening s ON s.movie_id = m.id "
-				+ "JOIN reservation r ON r.screening_id = s.id AND r.user_id = u.id "
-				+ "WHERE u.userid=? "
-				+ "ORDER BY re.created_at DESC ";
+		//String sql="SELECT DISTINCT "
+		//		+ "    re.id, "
+		//		+ "    re.created_at, "
+		//		+ "    re.content, "
+		//		+ "    re.rating, "
+		//		+ "    m.title, "
+		//		+ "    m.poster_url, "
+		//		+ "    m.score, "
+		//		+ "    s.start_time "
+		//		+ "FROM "
+		//		+ "    review re "
+		//		+ "JOIN movie m ON re.movie_id = m.id "
+		//		+ "JOIN user u ON re.user_id = u.id "
+		//		+ "JOIN screening s ON s.movie_id = m.id "
+		//		+ "JOIN reservation r ON r.screening_id = s.id AND r.user_id = u.id "
+		//		+ "WHERE u.userid=? "
+		//		+ "ORDER BY re.created_at DESC ";
+		
+		String sql = "SELECT re.id, re.created_at, re.content, re.rating, m.title, m.poster_url, m.score, (SELECT s.start_time FROM screening s JOIN reservation r ON r.screening_id = s.id WHERE s.movie_id = m.id AND r.user_id = u.id ORDER BY s.start_time DESC LIMIT 1) as start_time FROM review re JOIN movie m ON re.movie_id = m.id JOIN user u ON re.user_id = u.id WHERE u.userid=? ORDER BY re.created_at DESC";
+
 		List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();		
 		
 		Connection conn=db.getConnection();
