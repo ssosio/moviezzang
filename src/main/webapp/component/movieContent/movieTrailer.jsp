@@ -71,7 +71,8 @@ MovieDTO dto = dao.getMovieById("1");
 						onclick="location.href='?main=movie/movieDetail.jsp?id=<%=dto.getId()%>&name=<%=dto.getTitle()%>'">
 						상세정보</button>
 					<button
-						class="bg-white text-primary px-6 py-3 !rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors">
+						class="bg-white text-primary px-6 py-3 !rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors"
+						onclick="location.href='?main=book/booking/bookMain.jsp?movie_id=<%=dto.getId()%>'">
 						예매하기</button>
 				</div>
 			</div>
