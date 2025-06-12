@@ -69,10 +69,25 @@ $(function () {
 	    select.appendChild(option);
 	  };
 	  
+		// 초기 상태에서 예매내역이 없으면 메시지 보여주기
+	  if ($("#reserveTable tr[data-reserved]").length === 0) {
+	    $("#reservedinfo").text('예매한 영화가 없습니다.').show();
+	  } else {
+	    $("#reservedinfo").hide();
+	  }
+
+	  // 초기 상태에서 취소내역이 없으면 메시지 보여주기
+	  if ($("#canceltable tr[data-reserved]").length === 0) {
+	    $("#cancelinfo").text('취소한 영화가 없습니다.').show();
+	  } else {
+	    $("#cancelinfo").hide();
+	  }
+	  
 	  // 필터링 이벤트
 	  $("#monthSelect").on("change", function () {
 	    const selectedMonth = $(this).val(); // "YYYY-MM"
 	    let visibleCount = 0;
+	    let visibleCount2 = 0;
 	    
 	    $("#reserveTable tr[data-reserved]").each(function () {
 	      const reservedDate = $(this).data("reserved");
@@ -91,6 +106,24 @@ $(function () {
 	      } else {
 	        $("#reservedinfo").hide();
 	      }
+	    
+	    $("#canceltable tr[data-reserved]").each(function () {
+		      const reservedDate = $(this).data("reserved");
+		      if (selectedMonth === "all" || reservedDate === selectedMonth) {
+		        $(this).show();
+		        visibleCount2++;
+		      } else {
+		        $(this).hide();
+		      	
+		      };
+
+		    });
+		    
+		    if (visibleCount2 === 0) {
+		        $("#cancelinfo").text('취소한 영화가 없습니다.').show();
+		      } else {
+		        $("#cancelinfo").hide();
+		      }
 	  });
 	  
 	  
@@ -166,7 +199,7 @@ $(function () {
     }
 
   	.booklist-list {
-  	  border-bottom: 1px solid lightgray;
+  	  border-bottom: 0px solid lightgray;
       text-align: center;         
       display: flex;              
       justify-content: center;    
@@ -293,7 +326,9 @@ $(function () {
       			<th style="background-color: whitesmoke">인원수</th>
       			<th style="background-color: whitesmoke">취소금액</th>
       	     </tr>
-      	     
+      	     <tr>
+      			<td id="cancelinfo" colspan="8"></td>
+      			</tr>
       	     <%
       			for(int i=0;i<clist.size();i++)
       			{
@@ -320,7 +355,7 @@ $(function () {
       				
       			%>
       			
-      			<tr >
+      			<tr data-reserved="<%=map.get("reserved_at").substring(0,7)%>">
       				<td><%=map.get("reserved_at") %></td>
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
