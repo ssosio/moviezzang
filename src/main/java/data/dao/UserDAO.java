@@ -179,7 +179,8 @@ public class UserDAO {
 				+ "    m.title, "
 				+ "    t.name, "
 				+ "    s.start_time, "
-				+ "    s.price, "
+				+ "    res.lastpay, "
+				+ "    res.reserved_count, "
 				+ "    GROUP_CONCAT(sr.seat_id ORDER BY sr.seat_id) AS seat_id "
 				+ "FROM reservation res "
 				+ "JOIN screening s ON res.screening_id = s.id "
@@ -211,7 +212,8 @@ public class UserDAO {
 				map.put("title", rs.getString("title"));
 				map.put("name", rs.getString("name"));
 				map.put("start_time", rs.getString("start_time"));
-				map.put("price", rs.getString("price"));
+				map.put("lastpay", rs.getString("lastpay"));
+				map.put("reserved_count", rs.getString("reserved_count"));
 				map.put("seat_id", rs.getString("seat_id"));
 				
 				list.add(map);
@@ -236,7 +238,8 @@ public class UserDAO {
 					+ "    m.title, "
 					+ "    t.name, "
 					+ "    s.start_time, "
-					+ "    s.price, "
+					+ "    res.lastpay, "
+					+ "    res.reserved_count, "
 					+ "    GROUP_CONCAT(sr.seat_id ORDER BY sr.seat_id) AS seat_id "
 					+ "FROM reservation res "
 					+ "JOIN screening s ON res.screening_id = s.id "
@@ -268,7 +271,8 @@ public class UserDAO {
 					map.put("title", rs.getString("title"));
 					map.put("name", rs.getString("name"));
 					map.put("start_time", rs.getString("start_time"));
-					map.put("price", rs.getString("price"));
+					map.put("lastpay", rs.getString("lastpay"));
+					map.put("reserved_count", rs.getString("reserved_count"));
 					map.put("seat_id", rs.getString("seat_id"));
 					
 					list.add(map);

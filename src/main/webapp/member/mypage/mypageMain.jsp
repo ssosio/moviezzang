@@ -132,7 +132,7 @@ int storysize=slist.size();
         HashMap<String,String> map=list.get(i);
         String seatInfo = map.get("seat_id");
         int seat = (seatInfo == null || seatInfo.isEmpty()) ? 0 : seatInfo.split(",").length;
-        int price = Integer.parseInt(map.get("price"));
+        int price = Integer.parseInt(map.get("lastpay"));
         totalMileage += (int)((seat * price) * 0.1);
     }
     %>
@@ -146,7 +146,7 @@ int storysize=slist.size();
     <div class="mypage-section">
       <h4 class="text-2xl font-bold" style="color: #000080">영화 예매 내역</h4>
       <div class="mypage-box">
-        <p>영화관람권: <%=size %>매</p>
+        <p>총 예매내역: <%=size %>편</p>
       </div>
     </div>
 

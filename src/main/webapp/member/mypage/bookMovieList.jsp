@@ -235,11 +235,10 @@ $(function () {
       				MovieDAO mdao=MovieDAO.getInstance();
  				   MovieDTO mdto=mdao.getMovieBytitle(movietitle);
       				
-      				String seatInfo = map.get("seat_id");
-      	
-      				int seat = (map.get("seat_id") == null || map.get("seat_id").isEmpty()) ? 0 : map.get("seat_id").split(",").length;
-  
-      				int price=Integer.parseInt(map.get("price"));
+      				
+      				int price = (map.get("lastpay") != null && !map.get("lastpay").trim().isEmpty())
+      					    ? Integer.parseInt(map.get("lastpay"))
+      					    : 0;
       				
       				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -262,8 +261,8 @@ $(function () {
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
       				<td><%=formattedTime%></td>
-      				<td><%=seat %></td>
-      				<td><%=nf.format(price*seat)%></td>
+      				<td><%=map.get("reserved_count")%></td>
+      				<td><%=nf.format(price)%></td>
       				<td><a class="goreview" href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>#reviewSection"><img src="resources/review.jpg" style="width: 28px; height: 28px;
       				margin-left: 27px;"></a></td>
       				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
@@ -284,7 +283,7 @@ $(function () {
      <h2 class="text-2xl font-bold" style="color: #000080">예매취소내역</h2>
     </div>
     <br>
-    	<div class="booklist-list2">
+    	<div class="booklist-list2" style="text-align: center;">
       		<table class="table" id="canceltable">
       		  <tr>
       			<th style="background-color: whitesmoke">취소일시</th>
@@ -294,14 +293,17 @@ $(function () {
       			<th style="background-color: whitesmoke">인원수</th>
       			<th style="background-color: whitesmoke">취소금액</th>
       	     </tr>
+      	     
       	     <%
       			for(int i=0;i<clist.size();i++)
       			{
       				HashMap<String,String> map=clist.get(i);
       				
       				
-      				int seat = (map.get("seat_id") == null || map.get("seat_id").isEmpty()) ? 0 : map.get("seat_id").split(",").length;
-      				int price=Integer.parseInt(map.get("price"));
+      				
+      				int price = (map.get("lastpay") != null && !map.get("lastpay").trim().isEmpty())
+      					    ? Integer.parseInt(map.get("lastpay"))
+      					    : 0;
       				
       				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -323,8 +325,8 @@ $(function () {
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
       				<td><%=formattedTime %></td>
-      				<td><%=seat %></td>
-      				<td><%=nf.format(price*seat)%></td>
+      				<td><%=map.get("reserved_count") %></td>
+      				<td><%=nf.format(price)%></td>
       				
       			</tr>
       			
