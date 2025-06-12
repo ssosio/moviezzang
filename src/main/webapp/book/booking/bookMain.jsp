@@ -148,7 +148,7 @@ div.bookcontainer{
   width: 100%;
   padding: 5px 10px;
   box-sizing: border-box;
-  border-bottom: 1px solid #ddd;
+  border-bottom	: 1px solid #ddd;
 }
 
 .bookcontainer .timebox span {
@@ -250,39 +250,63 @@ $(function () {
   // ✅ 영화 클릭 처리 함수
   function handleMovieClick(movie_id) {
     currentMovie_id = movie_id;
+
+    const regions = [
+        "서울", "경기", "인천", "대전/충청/세종",
+        "부산/대구/경산", "광주/전라", "강원", "제주"
+      ];
+
+    // (1) 항상 지역 버튼 초기화
+	  $("button.btnlocal").each(function(idx){
+	    $(this).text(regions[idx]);
+	    $(this).prop("disabled", true);
+	  });
+	  $("#theater").empty();
+	  $(".showtimes").empty();
+
+
     $.ajax({
       type: "get",
       url: "<%=request.getContextPath()%>/book/booking/bookList.jsp",
       dataType: "json",
-      data: { movie_id: currentMovie_id },
+      data: { movie_id: currentMovie_id,
+    	  	  screening_date: selectedDate
+      },
       success: function (res) {
-        $("button.btnlocal").each(function () {
-          let originalText = $(this).text().split("(")[0].trim();
-          $(this).text(originalText);
+    	  const map = {};
+          res.forEach(item => map[item.region.trim()] = item.theater_count);
+			console.log("요청보낼때:",currentMovie_id, "sdate:",selectedDate);
+
+        $("button.btnlocal").each(function (idx) {
+            const region = regions[idx].trim();
+            const count = map[region] || 0;
+
+            $(this).text(region + (count > 0 ? `(${count})` : ""));
+            $(this).prop("disabled", count === 0);
+
+//           let originalText = $(this).text().split("(")[0].trim();
+//           $(this).text(originalText);
+
+//             if (!$(this).text().includes("(")) {
+//               $(this).prop("disabled", true);
+//             } else {
+//               $(this).prop("disabled", false);
+//             }
 
         });
 
-        $.each(res, function (i, item) {
-          $("button.btnlocal").each(function () {
-            let regionName = $(this).text().trim();
-            if (regionName == item.region) {
-              $(this).text(item.region + "(" + item.theater_count + ")");
-            }
+//         $.each(res, function (i, item) {
+//           $("button.btnlocal").each(function () {
+//             let regionName = $(this).text().trim();
+//             if (regionName == item.region) {
+//               $(this).text(item.region + "(" + item.theater_count + ")");
+//             }
 
-          });
-        });
-
-        $("button.btnlocal").each(function () {
-            if (!$(this).text().includes("(")) {
-              $(this).prop("disabled", true);
-            } else {
-              $(this).prop("disabled", false);
-            }
-          });
+//           });
+//         });
       }
     });
   }
-
   // ✅ 초기 진입 시 movie_id가 있을 경우 처리
   <% if (mov_id != null) { %>
     currentMovie_id = "<%=mov_id%>";
@@ -382,7 +406,14 @@ $(function () {
   $(document).on("click", ".btn-date", function () {
     selectedDate = $(this).data("date");
     $(".btn-date").removeClass("btn-active");
+    $(".btnlocal").removeClass("btn-active");
+    $(".btntheater").removeClass("btn-active");
+    $(".timebox").hide();
     $(this).addClass("btn-active");
+
+    if (currentMovie_id) {
+        handleMovieClick(currentMovie_id);   // ★ 추가!
+      }
     tryAutoLoadShowTimes();
   });
 
@@ -446,7 +477,6 @@ $(function () {
   generateDateButtons();
 });
 </script>
-
 </head>
 <%
 MovieDAO dao = MovieDAO.getInstance();

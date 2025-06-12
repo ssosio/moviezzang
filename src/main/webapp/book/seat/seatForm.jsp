@@ -73,6 +73,7 @@
 	.seatcount > div {
 		display: flex;
 		align-items: center;
+		margin-left: 70px;
 	}
 	.seatcount span:first-child {
 		margin-right: 10px;
@@ -113,9 +114,11 @@
 		margin-left: 50px;
 	}
 	.screen {
-		background: #ddd;
+		background: #352461;
 		text-align: center;
 		margin-top: 5px;
+		color: white;
+
 	}
 	.seat {
 		border-top: none;
