@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import data.dto.ReservationDTO;
 import data.dto.UserDTO;
 import mysql.db.DBConnect;
 
@@ -178,7 +179,8 @@ public class UserDAO {
 				+ "    m.title, "
 				+ "    t.name, "
 				+ "    s.start_time, "
-				+ "    s.price, "
+				+ "    res.lastpay, "
+				+ "    res.reserved_count, "
 				+ "    GROUP_CONCAT(sr.seat_id ORDER BY sr.seat_id) AS seat_id "
 				+ "FROM reservation res "
 				+ "JOIN screening s ON res.screening_id = s.id "
@@ -210,7 +212,8 @@ public class UserDAO {
 				map.put("title", rs.getString("title"));
 				map.put("name", rs.getString("name"));
 				map.put("start_time", rs.getString("start_time"));
-				map.put("price", rs.getString("price"));
+				map.put("lastpay", rs.getString("lastpay"));
+				map.put("reserved_count", rs.getString("reserved_count"));
 				map.put("seat_id", rs.getString("seat_id"));
 				
 				list.add(map);
@@ -235,7 +238,8 @@ public class UserDAO {
 					+ "    m.title, "
 					+ "    t.name, "
 					+ "    s.start_time, "
-					+ "    s.price, "
+					+ "    res.lastpay, "
+					+ "    res.reserved_count, "
 					+ "    GROUP_CONCAT(sr.seat_id ORDER BY sr.seat_id) AS seat_id "
 					+ "FROM reservation res "
 					+ "JOIN screening s ON res.screening_id = s.id "
@@ -267,7 +271,8 @@ public class UserDAO {
 					map.put("title", rs.getString("title"));
 					map.put("name", rs.getString("name"));
 					map.put("start_time", rs.getString("start_time"));
-					map.put("price", rs.getString("price"));
+					map.put("lastpay", rs.getString("lastpay"));
+					map.put("reserved_count", rs.getString("reserved_count"));
 					map.put("seat_id", rs.getString("seat_id"));
 					
 					list.add(map);
@@ -685,6 +690,27 @@ public class UserDAO {
 		return usertype;
 	}
 	
-	
+	//예매좌석 삭제
+	public void deleteSeatReserve(String reservation_id)
+	{
+		Connection conn=db.getConnection();
+		PreparedStatement pstmt=null;
+		
+		String sql="delete from seat_reserved where reservation_id=?";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, reservation_id);
+			
+			pstmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			db.dbClose(pstmt, conn);
+		}
+		
+	}
 	
 }

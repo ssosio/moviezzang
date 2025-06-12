@@ -6,6 +6,29 @@
     <%@ include file="../../component/menu/headerResources.jsp" %>
 <!DOCTYPE html>
 <html>
+<%
+	String root=request.getContextPath();
+
+	String id=request.getParameter("id");
+	String userid=(String)session.getAttribute("userid");
+    // 로그인 체크
+   // 로그인한 사용자의 시퀀스 번호
+    UserDAO dao=UserDAO.getInstance();
+    String uid=dao.getId(userid);
+     // 주소창에서 전달된 id
+
+    if (userid == null || id == null || !id.equals(uid)) {
+    	    
+        // 로그인 안 된 사용자        
+        %>
+        <script type="text/javascript">
+        
+			//history.back();
+			location.href="<%=root%>/component/error/notFound.jsp"
+        </script>
+        <%
+    }
+%>
 <head>
   <meta charset="UTF-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -50,6 +73,22 @@
 	        }
 	    });
 		
+	    //눈아이콘 누르면 비밀번호 타입 변경
+	    $("#passeye").click(function () {
+	        let pw1 = $("#password");
+	        let pw2 = $("#password2");
+
+	        
+	        if (pw1.attr("type") === "password") {
+	            pw1.attr("type", "text");
+	            pw2.attr("type", "text");
+	            $(this).removeClass("bi-eye").addClass("bi-eye-slash");
+	        } else {
+	            pw1.attr("type", "password");
+	            pw2.attr("type", "password");
+	            $(this).removeClass("bi-eye-slash").addClass("bi-eye");
+	        }
+	    });
 	});
   	
   	//유효성 체크
@@ -158,9 +197,7 @@ p{
   </style>
 </head>
 <%
-	String id=request.getParameter("id");
 
-	UserDAO dao=UserDAO.getInstance();
 	UserDTO dto=dao.getData(id);
 	
 	//이메일
@@ -169,13 +206,24 @@ p{
 	String email2=st.nextToken();
 	
 	//주소
-	String fullAddr = dto.getAddress();
-	String zipCode = "";
-	
+	  String fullAddr = dto.getAddress();
+   	  String zipCode = "";
+      String streetAdr = "";
+      String detailAdr = "";
 
-	if (fullAddr != null && fullAddr.length() > 5) {
-    zipCode = fullAddr.substring(0, 5);   
-	}
+    if (fullAddr != null && fullAddr.contains("/")) {
+        String[] addrArr = fullAddr.split("/", -1); //공백도 배열포함
+
+        if (addrArr.length >= 2) {
+            zipCode = addrArr[0];
+            streetAdr = addrArr[1];
+            
+            // detailAdr가 비어있을 수 있으므로 길이 체크
+            detailAdr = (addrArr.length >= 3) ? addrArr[2] : "";
+        }
+    }
+	
+	
 	
 	//핸드폰
 	String h1 = "";
@@ -228,15 +276,18 @@ p{
         	<tr>
         	<th style="background-color: whitesmoke;">비밀번호<label style="color: red;">*</label></th>
         	<td>
-        		<input type="text" class="form-control"  name="password" id="password" style="width: 150px;" value="<%=dto.getPassword() %>"
-        		required="required" placeholder="변경 할 비밀번호">
+        		<div class="d-flex align-items-center">
+  				<input type="password" class="form-control" name="password" id="password"
+         		value="<%=dto.getPassword() %>" required="required" placeholder="변경 할 비밀번호" style="width: 150px;">
+  				<i class="bi bi-eye ms-2" id="passeye" style="cursor: pointer;"></i>
+				</div>
         		<input type="password" name="password2" id="password2" class="form-control" style="width: 150px;" required="required" placeholder="비밀번호 확인">
         	</td>
         	</tr>
         	<tr>
         	<th style="background-color: whitesmoke;">생년월일<label style="color: red;">*</label></th>
         	<td>
-        		<input type="date" class="form-control" style="width: 150px;" name="birth" id="birth" value="<%=dto.getBirth()%>">
+        		<input type="date" class="form-control" style="width: 150px;" name="birth" id="birth" value="<%=dto.getBirth()%>" required="required">
         	</td>
         	</tr>
         	<tr>
@@ -249,11 +300,11 @@ p{
 					</select>
 					<a><i class="bi bi-dash-lg dash"></i></a>
         		<input type="text" class="form-control"  name="hp2" style="width: 30px;" onkeyup="goFocus(this)"
-        		value="<%=h2%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}">
+        		value="<%=h2%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}" required="required">
         		<span id="hpMsg" style="color:red; font-size:12px;"></span>
         			<i class="bi bi-dash-lg dash" style="color: black;"></i>
         		<input type="text" class="form-control"  name="hp3" style="width: 30px;"
-        		value="<%=h3%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}">
+        		value="<%=h3%>"  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0, 4)" pattern="\d{4}" required="required">
         	</td>
         	</tr>
         	<tr>
@@ -281,8 +332,8 @@ p{
         		<div class="col-sm-6 mb-3 mb-sm-0">
     		<input type="text" class="form-control form-control-user" id="zipCode" name="zipCode" placeholder="우편번호" readonly onclick="sample4_execDaumPostcode()"
     		value="<%=zipCode %>" style="width: 90px;">
-    		<input type="text" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly>
-    		<input type="text" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()">
+    		<input type="text" id="streetAdr" name="streetAdr" placeholder="도로명 주소" readonly value="<%=streetAdr%>" style="width: 400px; margin-top: 10px;">
+    		<input type="text" id="detailAdr" name="detailAdr" placeholder="상세 주소" onclick="addrCheck()" value="<%=detailAdr%>" style="margin-top: 10px;">
     			</div>
         	</td>
         	</tr>

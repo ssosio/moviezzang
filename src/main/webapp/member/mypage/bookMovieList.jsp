@@ -69,10 +69,25 @@ $(function () {
 	    select.appendChild(option);
 	  };
 	  
+		// 초기 상태에서 예매내역이 없으면 메시지 보여주기
+	  if ($("#reserveTable tr[data-reserved]").length === 0) {
+	    $("#reservedinfo").text('예매한 영화가 없습니다.').show();
+	  } else {
+	    $("#reservedinfo").hide();
+	  }
+
+	  // 초기 상태에서 취소내역이 없으면 메시지 보여주기
+	  if ($("#canceltable tr[data-reserved]").length === 0) {
+	    $("#cancelinfo").text('취소한 영화가 없습니다.').show();
+	  } else {
+	    $("#cancelinfo").hide();
+	  }
+	  
 	  // 필터링 이벤트
 	  $("#monthSelect").on("change", function () {
 	    const selectedMonth = $(this).val(); // "YYYY-MM"
 	    let visibleCount = 0;
+	    let visibleCount2 = 0;
 	    
 	    $("#reserveTable tr[data-reserved]").each(function () {
 	      const reservedDate = $(this).data("reserved");
@@ -91,6 +106,24 @@ $(function () {
 	      } else {
 	        $("#reservedinfo").hide();
 	      }
+	    
+	    $("#canceltable tr[data-reserved]").each(function () {
+		      const reservedDate = $(this).data("reserved");
+		      if (selectedMonth === "all" || reservedDate === selectedMonth) {
+		        $(this).show();
+		        visibleCount2++;
+		      } else {
+		        $(this).hide();
+		      	
+		      };
+
+		    });
+		    
+		    if (visibleCount2 === 0) {
+		        $("#cancelinfo").text('취소한 영화가 없습니다.').show();
+		      } else {
+		        $("#cancelinfo").hide();
+		      }
 	  });
 	  
 	  
@@ -166,12 +199,12 @@ $(function () {
     }
 
   	.booklist-list {
-  	  border-bottom: 1px solid lightgray;
+  	  border-bottom: 0px solid lightgray;
       text-align: center;         
       display: flex;              
       justify-content: center;    
       align-items: center;         
-      
+      margin-top: 15px;
 }
   
   </style>
@@ -218,8 +251,8 @@ $(function () {
       			<th style="background-color: whitesmoke">상영일시</th>
       			<th style="background-color: whitesmoke">인원수</th>
       			<th style="background-color: whitesmoke">결제금액</th>
+      			<th style="background-color: whitesmoke">리뷰작성</th>
       			<th style="background-color: whitesmoke">예매취소</th>
-      			<th style="background-color: whitesmoke">리뷰</th>
       		</tr>
       			<tr>
       			<td id="reservedinfo" colspan="8"></td>
@@ -235,11 +268,10 @@ $(function () {
       				MovieDAO mdao=MovieDAO.getInstance();
  				   MovieDTO mdto=mdao.getMovieBytitle(movietitle);
       				
-      				String seatInfo = map.get("seat_id");
-      	
-      				int seat = (map.get("seat_id") == null || map.get("seat_id").isEmpty()) ? 0 : map.get("seat_id").split(",").length;
-  
-      				int price=Integer.parseInt(map.get("price"));
+      				
+      				int price = (map.get("lastpay") != null && !map.get("lastpay").trim().isEmpty())
+      					    ? Integer.parseInt(map.get("lastpay"))
+      					    : 0;
       				
       				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -262,12 +294,12 @@ $(function () {
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
       				<td><%=formattedTime%></td>
-      				<td><%=seat %></td>
-      				<td><%=nf.format(price*seat)%></td>
+      				<td><%=map.get("reserved_count")%></td>
+      				<td><%=nf.format(price)%></td>
+      				<td><a class="goreview" href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>#reviewSection"><img src="resources/review.jpg" style="width: 28px; height: 28px;
+      				margin-left: 27px;"></a></td>
       				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
-      				<td><a class="goreview" href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>"><img src="resources/review.jpg" style="width: 28px; height: 28px;
-      				margin-left: 12px;"></a></td>
       			</tr>
       			
       			<%}%>
@@ -284,7 +316,7 @@ $(function () {
      <h2 class="text-2xl font-bold" style="color: #000080">예매취소내역</h2>
     </div>
     <br>
-    	<div class="booklist-list2">
+    	<div class="booklist-list2" style="text-align: center;">
       		<table class="table" id="canceltable">
       		  <tr>
       			<th style="background-color: whitesmoke">취소일시</th>
@@ -294,14 +326,19 @@ $(function () {
       			<th style="background-color: whitesmoke">인원수</th>
       			<th style="background-color: whitesmoke">취소금액</th>
       	     </tr>
+      	     <tr>
+      			<td id="cancelinfo" colspan="8"></td>
+      			</tr>
       	     <%
       			for(int i=0;i<clist.size();i++)
       			{
       				HashMap<String,String> map=clist.get(i);
       				
       				
-      				int seat = (map.get("seat_id") == null || map.get("seat_id").isEmpty()) ? 0 : map.get("seat_id").split(",").length;
-      				int price=Integer.parseInt(map.get("price"));
+      				
+      				int price = (map.get("lastpay") != null && !map.get("lastpay").trim().isEmpty())
+      					    ? Integer.parseInt(map.get("lastpay"))
+      					    : 0;
       				
       				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -318,13 +355,13 @@ $(function () {
       				
       			%>
       			
-      			<tr >
+      			<tr data-reserved="<%=map.get("reserved_at").substring(0,7)%>">
       				<td><%=map.get("reserved_at") %></td>
       				<td><%=map.get("title") %></td>
       				<td><%=map.get("name") %></td>
       				<td><%=formattedTime %></td>
-      				<td><%=seat %></td>
-      				<td><%=nf.format(price*seat)%></td>
+      				<td><%=map.get("reserved_count") %></td>
+      				<td><%=nf.format(price)%></td>
       				
       			</tr>
       			
