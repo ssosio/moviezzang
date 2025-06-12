@@ -355,12 +355,15 @@ $(function () {
     $.ajax({
       type: "get",
       dataType: "json",
-      data: { movie_id: currentMovie_id, region: region },
+      data: { movie_id: currentMovie_id, region: region,
+    	  screening_date: selectedDate
+      },
       url: "<%=request.getContextPath()%>/book/booking/theaterList.jsp",
       success: function (res) {
         let h = "";
         $.each(res, function (i, item) {
-          h += "<li><button class='btntheater btn-basiclist'>" + item.theater_name + "</button></li>";
+			const disabled = (item.can_reserve === "1")? "" : "disabled";
+          h += `<li><button class='btntheater btn-basiclist' ${disabled}>${item.theater_name}</button></li>`;
         });
         $("#theater").html(h);
       },

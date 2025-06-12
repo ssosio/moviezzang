@@ -57,6 +57,7 @@
 		height: 750px;
 		margin-top: 1px;
 		border: 1px solid #ccc;
+		border-radius: 6px;
 	}
 	.subject {
 		display: flex;
