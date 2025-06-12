@@ -81,7 +81,7 @@ MovieDTO dto = dao.getMovieById("1");
 <% } else { %>
 <!-- 대체 UI (예: 예고편 없음 표시) -->
 	<div class="p-6 text-center text-gray-700 pt-[10rem]">
-		<h2 class="text-2xl font-bold mb-4"> 예고편을 불러오지 못했습니다 (유튜브 api 할당량초과가능성 )</h2>
+		<h2 class="text-2xl font-bold mb-4"> 예고편을 불러오지 못했습니다 (유튜브 api 할당량초과)</h2>
 		<p>현재 해당 영화의 트레일러를 확인할 수 없습니다.</p>
 	</div>
 <% } %>
