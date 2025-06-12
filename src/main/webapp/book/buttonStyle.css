@@ -19,9 +19,9 @@
 	background: #ccc;
 }
 .btn-active{
-	background: #352461;
-	color: white;
-	border: 1px solid #352461;
+	background: #352461 !important;
+	color: white !important;
+	border: 1px solid #352461 !important;
 }
 .btn-mov {
 	border: 1px #352461 solid;

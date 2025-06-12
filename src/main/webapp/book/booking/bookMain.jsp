@@ -222,12 +222,12 @@ div.seat-info{
    border-radius: 6px;
    padding: 2px 6px;
    display: inline-block;
-   font-size: 13px;
+/*    font-size: 13px; */
    text-align: center;
    box-sizing: border-box;
 }
 .remaining-seat{
-  color: #007BFF;
+  color: #352461;
   font-weight: bold;
 }
 .btn-date{
@@ -250,7 +250,6 @@ $(function () {
   // ✅ 영화 클릭 처리 함수
   function handleMovieClick(movie_id) {
     currentMovie_id = movie_id;
-
     $.ajax({
       type: "get",
       url: "<%=request.getContextPath()%>/book/booking/bookList.jsp",
@@ -260,6 +259,7 @@ $(function () {
         $("button.btnlocal").each(function () {
           let originalText = $(this).text().split("(")[0].trim();
           $(this).text(originalText);
+
         });
 
         $.each(res, function (i, item) {
@@ -268,8 +268,17 @@ $(function () {
             if (regionName == item.region) {
               $(this).text(item.region + "(" + item.theater_count + ")");
             }
+
           });
         });
+
+        $("button.btnlocal").each(function () {
+            if (!$(this).text().includes("(")) {
+              $(this).prop("disabled", true);
+            } else {
+              $(this).prop("disabled", false);
+            }
+          });
       }
     });
   }
@@ -303,24 +312,16 @@ $(function () {
     $(".btntheater").hide();
     $(this).addClass("btn-active");
 
-
-
-        for(int i=0; i<8;i++){
-			const $i = $(`.${i}`);
-			const $targetBtn = !$(this).text().includes("(");
-			if(i == $targetBtn){
-
-			}
-        }
-
-
     const movie_id = $(this).attr("movie_id");
     handleMovieClick(movie_id);
   });
 
-  // ✅ 지역 버튼 클릭 시
+  // 지역 버튼 클릭 시
   $(document).on("click", "button.btnlocal", function () {
-    if (!$(".movielist").hasClass("btn-active")) return;
+    if (!$(".movielist").hasClass("btn-active")){
+		alert("영화를 먼저 선택해주세요!");
+		return;
+    }
 
     $(".btnlocal").removeClass("btn-active");
     $(this).addClass("btn-active");
@@ -487,14 +488,14 @@ List<MovieDTO> list = dao.getAllDatas();
 				<div class="local">
 					<h4>&nbsp;&nbsp;&nbsp;극장</h4>
 					<ul id="locals">
-					<li><button class="btnlocal btn-basiclist" data-index="0">서울</button></li>
-						<li><button class="btnlocal btn-basiclist" data-index="1">경기</button></li>
-						<li><button class="btnlocal btn-basiclist" data-index="2">인천</button></li>
-						<li><button class="btnlocal btn-basiclist" data-index="3">대전/충청/세종</button></li>
-						<li><button class="btnlocal btn-basiclist" data-index="4">부산/대구/경산</button></li>
-						<li><button class="btnlocal btn-basiclist" data-index="5">광주/전라</button></li>
-						<li><button class="btnlocal btn-basiclist" data-index="6">강원</button></li>
-						<li><button class="btnlocal btn-basiclist" data-index="7">제주</button></li>
+					<li><button class="btnlocal btn-basiclist">서울</button></li>
+						<li><button class="btnlocal btn-basiclist">경기</button></li>
+						<li><button class="btnlocal btn-basiclist">인천</button></li>
+						<li><button class="btnlocal btn-basiclist">대전/충청/세종</button></li>
+						<li><button class="btnlocal btn-basiclist">부산/대구/경산</button></li>
+						<li><button class="btnlocal btn-basiclist">광주/전라</button></li>
+						<li><button class="btnlocal btn-basiclist">강원</button></li>
+						<li><button class="btnlocal btn-basiclist">제주</button></li>
 					</ul>
 				</div>
 <!-- 				<div class="vertical-line"></div> -->

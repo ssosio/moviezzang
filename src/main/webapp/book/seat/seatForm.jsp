@@ -27,6 +27,12 @@
 <link href="<%=request.getContextPath()%>/book/buttonStyle.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweet-modal/dist/min/jquery.sweet-modal.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/sweet-modal/dist/min/jquery.sweet-modal.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <title>Insert title here</title>
 <style type="text/css">
 	body {
@@ -282,56 +288,80 @@ $(function () {
 	//----------------------------
 	//	결제
 	//----------------------------
-	$(".btn-pay").on("click",function(){
-		var screeningId = "<%=screening_id%>";
-		var userNum = "<%=userNum%>";
-		const totalInwon = parseInt($(".adult-inwoncount").text())
-						  +parseInt($(".teenager-inwoncount").text());
-		const seatIds = $(".selseat.select").map(function(){
-			return $(this).attr("seat-id");
-		}).get();
+	$(".btn-pay").on("click", function() {
+    var screeningId = "<%=screening_id%>";
+    var userNum = "<%=userNum%>";
 
-		const pay = confirm("결제하시겠습니까?");
+    let lastPay = $(".last-pay").text().trim();
+    lastPay = lastPay.replaceAll(",", "").replaceAll("원","");
+
+    const totalInwon = parseInt($(".adult-inwoncount").text())
+        + parseInt($(".teenager-inwoncount").text());
+
+    const seatIds = $(".selseat.select").map(function(){
+        return $(this).attr("seat-id");
+    }).get();
+
+    if(seatIds.length == 0){
+        Swal.fire("좌석 선택", "좌석을 선택해주세요", "warning");
+        return;
+    }
+    if(seatIds.length < totalInwon ){
+        Swal.fire("좌석 부족", "좌석을 모두 선택해주세요", "warning");
+        return;
+    }
+	//sweetalert
+    Swal.fire({
+        title: "결제하시겠습니까?",
+        text: "예매가 완료되면 좌석 변경이 불가합니다.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#352461",
+        cancelButtonColor: "#bdbdbd",
+        confirmButtonText: "결제",
+        cancelButtonText: "취소",
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                type: "post",
+                url: "<%=request.getContextPath()%>/book/payment/payReservationAction.jsp",
+                data: {
+                    screeningId: screeningId,
+                    userNum: userNum,
+                    lastPay: lastPay,
+                    seatIds: seatIds.join(","),
+                    total: totalInwon
+                },
+                dataType: "json",
+                success: function(res) {
+                    if(res.result === "success") {
+                        Swal.fire({
+                            title: "예매 완료!",
+                            text: "결제가 정상적으로 처리되었습니다.",
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500,
+                            background: "#f0f7ff"
+                        }).then(function(){
+                            top.location.href = "<%=request.getContextPath()%>/";
+                        });
+                    } else {
+                        Swal.fire("실패", "예매 중 오류가 발생했습니다.", "error");
+                    }
+                },
+                error: function() {
+                    Swal.fire("오류", "서버와의 통신에 실패했습니다.", "error");
+                }
+            });
+        }
+    });
+});
 
 
-		//좌석선택 안하고 결제할 시
-		if(seatIds.length == 0){
-		alert("좌석을 선택해주세요");
-		return;
-		}
-		//선택한 좌석이 총 인원수보다 적을 시
-		if(seatIds.length < totalInwon ){
-		alert("좌석을 모두 선택해주세요");
-		return;
-		}
-
-		if(pay){
-
-			$.ajax({
-				type:"post",
-				url:"<%=request.getContextPath()%>/book/payment/payReservationAction.jsp",
-				data: {screeningId : screeningId,
-						userNum : userNum,
-						seatIds : seatIds.join(",")
-						},
-				dataType:"json",
-				success:function(){
-
-					alert("예매가 완료되었습니다!");
-					locatin.href='<%=request.getContextPath()%>/index.jsp?main=member/mypage/mypageMain.jsp'
-				}
-
-			})
-		}
-
-
-
-	  })
 	  // ---------------------------
 	  // Hover (좌석에 마우스 올릴 때)
 	  // ---------------------------
-	  $(".selseat")
-	    .on("mouseover", function () {
+	  $(".selseat").on("mouseover", function () {
 	      const $this = $(this);
 	      if ($this.prop("disabled")) return;
 
@@ -633,6 +663,15 @@ $(function () {
 		        	($9.hasClass("select") && $10.hasClass("select"))
 		        )) shouldLock = true;
 		      }
+
+		      //9번: 11,12번 선택시 잠김
+		      if(col === 9){
+		    	  const $11 = $(`.selseat[row='${row}'][col='11']`);
+			      const $12 = $(`.selseat[row='${row}'][col='12']`);
+
+			      if($11.hasClass("select") && $12.hasClass("select")) shouldLock = true;
+		      }
+
 		      // 10번: (9,10 선택시 11만 열림, 11,12 선택시 10만 열림)
 		      if (col === 10) {
 		        const $9 = $(`.selseat[row='${row}'][col='9']`);
@@ -855,7 +894,7 @@ $(function () {
 			<hr>
 			<div class="pay">
 			<span>최종결제금액</span>
-			<span></span>
+			<span class="last-pay"></span>
 			</div>
 			<div class="pay-btn" style="text-align: center; margin-top: 20px;">
 				<button class="btn-pay">결제하기</button>
