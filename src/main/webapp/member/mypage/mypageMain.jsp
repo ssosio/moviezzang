@@ -130,10 +130,8 @@ int storysize=slist.size();
     int totalMileage = 0;
     for(int i=0;i<list.size();i++) {
         HashMap<String,String> map=list.get(i);
-        String seatInfo = map.get("seat_id");
-        int seat = (seatInfo == null || seatInfo.isEmpty()) ? 0 : seatInfo.split(",").length;
         int price = Integer.parseInt(map.get("lastpay"));
-        totalMileage += (int)((seat * price) * 0.1);
+        totalMileage += (int)(price * 0.1);
     }
     %>
 
