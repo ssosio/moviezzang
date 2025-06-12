@@ -81,6 +81,15 @@
 
 <!-- 스크립트 처리 -->
 <script>
+	let now = new Date();
+	let pad = n => String(n).padStart(2, "0");
+	let minDateTime = now.getFullYear() + "-" +
+	                  pad(now.getMonth() + 1) + "-" +
+	                  pad(now.getDate()) + "T" +
+	                  pad(now.getHours()) + ":" +
+	                  pad(now.getMinutes());
+	$("#startTimeInput").attr("min", minDateTime);
+
 	$("#movieSelect").on("change", function(){
 		  let posterUrl = $(this).find("option:selected").data("poster");
 		  

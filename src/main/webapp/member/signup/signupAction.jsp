@@ -16,6 +16,7 @@
 <title>Insert title here</title>
 </head>
 <%
+	String root = request.getContextPath();
 	UserDAO dao=UserDAO.getInstance();
 
 	request.setCharacterEncoding("utf-8");
@@ -63,7 +64,18 @@
 	dto.setAge(age);
 	dao.insertMember(dto);
 	
-	response.sendRedirect("../../index.jsp");
+	
+	String adminChk = request.getParameter("adminChk");
+	System.out.println(adminChk);
+	
+	if(adminChk.equals("checked"))
+	{		
+		response.sendRedirect(root + "/index.jsp?main=indexAdmin.jsp");
+	}
+	else
+	{
+		response.sendRedirect(root + "/index.jsp?main=layout/main.jsp");
+	}
 	
 %>
 

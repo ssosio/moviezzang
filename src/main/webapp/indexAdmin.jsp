@@ -1,8 +1,23 @@
+<%@page import="data.dao.UserDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
+<%
+	// 관리자 체크
+	String userid = (String)session.getAttribute("userid");
+	UserDAO dao = UserDAO.getInstance();
+	
+	if(userid == null || !dao.getUserType(userid).equals("ADMIN"))
+	{
+%>
+		<script>
+			history.back();
+		</script>
+<%
+	}
+%>
 <meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300..800&family=Black+Han+Sans&family=Dongle&family=Jua&family=Nanum+Myeongjo&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -94,8 +109,7 @@
 	    <div class="sidebar d-flex flex-column p-0">
 	        <div class="flex-grow-1">
 	            <a class="nav-link active" href="#" onclick="loadContents('./admin/adminMember.jsp')">회원</a>
-	            <a class="nav-link" href="#">영화</a>
-	            <a class="nav-link" href="#">극장</a>
+	            <a class="nav-link" href="#" onclick="loadContents('./admin/adminTheater.jsp')">극장</a>
 	            <a class="nav-link" href="#" onclick="loadContents('./admin/adminScreening.jsp')">상영스케줄</a>
 	        </div>
 	    </div>
@@ -110,7 +124,6 @@
 	        <!-- 여기가 관리자 컨텐츠 -->
 	        <div class="main-content" id="main-content">
 	            <h2>관리자 대시보드</h2>
-	            <p>집가고싶다</p>
 	        </div>
 	    </div>
 	</div>
@@ -119,5 +132,10 @@
 	function loadContents(content) {
 		$("#main-content").load(content);
 	}
+	
+	$(".sidebar>div>a").on("click", function(){
+		$(".sidebar>div>a").removeClass("active");
+		$(this).addClass("active");
+	});
 </script>
 </html>

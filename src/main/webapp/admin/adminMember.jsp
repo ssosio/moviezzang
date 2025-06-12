@@ -142,7 +142,7 @@
 	            });
 	        }
 	    } else {
-	        // 만약 값이 다시 원래대로 돌아왔다면, 배열에서 제거
+	        // 만약 값이 다시 원래대로 돌아왔다면 배열에서 제거
 	        if(idx > -1) {
 	            changedCells.splice(idx, 1);
 	        }
@@ -153,7 +153,7 @@
 	
 	// 추가 버튼 클릭 시
 	$("#btnAdd").click(function(){
-		loadContents("<%=request.getContextPath()%>/member/signup/signupForm.jsp");
+		loadContents("<%=request.getContextPath()%>/member/signup/signupForm.jsp?adminChk='admin'");
 	});
 	
 	// 수정 버튼 클릭 시

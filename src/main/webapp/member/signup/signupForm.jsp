@@ -267,13 +267,25 @@ i.dash {
 <%
 	String root=request.getContextPath();
 
+	String signupButtonStr = "가입하기";
+	String adminChk = "";
+		
+	if (request.getParameter("adminChk") != null)
+	{
+		signupButtonStr = "추가하기";
+		adminChk = "checked";
+	}
+	else
+	{
+		adminChk = "none";
+	}
 %>
 </head>
 <body>
 
 <div class="wrap">
 
-<form action="<%=root %>/member/signup/signupAction.jsp" method="post" onsubmit="return check(this)" name="frm">
+<form action="<%=root %>/member/signup/signupAction.jsp?adminChk=<%=adminChk%>" method="post" onsubmit="return check(this)" name="frm">
 	
 	<div class="boxs">
 	<label for="id">아이디</label>
@@ -346,7 +358,7 @@ i.dash {
 		<span id="emailMsg" class="emailMsg"></span>
 	</div>
 	
-		<button type="submit" class="btn regis" id="register">가입하기</button>
+		<button type="submit" class="btn regis" id="register"><%=signupButtonStr%></button>
 		
 </form>
 </div>
