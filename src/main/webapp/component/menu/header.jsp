@@ -19,7 +19,6 @@ String usertype = (String) session.getAttribute("usertype");
 
 String id = dao.getId(sessionuserid);
 
-String root = request.getContextPath();
 String currentMain = request.getParameter("main");
 %>
 
@@ -77,12 +76,12 @@ String currentMain = request.getParameter("main");
 					%>
 
 					<a id="logout"
-						class="!text-yellow-300 hover:!text-primary !transition-colors !no-underline"
-						href="member/login/logoutAction.jsp"> 로그아웃</a> <a id="logout"
 						class="!text-white hover:!text-yellow-300 !transition-colors !no-underline"
+						href="member/login/logoutAction.jsp"> 로그아웃</a> <a id="logout"
+						class="!text-white hover:!text-yellow-300 !transition-colors !no-underline <%= ("indexAdmin.jsp?id=" + id).equals(currentMain) ? "!text-yellow-300" : "!text-white" %>"
 						href="?main=indexAdmin.jsp?id=<%=id%>"> 관리자페이지</a> <a
 						href="?main=member/mypage/mypageMain.jsp?id=<%=id%>"
-						class="!text-sm hover:!text-yellow-300 !transition-colors !text-white !no-underline">마이페이지</a>
+						class="!text-sm hover:!text-yellow-300 !transition-colors !text-white !no-underline <%= ("member/mypage/mypageMain.jsp?id=" + id).equals(currentMain) ? "!text-yellow-300" : "!text-white" %>">마이페이지</a>
 					<%
 					}
 
@@ -92,7 +91,7 @@ String currentMain = request.getParameter("main");
 						class="!text-white hover:!text-yellow-300 !transition-colors !no-underline"
 						href="member/login/logoutAction.jsp"> 로그아웃</a> <a
 						href="?main=member/mypage/mypageMain.jsp?id=<%=id%>"
-						class="!text-sm hover:!text-yellow-300 !transition-colors !text-white !no-underline">마이페이지</a>
+						class="!text-sm hover:!text-yellow-300 !transition-colors !text-white  !no-underline <%= ("member/mypage/mypageMain.jsp?id=" + id).equals(currentMain) ? "!text-yellow-300" : "!text-white" %>">마이페이지</a>
 					<%
 					}
 					else {
@@ -100,7 +99,7 @@ String currentMain = request.getParameter("main");
 					<a id="openLoginModal2"
 						class="!text-white hover:!text-yellow-300 !transition-colors !no-underline"
 						href="#"> 로그인</a> <a href="?main=member/signup/signupForm.jsp"
-						class="!text-sm hover:!text-yellow-300 !transition-colors !text-white !no-underline <%="member/signup/signupForm.jsp".equals(currentMain) ? "!text-yellow-300" : "!text-white"%>">회원가입</a>
+						class="hover:!text-yellow-300 !transition-colors !text-white !no-underline <%="member/signup/signupForm.jsp".equals(currentMain) ? "!text-yellow-300" : "!text-white"%>">회원가입</a>
 					<%
 					}
 					%>
