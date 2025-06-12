@@ -131,7 +131,7 @@ int storysize=slist.size();
     for(int i=0;i<list.size();i++) {
         HashMap<String,String> map=list.get(i);
         int price = Integer.parseInt(map.get("lastpay"));
-        totalMileage += (int)(price * 0.1);
+        totalMileage += (double)(price * 0.1);
     }
     %>
 
