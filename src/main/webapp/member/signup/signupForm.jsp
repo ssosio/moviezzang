@@ -11,25 +11,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
 <title>회원가입</title>
-
-<%
-	String root=request.getContextPath();
-	String loginok=(String)session.getAttribute("loginok");
-
-	//로그인 했을 경우 회원가입 페이지로 이동 못하게
-	if(loginok=="yes"){
-	          
-    %>
-    <script type="text/javascript">
-    
-		//history.back();
-		location.href="<%=root%>/index.jsp"
-    </script>
-    <%
-}
-		
-
-%>
 <script type="text/javascript">
 	$(function () {
 		
@@ -111,7 +92,7 @@
 			 frm.hp3.focus();
 	 }
 	 
-	
+	 
 	
 	function check(f) {
 			
@@ -283,13 +264,28 @@ i.dash {
 	top: 45px; 
 }
 </style>
+<%
+	String root=request.getContextPath();
 
+	String signupButtonStr = "가입하기";
+	String adminChk = "";
+		
+	if (request.getParameter("adminChk") != null)
+	{
+		signupButtonStr = "추가하기";
+		adminChk = "checked";
+	}
+	else
+	{
+		adminChk = "none";
+	}
+%>
 </head>
 <body>
 
 <div class="wrap">
 
-<form action="<%=root %>/member/signup/signupAction.jsp" method="post" onsubmit="return check(this)" name="frm">
+<form action="<%=root %>/member/signup/signupAction.jsp?adminChk=<%=adminChk%>" method="post" onsubmit="return check(this)" name="frm">
 	
 	<div class="boxs">
 	<label for="id">아이디</label>
@@ -362,7 +358,7 @@ i.dash {
 		<span id="emailMsg" class="emailMsg"></span>
 	</div>
 	
-		<button type="submit" class="btn regis" id="register">가입하기</button>
+		<button type="submit" class="btn regis" id="register"><%=signupButtonStr%></button>
 		
 </form>
 </div>
@@ -385,12 +381,6 @@ i.dash {
             $("#zipCode").focus();
         }
     }
-    
-    //생년월일 선택시 오늘날짜 이전으로만 가능
-    let today= new Date().toISOString().substring(0,10); //2025-06-11T06:56:23.356Z서 현재년도-월-일 부분만 today로
-    //console.log(today.toISOString());
-    //toISOString() -> 단순화한 확장 ISO 형식(ISO 8601)의 문자열을 반환, 예)2025-06-11T06:56:23.356Z
-	$("#birth").attr("max", today); //id가 birth인 input[type:date]의 속성 max에 현재날짜 넣기
 </script>
 
 </body>

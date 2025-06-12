@@ -20,6 +20,7 @@
 	    border-radius: 12px;
 	    padding: 0;
 	    margin-top: 24px;
+	    margin-bottom: 20px;
 	    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 	}
 	.nav-tabs .nav-link.active {
