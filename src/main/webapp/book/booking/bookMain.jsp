@@ -148,7 +148,7 @@ div.bookcontainer{
   width: 100%;
   padding: 5px 10px;
   box-sizing: border-box;
-  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 .bookcontainer .timebox span {
@@ -227,7 +227,7 @@ div.seat-info{
    box-sizing: border-box;
 }
 .remaining-seat{
-  color: #352461;
+  color: #480be6;
   font-weight: bold;
 }
 .btn-date{
