@@ -421,7 +421,7 @@ input:checked+.switch-slider:before {
 		<div class="border-t border-gray-200">
 			<div class="p-8">
 				<div class="flex justify-between items-center mb-6">
-					<h2 class="text-2xl font-bold">평점 및 관람평</h2>
+					<h2 class="text-2xl font-bold" id="reviewSection">평점 및 관람평</h2>
 					<%
 					if (userid == null || userid.trim().equals("")) {
 					%>

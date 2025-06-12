@@ -73,6 +73,7 @@
 	        }
 	    });
 		
+	    //눈아이콘 누르면 비밀번호 타입 변경
 	    $("#passeye").click(function () {
 	        let pw1 = $("#password");
 	        let pw2 = $("#password2");

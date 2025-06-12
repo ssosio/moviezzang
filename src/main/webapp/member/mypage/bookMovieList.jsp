@@ -264,7 +264,7 @@ $(function () {
       				<td><%=formattedTime%></td>
       				<td><%=seat %></td>
       				<td><%=nf.format(price*seat)%></td>
-      				<td><a class="goreview" href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>"><img src="resources/review.jpg" style="width: 28px; height: 28px;
+      				<td><a class="goreview" href="index.jsp?main=movie/movieDetail.jsp?id=<%=mdto.getId() %>&name=<%=mdto.getTitle()%>#reviewSection"><img src="resources/review.jpg" style="width: 28px; height: 28px;
       				margin-left: 27px;"></a></td>
       				<td class="starttd"><a class="cancel-btn" onclick="cancelReserve(this)"
       				><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>

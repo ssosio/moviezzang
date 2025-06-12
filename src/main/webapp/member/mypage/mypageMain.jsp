@@ -122,7 +122,7 @@ int storysize=slist.size();
   <!-- Main content -->
   <div class="mypage-content">
     <div class="mypage-header">
-      <h1 class="text-2xl font-bold">안녕하세요! <%=dto.getName() %>(<%=dto.getUserid() %>)님</h1>
+      <h1 class="text-2xl font-bold">안녕하세요! <%=dto.getName() %>(<%=dto.getUserid() %>) 님</h1>
       <h6 style="color: gray;">Welcome!</h6>
       <div class="mileage">보유 마일리지 (<%=dto.getMileage() %>P)</div>
     </div>
