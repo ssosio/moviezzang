@@ -114,8 +114,8 @@ body {
 				<!-- 영화 포스터 1 -->
 				<%
 				for (int i = 1; i <= 5; i++) {
-				 	String id = String.valueOf(i); 
-					String name = String.valueOf(i); 
+				 	String id = String.valueOf(i);
+					String name = String.valueOf(i);
 					MovieDTO dto = dao.getMovieById(id);
 					String posterUrl = "https://image.tmdb.org/t/p/w500";
 					System.out.print("");
@@ -141,8 +141,10 @@ body {
 									개봉일&nbsp;<%=dto.getRelease_date()%></p>
 							</div>
 							<button
-								class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2">
-								예매하기</button>
+								class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap w-full mb-2"
+								onclick="location.href='<%=request.getContextPath()%>/index.jsp?main=book/booking/bookMain.jsp?movie_id=<%=dto.getId() %>'"
+								>
+							예매하기</button>
 							<button onclick="location.href='?main=movie/movieDetail.jsp?id=<%=id%>&name=<%=dto.getTitle()%>'"
 								class="border border-white text-white px-4 py-2 !rounded-button whitespace-nowrap w-full">
 								상세정보</button>
@@ -431,7 +433,7 @@ body {
 	</section>
 
 	<script>
-     
+
       document.addEventListener("DOMContentLoaded", function () {
         // 특별관 슬라이더
         const slider = document.getElementById("hallSlider");
@@ -480,7 +482,7 @@ body {
         slider.addEventListener("mouseleave", startTimer);
         startTimer();
       });
-  
+
     </script>
 </body>
 </html>

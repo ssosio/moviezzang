@@ -24,14 +24,14 @@
 	border: 1px solid #352461 !important;
 }
 .btn-mov {
-	border: 1px purple solid;
+	border: 1px #352461 solid;
 	background: white;
 	border-radius: 15px;
-	color:purple;
+	color:#352461;
 }
 
 .btn-mov:hover {
-	background: purple;
+	background: #352461;
 	color: white;
 }
 .btn-up{
@@ -50,41 +50,41 @@
 	width: 30px;
 	height: 30px;
 	background: white;
-	color: purple;
-	border: 1px solid purple;
+	color: #352461;
+	border: 1px solid #352461;
 }
 .btn-seat.select{
-	background: purple;
+	background: #352461;
 	color: white;
 }
 .btn-pay{
-	background: #481658;
+	background: #352461;
 	color: white;
 	border-radius: 5px;
-	border: 1px #481658 solid;
+	border: 1px #352461 solid;
 	width: 100px;
 	height: 30px;
 }
 .btn-pay:hover{
 	background: white;
-	color: #481658;
+	color: #352461;
 }
 .div-showSeat{
-	background:#481658 !important;
-	color: white !important;
-	border: 1px solid #481658 !important;
+	background:#352461;
+	color: white;
+	border: 1px solid #352461;
 }
 .reserved{
-	background: #481658 !important;
-	border: none !important;
-	cursor: not-allowed !important;
+	background: #352461;
+	border: none;
+	cursor: not-allowed;
 }
 .temp-reserved{
-	background: #eee !important;
-	cursor: not-allowed !important;
+	background: #eee;
+	cursor: not-allowed;
 }
 .selseat.hover {
-	background: #481658 !important;
+	background: #352461;
 	color: white;
 }
 .btn-day{

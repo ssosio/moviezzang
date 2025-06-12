@@ -271,6 +271,7 @@ input:checked+.switch-slider:before {
 							alt="" class="w-full rounded-lg shadow-lg" />
 						<div class="mt-4 flex space-x-2">
 							<button
+								onclick = "location.href='<%=request.getContextPath() %>/index.jsp?main=book/booking/bookMain.jsp?movie_id=<%=dto.getId() %>'"
 								class="bg-primary text-white px-4 py-3 !rounded-button whitespace-nowrap flex-1 flex items-center justify-center hover:bg-opacity-90 transition-colors">
 								<div class="w-5 h-5 flex items-center justify-center mr-2">
 									<i class="ri-ticket-line"></i>
@@ -444,7 +445,7 @@ input:checked+.switch-slider:before {
 					} else {
 					%>
 					<button
-						class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap text-sm hover:bg-opacity-90 transition-colors 
+						class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap text-sm hover:bg-opacity-90 transition-colors
       <%=(userid == null || userid.trim().equals("")) ? "hidden" : ""%>"
 						id="writeReviewBtn">관람평 작성</button>
 					<%
@@ -466,7 +467,7 @@ input:checked+.switch-slider:before {
 							</div>
 						</div>
  			<div class="w-full md:w-1/3">
-						
+
 					<%
 						Map<Integer, Integer> starCount = new HashMap<>();
 					int total = (reviews == null) ? 0 : reviews.size();
@@ -489,12 +490,12 @@ input:checked+.switch-slider:before {
 								</div>
 								<span class="text-sm w-12 text-right"><%= total == 0 ? total : (int)percentage %>%</span>
 							</div>
-						
+
 						<%
 						}
 						%>
-						</div> 
-						
+						</div>
+
 					</div>
 				</div>
 				<!-- 관람평 탭 -->
@@ -943,7 +944,7 @@ document.addEventListener("DOMContentLoaded", function () {
       reviewForm.action = "movie/insertReview.jsp";
       contentTextarea.value = "";
       ratingInput.value = "";
-      ratingText.textContent = "평점을 선택해주세요"; 
+      ratingText.textContent = "평점을 선택해주세요";
       ratingDisplay.textContent = "";
     }
   }
@@ -1095,7 +1096,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	    container.appendChild(star);
 	  }
 	}
-  
+
 
   renderStars(<%=String.format("%.1f", averageRating)%>);
 });

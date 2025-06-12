@@ -20,18 +20,20 @@ public class ReservationDAO {
 	}
 
 	//Reservation테이블 insert 여기서 auto_increment된 id값을 바로 return함.
-	public int insertReserve(String screening_Id, String userNum){
+	public int insertReserve(String screening_Id, String userNum, String lastPay, String reservedCount){
 		Connection conn = db.getConnection();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		int generatedId = -1;
 
-		String sql ="insert into reservation (screening_id, user_id, reserved_at) values (?, ?, now())";
+		String sql ="insert into reservation (screening_id, user_id, reserved_at,lastpay, reserved_count) values (?, ?, now(),?,?)";
 
 		try {
 			pst = conn.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
 			pst.setString(1, screening_Id);
 			pst.setString(2, userNum);
+			pst.setString(3, lastPay);
+			pst.setString(4, reservedCount);
 			pst.executeUpdate();
 
 			//생성 키 받기
