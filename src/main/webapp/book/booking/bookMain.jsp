@@ -382,6 +382,9 @@ $(function () {
     }
 
     $(".date-selector").html(html);
+
+    $(".btn-date").eq(0).trigger("click");
+
     selectedDate = today.toISOString().slice(0, 10);
   }
 
