@@ -125,7 +125,9 @@
 		height: 60px;
 		line-height: 60px;
 		box-shadow: 0px 10px 5px gray;
-		font-size: 1.2em;
+		font-size: 30px;
+		font-weight: bold;
+		font-family: serif;
 	}
 	.seat {
 		border-top: none;
