@@ -454,7 +454,10 @@ $(function () {
 	    if (total - selectedCount >= 2) {
 	        if (
 	          !$(`.selseat[row='${row}'][col='${startCol}']`).hasClass("select") &&
-	          !$(`.selseat[row='${row}'][col='${startCol + 1}']`).hasClass("select")
+	          !$(`.selseat[row='${row}'][col='${startCol + 1}']`).hasClass("select")  &&
+
+	          !$(`.selseat[row='${row}'][col='${startCol}']`).hasClass("reserved") &&
+	          !$(`.selseat[row='${row}'][col='${startCol + 1}']`).hasClass("reserved")
 	        ) {
 	          $(`.selseat[row='${row}'][col='${startCol}']`).addClass("select");
 	          $(`.selseat[row='${row}'][col='${startCol + 1}']`).addClass("select");
