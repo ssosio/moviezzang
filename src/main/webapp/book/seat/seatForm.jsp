@@ -66,10 +66,11 @@
 		align-items: center;
 	}
 	.seatcount {
-		background: #ddd;
+		background: #434343;
 		display: flex;
 		align-items: center;
 		padding: 10px;
+		color:white;
 	}
 	.seatcount > div {
 		display: flex;
@@ -92,6 +93,7 @@
 		border: 1px solid #ccc;
 		background: white;
 		line-height: 30px;
+		color: black;
 	}
 	.btn-down-a,
 	.btn-down-t {
@@ -119,7 +121,11 @@
 		text-align: center;
 		margin-top: 5px;
 		color: white;
-
+		transform : rotateX(-45deg);
+		height: 60px;
+		line-height: 60px;
+		box-shadow: 0px 10px 5px gray;
+		font-size: 1.2em;
 	}
 	.seat {
 		border-top: none;
@@ -247,6 +253,9 @@
 	.seat-overlay > span {
 		padding-top: 30px;
 		display: block;
+	}
+	.btn-seat{
+		border-radius: 90px 90px 0px 0px;
 	}
 </style>
 <%
