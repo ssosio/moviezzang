@@ -566,7 +566,7 @@ $(function () {
 	    const total = adult + teen;
 	    if (total === 0) {
 	      $(".seat-overlay").show();
-	      $(".selseat").prop("disabled", true).css("opacity", "0.5");
+	      $(".selseat").prop("disabled", true).css("opacity", "1.0");
 	    } else {
 	      $(".seat-overlay").hide();
 	      $(".selseat").each(function () {
