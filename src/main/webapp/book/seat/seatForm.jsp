@@ -121,7 +121,11 @@
 		text-align: center;
 		margin-top: 5px;
 		color: white;
-
+		transform : rotateX(-45deg);
+		height: 60px;
+		line-height: 60px;
+		box-shadow: 0px 10px 5px gray;
+		font-size: 1.2em;
 	}
 	.seat {
 		border-top: none;
