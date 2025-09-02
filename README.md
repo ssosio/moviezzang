@@ -11,7 +11,6 @@ AJAX 기반 **영화 예매 웹앱(JSP Model-1)** — 페이지 이동 없이 **
 - **영화 추천**: 선택 영화와 **장르 겹침** 기준 상위 5편 추천(평점 순)
 - **Admin 모듈**: 영화/극장/상영 편성/회원 관리
 - **스택**: JSP/JSTL + jQuery, Java/JDBC, MySQL 8.x, Tomcat 9+  
-  <sub>(※ Spring/Spring Boot **미사용**)</sub>
 
 ---
 
@@ -48,7 +47,7 @@ AJAX 기반 **영화 예매 웹앱(JSP Model-1)** — 페이지 이동 없이 **
 - **Back**: Java(서블릿/JSP), JDBC, DAO/DTO  
 - **DB**: MySQL 8.x (`com.mysql.cj.jdbc.Driver`)  
 - **Server**: Apache Tomcat 9+ (Eclipse Dynamic Web Project)  
-- **Framework**: 없음 (Spring/Spring Boot 미사용)
+- **Framework**: 없음
 
 ---
 
