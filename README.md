@@ -2,13 +2,16 @@
 
 ![header](https://capsule-render.vercel.app/api?type=venom&color=0:8871e5,100:b678c4&height=300&section=header&text=MOVIEZZANG&fontSize=90)
 
-AJAX 기반 **영화 예매 웹앱(JSP Model-1)** — 페이지 이동 없이 **날짜 → 지역 → 영화 → 극장 → 상영관 → 시간**을 필터링하고, **연속좌석·짝수 기준·호버 미리보기**로 실수 없는 좌석 선택 UX를 제공합니다.
+AJAX 기반 **영화 예매 웹앱(JSP Model-1)** — 페이지 이동 없이 **날짜 → 지역 → 영화 → 극장 → 상영관 → 시간**을 필터링하고,
+**연속좌석·짝수 기준·호버 미리보기**로 실수 없는 좌석 선택 UX를 제공합니다.
 
 ## 요약
 - 한 페이지 **AJAX 예매 플로우** (체감 빠른 조회/선택)
 - **좌석 선택 알고리즘**: 2인 이상 연속 좌석, 기준좌석 짝수 정렬, 홀수 인원 처리, 호버 미리보기
+- **리뷰/평점(댓글)**: 등록·수정·삭제, 영화 상세에서 노출
 - **Admin 모듈**: 영화/극장/상영 편성/회원 관리
 - **TMDb 연동**(키 외부화), **MySQL 8.x + Tomcat 9+**, **JSP/JSTL + jQuery**
+
 
 ## 스크린샷/GIF
 > `documents/screenshots/`에 `flow.gif`와 주요 화면 캡처를 추가하고 아래에 삽입하세요.  
